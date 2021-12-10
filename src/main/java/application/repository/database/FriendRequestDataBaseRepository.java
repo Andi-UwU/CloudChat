@@ -1,6 +1,9 @@
 package application.repository.database;
 
-import application.domain.*;
+import application.domain.FriendRequest;
+import application.domain.FriendRequestStatus;
+import application.domain.Tuple;
+import application.domain.User;
 import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
 

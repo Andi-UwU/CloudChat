@@ -2,10 +2,9 @@ package application.repository.file;
 
 import application.domain.Friendship;
 import application.domain.Tuple;
-import application.domain.User;
+import application.domain.validator.Validator;
 import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
-import application.domain.validator.Validator;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

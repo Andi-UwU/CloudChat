@@ -1,12 +1,10 @@
 package application.service;
 
-import application.domain.Friendship;
-import application.domain.Message;
-import application.domain.User;
 import application.domain.*;
 import application.exceptions.RepositoryException;
 import application.exceptions.ServiceException;
 import application.exceptions.ValidationException;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;

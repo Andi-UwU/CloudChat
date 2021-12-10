@@ -5,6 +5,7 @@ module application.lab_6 {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
+    requires java.sql;
 
     opens application.lab_6 to javafx.fxml;
     exports application.lab_6;

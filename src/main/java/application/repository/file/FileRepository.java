@@ -1,9 +1,9 @@
 package application.repository.file;
 
 import application.domain.Entity;
+import application.domain.validator.Validator;
 import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
-import application.domain.validator.Validator;
 import application.repository.memory.MemoryRepository;
 
 import java.io.*;

@@ -1,7 +1,6 @@
 package application.ui;
 
 import application.domain.FriendRequest;
-import application.domain.Friendship;
 import application.domain.User;
 import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
