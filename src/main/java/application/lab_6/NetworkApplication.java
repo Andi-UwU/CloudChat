@@ -50,7 +50,7 @@ public class NetworkApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         initialize();
-        NetworkController networkController = new NetworkController(stage,superService);
+        NetworkController networkController = new NetworkController(superService);
         FXMLLoader fxmlLoader = new FXMLLoader(NetworkApplication.class.getResource("network.fxml"));
         fxmlLoader.setController(networkController);
         Scene loginScene = new Scene(fxmlLoader.load());
