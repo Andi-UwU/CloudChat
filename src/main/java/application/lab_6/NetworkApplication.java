@@ -18,8 +18,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.sql.SQLException;
+
+import application.utils.DatabaseConstants;
 
 import static application.utils.DatabaseConstants.*;
 
