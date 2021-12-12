@@ -125,10 +125,13 @@ public class SuperService {
      * @param id of the user
      * @return the found user
      */
-    public User findUser(Integer id) throws SQLException, RepositoryException, ValidationException {
+    public User findUser(Integer id) throws RepositoryException, ValidationException {
         return network.findUser(id);
     }
 
+    public User loginUser(Integer id, String password) {
+        return new User("unused","so far");
+    }
     //=================== FRIENDSHIPS =======================
 
 
@@ -138,7 +141,7 @@ public class SuperService {
      * @param rightId id of another user
      * @throws ValidationException if the friendship is not valid
      * @throws RepositoryException if the friendship already exists
-     * @throws IOException if reading from data base fail
+     * @throws IOException if reading from data base fails
      */
     public void addFriendship(Integer leftId, Integer rightId) throws ValidationException, RepositoryException, IOException, SQLException {
 
