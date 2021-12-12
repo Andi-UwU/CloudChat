@@ -5,7 +5,6 @@ import application.domain.FriendRequestStatus;
 import application.domain.Tuple;
 import application.domain.User;
 import application.exceptions.RepositoryException;
-import application.exceptions.ValidationException;
 
 import java.io.IOException;
 import java.sql.*;
@@ -81,7 +80,7 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
     }
 
     @Override
-    public List<FriendRequest> getAll() throws SQLException, ValidationException, RepositoryException {
+    public List<FriendRequest> getAll() throws SQLException, RepositoryException {
         List<FriendRequest> requests = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement("SELECT * from friend_requests");
@@ -99,6 +98,7 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
             }
             return requests;
         }
+
     }
 
     /*

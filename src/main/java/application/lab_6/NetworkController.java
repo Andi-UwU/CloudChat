@@ -4,6 +4,7 @@ import application.domain.*;
 import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
 import application.service.SuperService;
+import application.utils.WarningBox;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,12 +46,8 @@ public class NetworkController {
             mainStage.show();
             ((Node)(event.getSource())).getScene().getWindow().hide();
 
-        } catch (ValidationException | RepositoryException | NumberFormatException | IOException ignored) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning");
-            alert.setHeaderText("");
-            alert.setContentText("Invalid login information!");
-            alert.showAndWait();
+        } catch (ValidationException | RepositoryException | NumberFormatException | IOException e) {
+            WarningBox.show(e.getMessage());
         }
     }
 }

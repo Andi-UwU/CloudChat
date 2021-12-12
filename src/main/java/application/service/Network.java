@@ -3,6 +3,7 @@ package application.service;
 import application.domain.Friendship;
 import application.domain.Tuple;
 import application.domain.User;
+import application.domain.FriendDTO;
 import application.domain.validator.Validator;
 import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
@@ -114,7 +115,7 @@ public class Network {
                                             friendUser.getLastName() + " | " +
                                             x.getDate().format(DATE_TIME_FORMATTER);
 
-                        } catch (ValidationException | RepositoryException e) {
+                        } catch (RepositoryException e) {
                             e.printStackTrace();
                         }
                     return friendString;
@@ -141,6 +142,36 @@ public class Network {
                     String dateString=x.split("\\|")[2].substring(1); // get date from string with name and date
                     LocalDateTime date = LocalDateTime.parse(dateString,DATE_TIME_FORMATTER);
                     return date.getMonthValue() == month; // verify if month is correct
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<FriendDTO> getFriendDtoOfUser(Integer userId) throws RepositoryException, SQLException, ValidationException {
+        List<Friendship> userFriendship = friendshipRepository.getAll();
+        userRepository.find(userId);
+        return userFriendship
+                .stream()
+                .filter(x -> (x.getId().getLeft().equals(userId) || x.getId().getRight().equals(userId)))
+                .map(friendship -> {
+                    FriendDTO friend = new FriendDTO();
+                    try {
+                        User friendUser;
+                        if (friendship.getId().getLeft().equals(userId)) {//the friend is the right one
+                            friendUser = userRepository.find(friendship.getId().getRight());
+                        }
+                        else {//the friend is the left one
+                            friendUser = userRepository.find(friendship.getId().getLeft());
+                        }
+                        friend.setId(friendUser.getId());
+                        friend.setName(friendUser.getFirstName() + " " + friendUser.getLastName());
+                        friend.setDate(friendship.getDate().format(DATE_TIME_FORMATTER));
+
+
+                    } catch (RepositoryException e) {
+                        e.printStackTrace();
+                    }
+                    return friend;
+
                 })
                 .collect(Collectors.toList());
     }
@@ -189,7 +220,6 @@ public class Network {
      * @return User
      * @throws ValidationException if the attributes are not valid
      * @throws RepositoryException if the user doesn't exist
-     * @throws SQLException if the database cannot be reached
      */
     public User updateUser(Integer id, String firstName, String lastName) throws ValidationException, IOException, RepositoryException, SQLException {
         User user = new User(firstName, lastName);
@@ -214,9 +244,8 @@ public class Network {
      * @param id Integer
      * @return User
      * @throws RepositoryException if the user doesn't exist
-     * @throws ValidationException if the user is invalid
      */
-    public User findUser(Integer id) throws  RepositoryException, ValidationException {
+    public User findUser(Integer id) throws  RepositoryException {
         return userRepository.find(id);
     }
 
@@ -275,9 +304,8 @@ public class Network {
      * Adds user references to friendship
      * @param f Friendship
      * @throws RepositoryException if the user doesn't exist
-     * @throws ValidationException if the friendship isn't valid
      */
-    private void addUsersToFriendship(Friendship f) throws RepositoryException, ValidationException {
+    private void addUsersToFriendship(Friendship f) throws RepositoryException {
         User userLeft = userRepository.find(f.getId().getLeft());
         User userRight = userRepository.find(f.getId().getRight());
         f.setUserLeft(userLeft);
@@ -288,9 +316,8 @@ public class Network {
      * Adds user references to a list of friendships
      * @param friendships List(Friendship)
      * @throws RepositoryException if the users don't exist
-     * @throws ValidationException if the friendship is invalid
      */
-    private void addUsersToFriendshipList(List<Friendship> friendships) throws RepositoryException, ValidationException {
+    private void addUsersToFriendshipList(List<Friendship> friendships) throws RepositoryException {
         for (Friendship f : friendships){
             addUsersToFriendship(f);
         }
@@ -302,10 +329,8 @@ public class Network {
      * @param rightId Integer
      * @return Friendship
      * @throws RepositoryException if the friendship doesn't exist
-     * @throws ValidationException if the users don't exist
-     * @throws SQLException if the database cannot be reached
      */
-    public Friendship deleteFriendship(Integer leftId, Integer rightId) throws IOException, RepositoryException, SQLException, ValidationException {
+    public Friendship deleteFriendship(Integer leftId, Integer rightId) throws IOException, RepositoryException, ValidationException, SQLException {
         if (leftId > rightId){
             Integer temp = leftId;
             leftId = rightId;
@@ -324,7 +349,6 @@ public class Network {
      * @return Friendship
      * @throws ValidationException if the friendship is invalid
      * @throws RepositoryException if the friendship doesn't exist
-     * @throws SQLException if the database cannot be reached
      */
     public Friendship updateFriendship(Integer leftId, Integer rightId, LocalDateTime date) throws ValidationException, IOException, RepositoryException, SQLException {
 
@@ -352,9 +376,8 @@ public class Network {
      * @param rightId Integer
      * @return Friendship
      * @throws RepositoryException if the friendship doesn't exist
-     * @throws ValidationException if the friendship is invalid
      */
-    public Friendship findFriendship(Integer leftId, Integer rightId) throws RepositoryException, ValidationException {
+    public Friendship findFriendship(Integer leftId, Integer rightId) throws RepositoryException {
         if (leftId > rightId){
             Integer temp = leftId;
             leftId = rightId;

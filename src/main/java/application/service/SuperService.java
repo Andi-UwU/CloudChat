@@ -1,6 +1,7 @@
 package application.service;
 
 import application.domain.*;
+import application.domain.FriendDTO;
 import application.exceptions.RepositoryException;
 import application.exceptions.ServiceException;
 import application.exceptions.ValidationException;
@@ -67,6 +68,10 @@ public class SuperService {
      */
     public int getCommunitiesNumber() throws SQLException, ValidationException, RepositoryException {
         return network.getCommunitiesNumber();
+    }
+
+    public List<FriendDTO> getFriendDtoOfUser(Integer id) throws RepositoryException, SQLException, ValidationException {
+        return network.getFriendDtoOfUser(id);
     }
 
     //==================== USERS ==========================

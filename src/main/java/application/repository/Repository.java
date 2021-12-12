@@ -19,7 +19,7 @@ public interface Repository<ID, E extends Entity<ID>> {
      * @throws ValidationException if the entity is invalid (probable improper storage in repository)
      * @throws SQLException if a database cannot be reached
      */
-    E find(ID id) throws RepositoryException, ValidationException;
+    E find(ID id) throws RepositoryException;
 
     /**
      * Gets all the entities of a repository
@@ -28,7 +28,7 @@ public interface Repository<ID, E extends Entity<ID>> {
      * @throws ValidationException if the entity is invalid (probable improper storage in repository)
      * @throws RepositoryException if a database has a foreign key towards a nonexistent value
      */
-    List<E> getAll() throws SQLException, ValidationException, RepositoryException;
+    List<E> getAll() throws RepositoryException, SQLException, ValidationException;
 
     /**
      * Adds an entity to the repository

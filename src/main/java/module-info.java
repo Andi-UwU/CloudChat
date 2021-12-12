@@ -9,4 +9,5 @@ module application.lab_6 {
 
     opens application.lab_6 to javafx.fxml;
     exports application.lab_6;
+    exports application.domain;
 }

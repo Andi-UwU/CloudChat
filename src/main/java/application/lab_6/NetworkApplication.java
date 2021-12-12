@@ -17,10 +17,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.sql.SQLException;
-
-import application.utils.DatabaseConstants;
 
 import static application.utils.DatabaseConstants.*;
 
@@ -30,17 +27,24 @@ public class NetworkApplication extends Application {
 
     private void initialize() throws Exception {
         try {
+            // User
             Repository<Integer, User> userRepository = new UserDataBaseRepository(URL, USERNAME, PASSWORD);
-            Repository<Tuple<Integer, Integer>, Friendship> friendshipRepository = new FriendshipDataBaseRepository(URL, USERNAME, PASSWORD);
             Validator<User> userValidator = new UserValidator();
+            // Friendship
+            Repository<Tuple<Integer, Integer>, Friendship> friendshipRepository = new FriendshipDataBaseRepository(URL, USERNAME, PASSWORD);
             Validator<Friendship> friendshipValidator = new FriendshipValidator();
+            // Network
             Network network = new Network(userRepository, userValidator, friendshipRepository, friendshipValidator);
+            // Friend Request
             Validator<FriendRequest> friendRequestValidator = new FriendRequestValidator();
             Repository<Tuple<Integer,Integer>, FriendRequest> requestRepository = new FriendRequestDataBaseRepository(URL, USERNAME, PASSWORD);
             FriendRequestService friendRequestService = new FriendRequestService(requestRepository,friendRequestValidator);
+            // Message
             Validator<Message> messageValidator = new MessageValidator();
             Repository<Integer, Message> messageRepository = new MessageDataBaseRepository(URL, USERNAME, PASSWORD);
             MessageService messageService = new MessageService(messageRepository, messageValidator);
+
+            // Super Service
             this.superService= new SuperService(network, messageService,friendRequestService);
         } catch (RepositoryException | SQLException | ValidationException e) {
             System.out.println(e.getMessage());
@@ -61,6 +65,6 @@ public class NetworkApplication extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+        launch(args);
     }
 }

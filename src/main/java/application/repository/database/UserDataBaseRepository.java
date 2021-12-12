@@ -27,7 +27,7 @@ public class UserDataBaseRepository extends DataBaseRepository<Integer, User>{
      * @return the entity if it exists in the repository
      */
     @Override
-    public User find(Integer id) throws RepositoryException, ValidationException {
+    public User find(Integer id) throws RepositoryException {
 
         String sql = "SELECT * from users where id = ?";
         try (Connection connection = DriverManager.getConnection(url, username, password);
