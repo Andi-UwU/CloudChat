@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendshipDataBaseRepository extends DataBaseRepository<Tuple<Integer, Integer>, Friendship> {
+    //TODO comments already in interface
     /**
      * constructor
      * @param url of database

@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
  * Handles friend requests from the repository
  */
 public class FriendRequestService {
+    //TODO missing comment
     private Repository<Tuple<Integer,Integer>, FriendRequest> requestRepository;
     private Validator<FriendRequest> validatorRequest;
     public FriendRequestService (Repository<Tuple<Integer, Integer>, FriendRequest> friendRequestDatabase,

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDataBaseRepository extends DataBaseRepository<Integer, User>{
-
+    //TODO comments already in interface
     /**
      * constructor
      * @param url of database

@@ -7,6 +7,8 @@ public class AddFriendDTO {
     private String name;
     private String request;
 
+    //TODO comments again
+
     public AddFriendDTO(){
     }
 

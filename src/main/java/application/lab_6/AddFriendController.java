@@ -31,13 +31,10 @@ public class AddFriendController {
     // Table View
     @FXML
     private TableView<AddFriendDTO> tableView;
-
     @FXML
     private TableColumn<AddFriendDTO, Integer> idColumn;
-
     @FXML
     private TableColumn<AddFriendDTO, String> nameColumn;
-
     @FXML
     private TableColumn<AddFriendDTO, String> requestColumn;
 
@@ -52,18 +49,14 @@ public class AddFriendController {
     public void setUser(User user){
         this.user = user;
     }
-
     public void setService(SuperService superService){
         this.superService = superService;
     }
+
     private void updateTableView(){
         try {
             addFriendList.setAll(superService.getAddFriendDtoOfUser(user.getId()));
-        } catch (RepositoryException e) {
-            WarningBox.show(e.getMessage());
-        } catch (SQLException e) {
-            WarningBox.show(e.getMessage());
-        } catch (ValidationException e) {
+        } catch (RepositoryException | SQLException | ValidationException e) {
             WarningBox.show(e.getMessage());
         }
         tableView.setItems(addFriendList);
@@ -101,13 +94,7 @@ public class AddFriendController {
             addFriendList.set(tableView.getSelectionModel().getSelectedIndex(), addFriendDTO);
             tableView.setItems(addFriendList);
 
-        } catch (ValidationException e) {
-            WarningBox.show(e.getMessage());
-        } catch (SQLException throwables) {
-            WarningBox.show(throwables.getMessage());
-        } catch (RepositoryException e) {
-            WarningBox.show(e.getMessage());
-        } catch (IOException e) {
+        } catch (ValidationException | SQLException | RepositoryException | IOException e) {
             WarningBox.show(e.getMessage());
         }
 
