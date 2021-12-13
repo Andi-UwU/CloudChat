@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import org.controlsfx.control.action.Action;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -47,26 +48,24 @@ public class MainPageController {
     @FXML
     private Button addFriendButton;
 
+    //========= Friend Requests Button
+    @FXML
+    private Button friendRequestsButton;
+
     public MainPageController(User user, SuperService superService) {
         this.superService=superService;
         this.user=user;
     }
 
     private void updateFriendsTableView(){
-
         try {
-            friendsList.setAll(superService.getFriendDtoOfUser(user.getId()));
-        } catch (RepositoryException e) {
-            WarningBox.show(e.getMessage());
-        } catch (SQLException e) {
-            WarningBox.show(e.getMessage());
-        } catch (ValidationException e) {
-            WarningBox.show(e.getMessage());
-        }
+            friendsList.setAll(superService.getFriendDtoOfUser(user.getId())); }
+        catch (RepositoryException | SQLException | ValidationException e) {
+            WarningBox.show(e.getMessage()); }
         friendsTableView.setItems(friendsList);
     }
-    private void initializeFriendsTableView(){
 
+    private void initializeFriendsTableView(){
         friendsTableColumnId.setCellValueFactory(new PropertyValueFactory<FriendDTO, Integer>("id"));
         friendsTableColumnName.setCellValueFactory(new PropertyValueFactory<FriendDTO, String>("name"));
         friendsTableColumnFriendshipDate.setCellValueFactory(new PropertyValueFactory<FriendDTO, String>("date"));
@@ -76,7 +75,6 @@ public class MainPageController {
     @FXML
     public void initialize() {
         welcomeLabel.setText("Welcome " + user.getFirstName() + " " + user.getLastName() + "!");
-
         initializeFriendsTableView();
     }
 
@@ -85,7 +83,7 @@ public class MainPageController {
         try{
             //delete from repository
             FriendDTO friendDto = friendsTableView.getSelectionModel().getSelectedItem();
-            if (friendDto == null){
+            if (friendDto == null) {
                 WarningBox.show("Select a friend to delete!");
                 return;
             }
@@ -94,31 +92,15 @@ public class MainPageController {
             //delete from table view if no exception was thrown
             friendsList.remove(friendDto);
             friendsTableView.setItems(friendsList);
-
-
         } catch (NumberFormatException e){
-            WarningBox.show("The id must be an integer!!!");
-
+            WarningBox.show("The id must be an integer!");
         } catch (ValidationException | SQLException | RepositoryException | IOException e) {
-            WarningBox.show(e.getMessage());
-        }
-    }
-
-    private void changeToScene(String sceneName, ActionEvent actionEvent){
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource(sceneName));
-            Stage stage = (Stage)((Node)(actionEvent.getSource())).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
             WarningBox.show(e.getMessage());
         }
     }
 
     @FXML
     public void changeToAddFriendScene(ActionEvent actionEvent){
-
         //changeToScene("resources/application/lab_6/addFriendScene.fxml", actionEvent);
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -139,4 +121,24 @@ public class MainPageController {
         }
     }
 
+    @FXML
+    public void friendRequestsView(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            FriendRequestsController friendRequestsController = new FriendRequestsController();
+            friendRequestsController.setService(superService);
+            friendRequestsController.setUser(user);
+            fxmlLoader.setLocation(getClass().getResource("friendRequestScene.fxml"));
+            fxmlLoader.setController(friendRequestsController);
+            Scene friendRequestScene = new Scene(fxmlLoader.load());
+            Stage friendRequestStage = new Stage();
+            friendRequestStage.setTitle("The Network");
+            friendRequestStage.setScene(friendRequestScene);
+            friendRequestStage.show();
+            ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
+        } catch (NumberFormatException | IOException e) {
+            WarningBox.show(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }

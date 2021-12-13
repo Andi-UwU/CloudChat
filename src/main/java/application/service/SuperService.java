@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class SuperService {
@@ -27,6 +28,7 @@ public class SuperService {
         this.friendRequestService = friendRequestService;
     }
 
+    //TODO some comments down there
 
     // ===================== NETWORK ==========================
     /**
@@ -35,7 +37,6 @@ public class SuperService {
      * @return the friend list of the user as Iterable
      */
     public List<User> friendList(User user) throws SQLException, RepositoryException, ValidationException {
-
         return network.friendList(user);
     }
 
@@ -48,7 +49,6 @@ public class SuperService {
      * @throws RepositoryException if a user doesn't exist
      */
     public List<String> getFriendshipsOfUser(Integer userId) throws ValidationException, SQLException, RepositoryException {
-
         return network.getFriendshipsOfUser(userId);
     }
 
@@ -184,7 +184,6 @@ public class SuperService {
      * @throws IOException if reading from data base fails
      */
     public void addFriendship(Integer leftId, Integer rightId) throws ValidationException, RepositoryException, IOException, SQLException {
-
         network.addFriendship(leftId, rightId);
     }
 
@@ -311,16 +310,47 @@ public class SuperService {
 
     // ===================== FRIEND REQUEST ==========================
 
-    public Iterable<FriendRequest> getAllFriendRequests() throws ValidationException, SQLException, RepositoryException {
+    public List<FriendRequestDTO> getAllFriendRequestsDtoForUser(Integer id ) throws ValidationException, RepositoryException, SQLException {
+        User user=findUser(id);
+        List<FriendRequestDTO> list1 = getAllFriendRequestsFromUser(id)
+                .stream()
+                .map(request ->{
+                    return new FriendRequestDTO(
+                            "You",
+                            request.getUserTo().getFirstName() +" "+ request.getUserTo().getLastName(),
+                            id,
+                            request.getUserTo().getId(),
+                            request.getStatus()
+                            );
+                })
+                .collect(Collectors.toList());
+
+        List<FriendRequestDTO> list2 = getAllFriendRequestsForUser(id)
+                .stream()
+                .map(request ->{
+                    return new FriendRequestDTO(
+                            request.getUserFrom().getFirstName() +" "+ request.getUserFrom().getLastName(),
+                            "You",
+                            request.getUserFrom().getId(),
+                            id,
+                            request.getStatus()
+                    );
+                })
+                .collect(Collectors.toList());
+
+        return Stream.concat(list1.stream(),list2.stream()).collect(Collectors.toList());
+    }
+
+    public List<FriendRequest> getAllFriendRequests() throws ValidationException, SQLException, RepositoryException {
         return friendRequestService.getAll();
     }
 
-    public Iterable<FriendRequest> getAllFriendRequestsForUser(Integer id) throws ValidationException, SQLException, RepositoryException {
+    public List<FriendRequest> getAllFriendRequestsForUser(Integer id) throws ValidationException, SQLException, RepositoryException {
         findUser(id);
         return friendRequestService.getAllToUser(id);
     }
 
-    public Iterable <FriendRequest> getAllFriendRequestsFromUser(Integer id) throws ValidationException, SQLException, RepositoryException {
+    public List <FriendRequest> getAllFriendRequestsFromUser(Integer id) throws ValidationException, SQLException, RepositoryException {
         findUser(id);
         return friendRequestService.getAllFromUser(id);
     }

@@ -12,6 +12,7 @@ public class FriendDTO {
         this.name = name;
         this.date = date;
     }
+    //TODO these comments
 
     public Integer getId() {
         return id;

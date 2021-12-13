@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageDataBaseRepository extends DataBaseRepository<Integer, Message> {
-
+    //TODO comments
     /**
      * constructor
      * @param url of database

@@ -20,6 +20,7 @@ import static application.utils.Constants.DATE_TIME_FORMATTER;
 
 
 public class Network {
+    //TODO missing comments
 
     // ===================== NETWORK ==========================
     private final Repository<Integer, User> userRepository; // stores the users of the network
