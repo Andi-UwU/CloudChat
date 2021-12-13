@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <SplitPane dividerPositions="0.1460843373493976" layoutY="-1.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="43.0" prefWidth="242.0">
+               <children>
+                  <Label alignment="CENTER" layoutY="14.0" prefHeight="27.0" prefWidth="599.0" text="Send friendship requests!" textAlignment="CENTER">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="335.0" prefWidth="599.0">
+               <children>
+                  <TableView fx:id="tableView" prefHeight="338.0" prefWidth="334.0">
+                    <columns>
+                      <TableColumn minWidth="9.599975407123566" prefWidth="222.3999908566475" text="User">
+                           <columns>
+                              <TableColumn fx:id="idColumn" prefWidth="35.20001298189163" text="Id" />
+                              <TableColumn fx:id="nameColumn" prefWidth="142.3999900817871" text="Name" />
+                           </columns>
+                        </TableColumn>
+                      <TableColumn fx:id="requestColumn" editable="false" minWidth="0.0" prefWidth="152.80006408691406" sortable="false" text="Friendship request" />
+                    </columns>
+                  </TableView>
+                  <AnchorPane layoutX="334.0" prefHeight="338.0" prefWidth="265.0">
+                     <children>
+                        <Button fx:id="addButton" layoutX="86.0" layoutY="44.0" mnemonicParsing="false" onAction="#addFriendRequest" prefHeight="26.0" prefWidth="78.0" text="Add" />
+                        <Button fx:id="backButton" layoutX="86.0" layoutY="110.0" mnemonicParsing="false" onAction="#backButtonAction" prefHeight="26.0" prefWidth="78.0" text="Back" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

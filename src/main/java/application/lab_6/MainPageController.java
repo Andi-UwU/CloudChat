@@ -6,17 +6,21 @@ import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
 import application.service.SuperService;
 import application.utils.WarningBox;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+
 
 public class MainPageController {
     private SuperService superService;
@@ -36,13 +40,12 @@ public class MainPageController {
 
     private ObservableList<FriendDTO> friendsList = FXCollections.observableArrayList();
 
-    //========= Delete Friend Text Field =============
-    @FXML
-    private TextField deleteFriendTextField;
-
     //========= Delete Friend Button
     @FXML
     private Button deleteFriendButton;
+
+    @FXML
+    private Button addFriendButton;
 
     public MainPageController(User user, SuperService superService) {
         this.superService=superService;
@@ -68,14 +71,6 @@ public class MainPageController {
         friendsTableColumnName.setCellValueFactory(new PropertyValueFactory<FriendDTO, String>("name"));
         friendsTableColumnFriendshipDate.setCellValueFactory(new PropertyValueFactory<FriendDTO, String>("date"));
         updateFriendsTableView();
-        // Friends table selection
-        friendsTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FriendDTO>() {
-            @Override
-            public void changed(ObservableValue<? extends FriendDTO> observable, FriendDTO oldValue, FriendDTO newValue) {
-                if (newValue != null)
-                    deleteFriendTextField.setText(newValue.getId().toString());
-            }
-        });
     }
 
     @FXML
@@ -88,10 +83,18 @@ public class MainPageController {
     @FXML
     public void deleteFriendButtonAction(ActionEvent actionEvent){
         try{
-            Integer friendId = Integer.parseInt(deleteFriendTextField.getText());
-
+            //delete from repository
+            FriendDTO friendDto = friendsTableView.getSelectionModel().getSelectedItem();
+            if (friendDto == null){
+                WarningBox.show("Select a friend to delete!");
+                return;
+            }
+            Integer friendId = friendDto.getId();
             superService.deleteFriendship(user.getId(), friendId);
-            updateFriendsTableView();
+            //delete from table view if no exception was thrown
+            friendsList.remove(friendDto);
+            friendsTableView.setItems(friendsList);
+
 
         } catch (NumberFormatException e){
             WarningBox.show("The id must be an integer!!!");
@@ -100,4 +103,40 @@ public class MainPageController {
             WarningBox.show(e.getMessage());
         }
     }
+
+    private void changeToScene(String sceneName, ActionEvent actionEvent){
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource(sceneName));
+            Stage stage = (Stage)((Node)(actionEvent.getSource())).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            WarningBox.show(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void changeToAddFriendScene(ActionEvent actionEvent){
+
+        //changeToScene("resources/application/lab_6/addFriendScene.fxml", actionEvent);
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            AddFriendController addFriendController = new AddFriendController();
+            addFriendController.setService(superService);
+            addFriendController.setUser(user);
+            fxmlLoader.setLocation(getClass().getResource("addFriendScene.fxml"));
+            fxmlLoader.setController(addFriendController);
+            Scene addFriendScene = new Scene(fxmlLoader.load());
+            Stage addFriendStage = new Stage();
+            addFriendStage.setTitle("The Network");
+            addFriendStage.setScene(addFriendScene);
+            addFriendStage.show();
+            ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+
+        } catch (NumberFormatException | IOException e) {
+            WarningBox.show(e.getMessage());
+        }
+    }
+
 }
