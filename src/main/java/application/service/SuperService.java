@@ -266,10 +266,14 @@ public class SuperService {
 
     public void addReply(Integer fromId, Integer replyToId, String text) throws ValidationException, SQLException, RepositoryException, IOException {
         User from = network.findUser(fromId);
-
         Message replyTo = messageService.find(replyToId);
-
         messageService.addReply(from, text, replyTo);
+    }
+
+    public void addReplyToAll(Integer fromId, Integer replyToId, String text) throws RepositoryException, ValidationException, SQLException, IOException {
+        User from = network.findUser(fromId);
+        Message replyTo = messageService.find(replyToId);
+        messageService.addReplyToAll(from,text,replyTo);
     }
 
     public Message updateMessage(Integer messageId, String newText) throws ValidationException, SQLException, RepositoryException, IOException {
