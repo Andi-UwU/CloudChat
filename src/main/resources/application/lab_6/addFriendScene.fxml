@@ -5,6 +5,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -36,8 +37,10 @@
                   </TableView>
                   <AnchorPane layoutX="334.0" prefHeight="338.0" prefWidth="265.0">
                      <children>
-                        <Button fx:id="addButton" layoutX="86.0" layoutY="44.0" mnemonicParsing="false" onAction="#addFriendRequest" prefHeight="26.0" prefWidth="78.0" text="Add" />
-                        <Button fx:id="backButton" layoutX="86.0" layoutY="110.0" mnemonicParsing="false" onAction="#backButtonAction" prefHeight="26.0" prefWidth="78.0" text="Back" />
+                        <Button fx:id="addButton" layoutX="86.0" layoutY="99.0" mnemonicParsing="false" onAction="#addFriendRequest" prefHeight="26.0" prefWidth="78.0" text="Add" />
+                        <Button fx:id="backButton" layoutX="86.0" layoutY="251.0" mnemonicParsing="false" onAction="#backButtonAction" prefHeight="26.0" prefWidth="78.0" text="Back" />
+                        <Button fx:id="filterButton" layoutX="86.0" layoutY="55.0" mnemonicParsing="false" onAction="#filterButtonAction" prefHeight="26.0" prefWidth="78.0" text="Filter" />
+                        <TextField fx:id="filterTextField" layoutX="50.0" layoutY="14.0" prefHeight="26.0" prefWidth="158.0" promptText="Name" />
                      </children>
                   </AnchorPane>
                </children>

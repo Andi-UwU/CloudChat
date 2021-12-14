@@ -52,10 +52,17 @@ public class MainPageController {
     @FXML
     private Button friendRequestsButton;
 
+
+    //========= Back to login button
+    @FXML
+    private Button backToLoginButton;
+
     public MainPageController(User user, SuperService superService) {
         this.superService=superService;
         this.user=user;
     }
+
+
 
     private void updateFriendsTableView(){
         try {
@@ -135,6 +142,24 @@ public class MainPageController {
             friendRequestStage.setTitle("The Network");
             friendRequestStage.setScene(friendRequestScene);
             friendRequestStage.show();
+            ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
+        } catch (NumberFormatException | IOException e) {
+            WarningBox.show(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void backToLoginAction(ActionEvent actionEvent){
+        try {
+            NetworkController networkController = new NetworkController(superService);
+            FXMLLoader fxmlLoader = new FXMLLoader(NetworkApplication.class.getResource("network.fxml"));
+            fxmlLoader.setController(networkController);
+            Scene loginScene = new Scene(fxmlLoader.load());
+            Stage stage = new Stage();
+            stage.setTitle("The Network");
+            stage.setScene(loginScene);
+            stage.show();
             ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
         } catch (NumberFormatException | IOException e) {
             WarningBox.show(e.getMessage());

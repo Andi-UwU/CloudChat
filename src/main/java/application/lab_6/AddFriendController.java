@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -52,6 +53,13 @@ public class AddFriendController {
     public void setService(SuperService superService){
         this.superService = superService;
     }
+
+    // Filter
+
+    @FXML
+    private Button filterButton;
+    @FXML
+    private TextField filterTextField;
 
     private void updateTableView(){
         try {
@@ -115,6 +123,19 @@ public class AddFriendController {
             ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
 
         } catch (NumberFormatException | IOException e) {
+            WarningBox.show(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void filterButtonAction(ActionEvent actionEvent){
+        try{
+            String name = filterTextField.getText();
+            addFriendList.setAll(superService.getAddFriendDtoOfUserByName(user.getId(), name));
+
+            //tableView.setItems(addFriendList);
+
+        } catch (ValidationException | SQLException | RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
     }
