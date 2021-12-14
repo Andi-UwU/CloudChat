@@ -109,6 +109,36 @@ public class SuperService {
                 .collect(Collectors.toList());
     }
 
+    public List<AddFriendDTO> getAddFriendDtoOfUserByName(Integer id, String name) throws ValidationException, SQLException, RepositoryException {
+        List<Integer> pendingRequests = friendRequestService.getAllFromUser(id)
+                .stream()
+                .filter(request -> request.getStatus().equals(FriendRequestStatus.PENDING))
+                .map(request -> request.getUserTo().getId())
+                .collect(Collectors.toList());
+
+
+        return getNonFriendOfUser(id)
+                .stream()
+                .filter(user -> {
+                    String userName = (user.getFirstName() + " " + user.getLastName()).toLowerCase();
+                    return userName.contains(name.toLowerCase());
+                })
+                .map(user -> {
+                    Integer userId = user.getId();
+                    String userName = user.getFirstName() + " " + user.getLastName();
+                    String request;
+
+                    if (pendingRequests.contains(userId))
+                        request = "Already sent";
+                    else
+                        request = "Send";
+
+                    return new AddFriendDTO(userId, userName, request);
+
+                })
+                .collect(Collectors.toList());
+    }
+
     //==================== USERS ==========================
 
     /**
