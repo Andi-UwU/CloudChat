@@ -101,6 +101,20 @@ public class MessageService {
         repository.add(message);
     }
 
+    public void addReplyToAll(User from, String text, Message replyMessage) throws ValidationException, SQLException, RepositoryException, IOException {
+        List<User> to = replyMessage.getTo();
+        to.remove(from);
+        to.add(replyMessage.getFrom());
+        Message message = new Message(from, to, text, LocalDateTime.now());
+        setNextId();
+        message.setId(nextId);
+        message.setReplyOf(replyMessage);
+
+        validator.validate(message);
+
+        repository.add(message);
+    }
+
     /**
      * Returns a message before deleting it
      * @param id Integer
