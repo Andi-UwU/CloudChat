@@ -178,10 +178,13 @@ public class AdminConsole {
 
     // ====================== NETWORK ============================
 
+    /*
     private void getCommunitiesNumber() throws SQLException, ValidationException, RepositoryException {
 
         System.out.println("---Communities number: " + superService.getCommunitiesNumber());
     }
+
+     */
 
     private void showFriendsOfUser() throws IOException, ValidationException, SQLException, RepositoryException {
         System.out.println("---Friends of user:");
@@ -371,7 +374,7 @@ public class AdminConsole {
                     case 9 -> updateFriendship();
                     case 10 -> findFriendship();
                     // NETWORK
-                    case 11 -> getCommunitiesNumber();
+                    //case 11 -> getCommunitiesNumber();
                     case 12 -> showFriendsOfUser();
                     case 13 -> showFriendsOfUserFromMonth();
                     // MESSAGES

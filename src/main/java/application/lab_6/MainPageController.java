@@ -62,6 +62,9 @@ public class MainPageController {
         this.user=user;
     }
 
+    @FXML
+    private Button chatButton;
+
 
 
     private void updateFriendsTableView(){
@@ -142,7 +145,7 @@ public class MainPageController {
             friendRequestStage.setTitle("The Network");
             friendRequestStage.setScene(friendRequestScene);
             friendRequestStage.show();
-            ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
+            //((Node) (actionEvent.getSource())).getScene().getWindow().hide();
         } catch (NumberFormatException | IOException e) {
             WarningBox.show(e.getMessage());
             e.printStackTrace();
@@ -164,6 +167,27 @@ public class MainPageController {
         } catch (NumberFormatException | IOException e) {
             WarningBox.show(e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void changeToChatScene(ActionEvent actionEvent){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            ChatController chatController = new ChatController();
+            chatController.setService(superService);
+            chatController.setUser(user);
+            fxmlLoader.setLocation(getClass().getResource("chatScene.fxml"));
+            fxmlLoader.setController(chatController);
+            Scene chatScene = new Scene(fxmlLoader.load());
+            Stage chatStage = new Stage();
+            chatStage.setTitle("Chat");
+            chatStage.setScene(chatScene);
+            chatStage.show();
+            ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+
+        } catch (NumberFormatException | IOException e) {
+            WarningBox.show(e.getMessage());
         }
     }
 }

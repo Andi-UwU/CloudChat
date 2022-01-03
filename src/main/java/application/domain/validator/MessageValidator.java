@@ -28,8 +28,6 @@ public class MessageValidator implements Validator<Message> {
         if (message.getText().equals("")){
             errors += "Invalid text!\n";
         }
-        if (message.getReplyOf().isPresent() && message.getTo().size() != 1)
-            errors += "A reply message must have only one receiver!\n";
 
         if (!errors.equals(""))
             throw new ValidationException(errors);

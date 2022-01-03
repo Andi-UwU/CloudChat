@@ -23,8 +23,6 @@ public class UserValidator implements Validator<User>{
             if (user.getId() < 0)
                 errors += "Invalid id!\n";
         }
-        else
-            errors += "Invalid id!\n";
 
         if (!errors.equals(""))
             throw new ValidationException(errors);

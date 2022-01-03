@@ -66,13 +66,29 @@ public class SuperService {
      * gets the communities number from the network
      * @return communities number as int
      */
+    /*
     public int getCommunitiesNumber() throws SQLException, ValidationException, RepositoryException {
         return network.getCommunitiesNumber();
     }
 
+     */
+
     public List<FriendDTO> getFriendDtoOfUser(Integer id) throws RepositoryException, SQLException, ValidationException {
         return network.getFriendDtoOfUser(id);
     }
+
+    public List<UserDTO> getUserDtoOfMessage(Message message){
+        return message.getTo()
+                .stream()
+                .map(user -> {
+                    Integer id = user.getId();
+                    String name = user.getFirstName() + " " + user.getLastName();
+                    UserDTO userDTO = new UserDTO(id, name);
+                    return userDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
 
     public List<User> getNonFriendOfUser(Integer id) throws RepositoryException, ValidationException, SQLException {
         List<User> friendsOfUser = friendList(network.findUser(id));
@@ -284,14 +300,14 @@ public class SuperService {
         return messageService.find(id);
     }
 
-    public void addMessage(Integer fromId, List<Integer> toIds, String text) throws ValidationException, SQLException, RepositoryException, IOException {
+    public Message addMessage(Integer fromId, List<Integer> toIds, String text) throws ValidationException, SQLException, RepositoryException, IOException {
         User from = network.findUser(fromId);
         List<User> to = new ArrayList<>();
         for(Integer id : toIds){
             to.add(network.findUser(id));
         }
 
-        messageService.addMessage(from, to, text);
+        return messageService.addMessage(from, to, text);
     }
 
     public void addReply(Integer fromId, Integer replyToId, String text) throws ValidationException, SQLException, RepositoryException, IOException {
