@@ -87,11 +87,10 @@ public class UserDataBaseRepository extends DataBaseRepository<Integer, User>{
      */
     @Override
     public User add(User entity) throws IOException, RepositoryException {
-        String sql = "insert into users (id, first_name, last_name ) values (?, ?, ?)";
+        String sql = "insert into users (first_name, last_name ) values (?, ?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            ps.setInt(1, entity.getId());
             ps.setString(2, entity.getFirstName());
             ps.setString(3, entity.getLastName());
             ps.executeUpdate();

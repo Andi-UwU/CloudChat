@@ -156,11 +156,16 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement messageStatement = connection.prepareStatement(
-                     "insert into message (id, \"from\", date, text, reply_of) values (?, ?, ?, ?, ?)")
+                     "insert into message (id, \"from\", date, text, reply_of) values (?, ?, ?, ?, ?)");
+             PreparedStatement nextIdStatement = connection.prepareStatement(
+                     "SELECT nextval('message_id_seq');")
         ) {
-
+            //get the next id
+            ResultSet messageResultSet = nextIdStatement.executeQuery();
+            messageResultSet.next();
+            Integer messageId = messageResultSet.getInt("nextval");
             //insert into message table
-            messageStatement.setInt(1, message.getId());
+            messageStatement.setInt(1, messageId);
             messageStatement.setInt(2, message.getFrom().getId());
             messageStatement.setString(3, message.getDate().toString());
             messageStatement.setString(4, message.getText());
@@ -175,12 +180,12 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
             for (User user : message.getTo()){
                 PreparedStatement sendToStatement = connection.prepareStatement(
                         "insert into send_to (message_id, user_id) values (?, ?)");
-                sendToStatement.setInt(1, message.getId());
+                sendToStatement.setInt(1, messageId);
                 sendToStatement.setInt(2, user.getId());
                 sendToStatement.executeUpdate();
                 sendToStatement.close();
             }
-
+            message.setId(messageId);
             return message;
         } catch (SQLException e) {
             throw new RepositoryException("The message already exists!\n");

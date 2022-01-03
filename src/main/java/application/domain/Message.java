@@ -114,13 +114,11 @@ public class Message extends Entity<Integer> {
     @Override
     public String toString() {
         String idsAsString = "";
-        for (User u : to){
-            idsAsString += u.getId().toString() + " ";
-        }
-        String messageAsString = getId() + ". " + from.getFirstName() + " " + from.getLastName() + ": " + text + " -> " + idsAsString;
+
+        String messageAsString = text;
 
         if (replyOf.isPresent())
-            messageAsString += " replied to message " + replyOf.get().getId();
+            messageAsString += " - replied to " +  "'" + replyOf.get().getText() + "'";
 
         return messageAsString;
     }

@@ -19,7 +19,6 @@ public class MessageService {
 
     private final Repository<Integer, Message> repository;
     private final Validator<Message> validator;
-    private Integer nextId;
 
 
     public MessageService(Repository<Integer, Message> repository, Validator<Message> validator) throws RepositoryException, ValidationException, SQLException {
@@ -33,13 +32,6 @@ public class MessageService {
      * @throws ValidationException if the messages are invalid
      * @throws SQLException if the database cannot be reached
      */
-    private void setNextId() throws RepositoryException, ValidationException, SQLException {
-        nextId = 1;
-        for (Message m : repository.getAll()){
-            if (m.getId() >= nextId)
-                nextId = m.getId() + 1;
-        }
-    }
 
     /**
      * Returns all messages
@@ -72,13 +64,13 @@ public class MessageService {
      * @throws RepositoryException if the message already exists
      * @throws IOException if the params cannot be parsed
      */
-    public void addMessage(User from, List<User> to, String text) throws ValidationException, RepositoryException, IOException, SQLException {
-        setNextId();
+    public Message addMessage(User from, List<User> to, String text) throws ValidationException, RepositoryException, IOException, SQLException {
+
         Message message = new Message(from, to, text, LocalDateTime.now());
-        message.setId(nextId);
+
         validator.validate(message);
 
-        repository.add(message);
+        return repository.add(message);
     }
 
     /**
@@ -92,8 +84,7 @@ public class MessageService {
      */
     public void addReply(User from, String text, Message replyTo) throws ValidationException, RepositoryException, IOException, SQLException {
         Message message = new Message(from, List.of(replyTo.getFrom()), text, LocalDateTime.now());
-        setNextId();
-        message.setId(nextId);
+
         message.setReplyOf(replyTo);
 
         validator.validate(message);
@@ -104,10 +95,10 @@ public class MessageService {
     public void addReplyToAll(User from, String text, Message replyMessage) throws ValidationException, SQLException, RepositoryException, IOException {
         List<User> to = replyMessage.getTo();
         to.remove(from);
-        to.add(replyMessage.getFrom());
+        if (!from.equals(replyMessage.getFrom()))
+            to.add(replyMessage.getFrom());
         Message message = new Message(from, to, text, LocalDateTime.now());
-        setNextId();
-        message.setId(nextId);
+
         message.setReplyOf(replyMessage);
 
         validator.validate(message);

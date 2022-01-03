@@ -28,7 +28,6 @@ public class Network {
     private final Repository<Tuple<Integer, Integer>, Friendship> friendshipRepository; // stores the friendships of the network
     private final Validator<Friendship> friendshipValidator; // validates the friendships
 
-    private Integer nextId; // the Integer that will be assigned to the next user added
 
 
     /**
@@ -48,19 +47,6 @@ public class Network {
         this.userValidator = userValidator;
         this.friendshipRepository = friendshipRepository;
         this.friendshipValidator = friendshipValidator;
-
-        setId();
-    }
-
-    /**
-     * Set the nextId field as the consecutive number to the largest id value
-     */
-    private void setId() throws SQLException, ValidationException, RepositoryException {
-        nextId = 1;
-        for (User u : userRepository.getAll()){
-            if (u.getId() >= nextId)
-                nextId = u.getId() + 1;
-        }
     }
 
     /**
@@ -186,10 +172,8 @@ public class Network {
      * @throws ValidationException if the user is not valid
      * @throws IOException if the user cannot be parsed
      */
-    public User addUser(String firstName, String lastName) throws ValidationException, IOException, RepositoryException, SQLException {
+    public User addUser(String firstName, String lastName) throws ValidationException, IOException, RepositoryException {
         User user = new User(firstName, lastName);
-        setId();
-        user.setId(nextId);
 
         userValidator.validate(user);
 
@@ -225,7 +209,6 @@ public class Network {
     public User updateUser(Integer id, String firstName, String lastName) throws ValidationException, IOException, RepositoryException, SQLException {
         User user = new User(firstName, lastName);
         user.setId(id);
-
         userValidator.validate(user);
 
         return userRepository.update(user);
@@ -404,9 +387,8 @@ public class Network {
         return friendships;
     }
 
+    /*
     private int[][] getMatrix() throws SQLException, ValidationException, RepositoryException {
-
-        int[][] matrix = new int[nextId][nextId];
 
         friendshipRepository.getAll().forEach(f -> {
             matrix[f.getId().getLeft()][f.getId().getRight()] = 1;
@@ -465,6 +447,8 @@ public class Network {
         }
         return communitiesNumber;
     }
+
+     */
 
 }
 

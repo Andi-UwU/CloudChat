@@ -1,16 +1,20 @@
 package application.domain;
 
+import javafx.scene.control.CheckBox;
+
 import java.util.Objects;
 
 public class FriendDTO {
     private Integer id;
     private String name;
     private String date;
+    private CheckBox select;
 
     public FriendDTO(Integer id, String name, String date) {
         this.id = id;
         this.name = name;
         this.date = date;
+        this.select = new CheckBox();
     }
     //TODO these comments
 
@@ -23,6 +27,7 @@ public class FriendDTO {
     }
 
     public FriendDTO() {
+        this.select = new CheckBox();
     }
 
     public String getName() {
@@ -39,6 +44,14 @@ public class FriendDTO {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public CheckBox getSelect() {
+        return select;
+    }
+
+    public void setSelect(CheckBox select) {
+        this.select = select;
     }
 
     @Override
