@@ -31,6 +31,7 @@ public class MainPageController implements Observer {
     private User user;
 
     private Scene friendRequestWindow = null;
+    private Scene addFriendWindow = null;
 
     @FXML
     private Label welcomeLabel;
@@ -130,7 +131,8 @@ public class MainPageController implements Observer {
             addFriendStage.setTitle("The Network");
             addFriendStage.setScene(addFriendScene);
             addFriendStage.show();
-            ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+            addFriendWindow = addFriendScene;
+            //((Node)(actionEvent.getSource())).getScene().getWindow().hide();
 
         } catch (NumberFormatException | IOException e) {
             WarningBox.show(e.getMessage());
@@ -172,6 +174,8 @@ public class MainPageController implements Observer {
             stage.show();
             if (friendRequestWindow!=null)
                 friendRequestWindow.getWindow().hide();
+            if (addFriendWindow!=null)
+                addFriendWindow.getWindow().hide();
             ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
         } catch (NumberFormatException | IOException e) {
             WarningBox.show(e.getMessage());
