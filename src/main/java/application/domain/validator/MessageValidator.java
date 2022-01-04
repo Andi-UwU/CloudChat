@@ -25,6 +25,11 @@ public class MessageValidator implements Validator<Message> {
                 errors += "Invalid receiver";
             }
         }
+        if (message.getFrom() != null && message.getTo() != null) {
+            if (message.getTo().contains(message.getFrom()) && message.getReplyOf().isPresent()){
+                errors += "You can not reply your own messages!";
+            }
+        }
         if (message.getText().equals("")){
             errors += "Invalid text!\n";
         }
