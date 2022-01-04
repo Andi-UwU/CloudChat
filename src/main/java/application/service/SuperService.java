@@ -5,6 +5,7 @@ import application.domain.FriendDTO;
 import application.exceptions.RepositoryException;
 import application.exceptions.ServiceException;
 import application.exceptions.ValidationException;
+import application.utils.observer.Observer;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -361,7 +362,7 @@ public class SuperService {
     // ===================== FRIEND REQUEST ==========================
 
     public List<FriendRequestDTO> getAllFriendRequestsDtoForUser(Integer id ) throws ValidationException, RepositoryException, SQLException {
-        User user=findUser(id);
+        //User user=findUser(id);
         List<FriendRequestDTO> list1 = getAllFriendRequestsFromUser(id)
                 .stream()
                 .map(request ->{
@@ -460,4 +461,18 @@ public class SuperService {
     public FriendRequest deleteFriendRequest(Integer idFrom, Integer idTo) throws ValidationException, SQLException, RepositoryException, IOException {
         return friendRequestService.deleteRequest(idFrom,idTo);
     }
+
+    /**
+     * Adds an observer to the Network service
+     * @param observer Observer object
+     */
+    public void addObserverForNetwork(Observer observer) {
+        network.addObserver(observer);
+    }
+
+    /**
+     * Adds an observer to the Friend Request service
+     * @param observer Observer object
+     */
+    public void addObserverForFriendRequests(Observer observer) { friendRequestService.addObserver(observer);}
 }

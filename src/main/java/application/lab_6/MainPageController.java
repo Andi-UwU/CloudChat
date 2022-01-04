@@ -6,7 +6,10 @@ import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
 import application.service.SuperService;
 import application.utils.WarningBox;
+import application.utils.observer.Observer;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,12 +26,15 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 
-public class MainPageController {
+public class MainPageController implements Observer {
     private SuperService superService;
     private User user;
+
+    private Scene friendRequestWindow = null;
+    private Scene addFriendWindow = null;
+
     @FXML
     private Label welcomeLabel;
-
     //========= Friends Table ===============
     @FXML
     private TableColumn<FriendDTO, Integer> friendsTableColumnId;
@@ -59,13 +65,13 @@ public class MainPageController {
 
     public MainPageController(User user, SuperService superService) {
         this.superService=superService;
+        superService.addObserverForNetwork(this);
         this.user=user;
     }
 
+
     @FXML
     private Button chatButton;
-
-
 
     private void updateFriendsTableView(){
         try {
@@ -73,6 +79,11 @@ public class MainPageController {
         catch (RepositoryException | SQLException | ValidationException e) {
             WarningBox.show(e.getMessage()); }
         friendsTableView.setItems(friendsList);
+    }
+
+    @Override
+    public void observerUpdate() {
+        updateFriendsTableView();
     }
 
     private void initializeFriendsTableView(){
@@ -124,7 +135,8 @@ public class MainPageController {
             addFriendStage.setTitle("The Network");
             addFriendStage.setScene(addFriendScene);
             addFriendStage.show();
-            ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+            addFriendWindow = addFriendScene;
+            //((Node)(actionEvent.getSource())).getScene().getWindow().hide();
 
         } catch (NumberFormatException | IOException e) {
             WarningBox.show(e.getMessage());
@@ -145,6 +157,9 @@ public class MainPageController {
             friendRequestStage.setTitle("The Network");
             friendRequestStage.setScene(friendRequestScene);
             friendRequestStage.show();
+
+            friendRequestWindow=friendRequestScene;
+
             //((Node) (actionEvent.getSource())).getScene().getWindow().hide();
         } catch (NumberFormatException | IOException e) {
             WarningBox.show(e.getMessage());
@@ -163,12 +178,17 @@ public class MainPageController {
             stage.setTitle("The Network");
             stage.setScene(loginScene);
             stage.show();
+            if (friendRequestWindow!=null)
+                friendRequestWindow.getWindow().hide();
+            if (addFriendWindow!=null)
+                addFriendWindow.getWindow().hide();
             ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
         } catch (NumberFormatException | IOException e) {
             WarningBox.show(e.getMessage());
             e.printStackTrace();
         }
     }
+
 
     @FXML
     public void changeToChatScene(ActionEvent actionEvent){

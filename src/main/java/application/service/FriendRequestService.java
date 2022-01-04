@@ -7,16 +7,19 @@ import application.domain.validator.Validator;
 import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
 import application.repository.Repository;
+import application.utils.observer.Observable;
+import application.utils.observer.Observer;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * Handles friend requests from the repository
  */
-public class FriendRequestService {
+public class FriendRequestService implements Observable {
     //TODO missing comment
     private Repository<Tuple<Integer,Integer>, FriendRequest> requestRepository;
     private Validator<FriendRequest> validatorRequest;
@@ -25,6 +28,7 @@ public class FriendRequestService {
         this.requestRepository=friendRequestDatabase;
         this.validatorRequest =validator;
     }
+    private List<Observer> observers=new ArrayList<>();
 
     /**
      * Find a request
@@ -32,10 +36,8 @@ public class FriendRequestService {
      * @param idTo Integer
      * @return FriendRequest
      * @throws RepositoryException if the request doesn't exist
-     * @throws ValidationException if the request is invalid
-     * @throws SQLException if the database cannot be reached
      */
-    public FriendRequest findRequest(Integer idFrom, Integer idTo) throws RepositoryException, ValidationException, SQLException {
+    public FriendRequest findRequest(Integer idFrom, Integer idTo) throws RepositoryException {
         return requestRepository.find(new Tuple<>(idFrom,idTo));
     }
 
@@ -44,9 +46,11 @@ public class FriendRequestService {
      * @param request FriendRequest
      * @throws RepositoryException if a request already exists
      * @throws ValidationException if the request is invalid
+     * @throws IOException if the request has invalid data
      */
     public void addRequest (FriendRequest request) throws RepositoryException, IOException, ValidationException {
         validatorRequest.validate(request);
+        notifyObservers();
         requestRepository.add(request);
     }
 
@@ -61,7 +65,9 @@ public class FriendRequestService {
      * @throws IOException if the old value cannot be parsed
      */
     public FriendRequest deleteRequest (Integer idFrom, Integer idTo) throws ValidationException, SQLException, RepositoryException, IOException {
-        return requestRepository.delete(new Tuple<>(idFrom,idTo));
+        FriendRequest old = requestRepository.delete(new Tuple<>(idFrom,idTo));
+        notifyObservers();
+        return old;
     }
 
     /**
@@ -82,7 +88,9 @@ public class FriendRequestService {
         FriendRequest request = new FriendRequest(FriendRequestStatus.valueOf(status));
         request.setId(new Tuple<>(idFrom,idTo));
 
-        return requestRepository.update(request);
+        FriendRequest upd = requestRepository.update(request);
+        notifyObservers();
+        return upd;
     }
 
     /**
@@ -122,6 +130,15 @@ public class FriendRequestService {
                 .filter( x-> { return x.getId().getLeft().equals(id); })
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Deletes all friend requests from a specific user
+     * @param id user's ID
+     * @throws IOException
+     * @throws SQLException
+     * @throws RepositoryException
+     * @throws ValidationException
+     */
     public void deleteRequestsOfUser(Integer id) throws IOException, SQLException, RepositoryException, ValidationException {
 
         boolean done = false;
@@ -138,5 +155,21 @@ public class FriendRequestService {
             }
             done = true;
         }
+    }
+
+    @Override
+    public void addObserver(Observer e) {
+        observers.add(e);
+    }
+
+    @Override
+    public void removeObserver(Observer e) {
+        observers.remove(e);
+    }
+
+    @Override
+    public void notifyObservers() {
+        observers.stream()
+                .forEach(Observer::observerUpdate);
     }
 }
