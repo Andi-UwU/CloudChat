@@ -8,6 +8,8 @@ import application.domain.validator.Validator;
 import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
 import application.repository.Repository;
+import application.utils.observer.Observable;
+import application.utils.observer.Observer;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
 import static application.utils.Constants.DATE_TIME_FORMATTER;
 
 
-public class Network {
+public class Network implements Observable {
     //TODO missing comments
 
     // ===================== NETWORK ==========================
@@ -29,6 +31,7 @@ public class Network {
     private final Validator<Friendship> friendshipValidator; // validates the friendships
 
 
+    private List<Observer> observers=new ArrayList<>(); // list of observer objects that observe for changes in this service
 
     /**
      * Constructor
@@ -177,7 +180,9 @@ public class Network {
 
         userValidator.validate(user);
 
-        return userRepository.add(user);
+        User added = userRepository.add(user);
+        notifyObservers();
+        return added;
     }
 
     /**
@@ -193,7 +198,7 @@ public class Network {
         User deleted = userRepository.delete(id);
 
         deleteFriendshipsOfUser(deleted);
-
+        notifyObservers();
         return deleted;
     }
 
@@ -211,7 +216,9 @@ public class Network {
         user.setId(id);
         userValidator.validate(user);
 
-        return userRepository.update(user);
+        User updated = userRepository.update(user);
+        notifyObservers();
+        return updated;
     }
 
     /**
@@ -282,6 +289,8 @@ public class Network {
 
         friendshipValidator.validate(friendship);
         friendshipRepository.add(friendship);
+
+        notifyObservers();
     }
 
     /**
@@ -322,7 +331,9 @@ public class Network {
         }
         Tuple<Integer, Integer> friendshipId = new Tuple<>(leftId, rightId);
 
-        return friendshipRepository.delete(friendshipId);
+        Friendship deleted = friendshipRepository.delete(friendshipId);
+        notifyObservers();
+        return deleted;
     }
 
     /**
@@ -350,6 +361,8 @@ public class Network {
 
         Friendship updatedFriendship = friendshipRepository.update(friendship);
         addUsersToFriendship(updatedFriendship);
+
+        notifyObservers();
         return updatedFriendship;
     }
 
@@ -387,7 +400,18 @@ public class Network {
         return friendships;
     }
 
+
+
+
+    /**
+     * Returns a friendship matrix
+     * @return int[][]
+     * @throws SQLException if the database cannot be reached
+     * @throws ValidationException
+     * @throws RepositoryException
+     */
     /*
+
     private int[][] getMatrix() throws SQLException, ValidationException, RepositoryException {
 
         friendshipRepository.getAll().forEach(f -> {
@@ -398,6 +422,16 @@ public class Network {
         return matrix;
     }
 
+     */
+
+    /**
+     * Returns the number of communities in the network
+     * @return int
+     * @throws SQLException if the database cannot be reached
+     * @throws ValidationException
+     * @throws RepositoryException
+     */
+    /*
     public int getCommunitiesNumber() throws SQLException, ValidationException, RepositoryException {
         int communitiesNumber = 0;
         int[][] matrix = getMatrix();
@@ -450,5 +484,32 @@ public class Network {
 
      */
 
+
+    /**
+     * Adds observers to the current service
+     * @param e Observer object
+     */
+    @Override
+    public void addObserver(Observer e) {
+        observers.add(e);
+    }
+
+    /**
+     * Removes observers from the current service
+     * @param e Observer object
+     */
+    @Override
+    public void removeObserver(Observer e) {
+        observers.remove(e);
+    }
+
+    /**
+     * Notifies all observers of any changes occuring in the service
+     */
+    @Override
+    public void notifyObservers() {
+        observers.stream()
+                .forEach(Observer::observerUpdate);
+    }
 }
 

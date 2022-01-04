@@ -7,6 +7,7 @@ import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
 import application.service.SuperService;
 import application.utils.WarningBox;
+import application.utils.observer.Observer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,7 +24,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class FriendRequestsController {
+public class FriendRequestsController implements Observer {
     private SuperService superService;
     private User user;
 
@@ -32,6 +33,7 @@ public class FriendRequestsController {
     }
     public void setService(SuperService superService){
         this.superService = superService;
+        superService.addObserverForFriendRequests(this);
     }
 
     @FXML
@@ -65,6 +67,11 @@ public class FriendRequestsController {
             WarningBox.show(e.getMessage());
         }
         requestsTableView.setItems(friendRequestList);
+    }
+
+    @Override
+    public void observerUpdate() {
+        updateTableView();
     }
 
     private void initializeRequestsTableView() {
@@ -146,7 +153,7 @@ public class FriendRequestsController {
     @FXML
     public void backMenuAction(ActionEvent actionEvent){
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
+            /*FXMLLoader fxmlLoader = new FXMLLoader();
             MainPageController mainPageController = new MainPageController(user,superService);
             fxmlLoader.setLocation(getClass().getResource("mainpage.fxml"));
             fxmlLoader.setController(mainPageController);
@@ -154,11 +161,12 @@ public class FriendRequestsController {
             Stage mainStage = new Stage();
             mainStage.setTitle("The Network");
             mainStage.setScene(mainScene);
-            mainStage.show();
+            mainStage.show();*/
             ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
 
-        } catch (NumberFormatException | IOException e) {
+        } catch (NumberFormatException e) {
             WarningBox.show(e.getMessage());
         }
     }
+
 }

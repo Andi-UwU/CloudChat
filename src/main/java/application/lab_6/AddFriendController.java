@@ -111,7 +111,7 @@ public class AddFriendController {
     @FXML
     public void backButtonAction(ActionEvent actionEvent){
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
+            /*FXMLLoader fxmlLoader = new FXMLLoader();
             MainPageController mainPageController = new MainPageController(user,superService);
             fxmlLoader.setLocation(getClass().getResource("mainpage.fxml"));
             fxmlLoader.setController(mainPageController);
@@ -119,10 +119,10 @@ public class AddFriendController {
             Stage mainStage = new Stage();
             mainStage.setTitle("The Network");
             mainStage.setScene(mainScene);
-            mainStage.show();
+            mainStage.show();*/
             ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
 
-        } catch (NumberFormatException | IOException e) {
+        } catch (NumberFormatException e) {
             WarningBox.show(e.getMessage());
         }
     }

@@ -12,23 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendshipDataBaseRepository extends DataBaseRepository<Tuple<Integer, Integer>, Friendship> {
-    //TODO comments already in interface
     /**
-     * constructor
-     * @param url of database
-     * @param username of the database account
-     * @param password of the database account
+     * Constructor
+     * @param url database URL
+     * @param username login information for database
+     * @param password login information for database
      */
     public FriendshipDataBaseRepository(String url, String username, String password) {
         super(url, username, password);
     }
 
-    /**
-     * finds the entity with the id
-     * @param id
-     * the entity if it exists in the repository
-     * false otherwise
-     */
     @Override
     public Friendship find(Tuple<Integer, Integer> id) throws RepositoryException {
         String sql = "SELECT * from friendship where id_left = ? and id_right = ?";
@@ -56,10 +49,6 @@ public class FriendshipDataBaseRepository extends DataBaseRepository<Tuple<Integ
         }
     }
 
-    /**
-     * gets all entities of the repository
-     * @return all entities as Iterable
-     */
     @Override
     public List<Friendship> getAll() throws SQLException, ValidationException {
         List<Friendship> friendships = new ArrayList<>();
@@ -78,15 +67,6 @@ public class FriendshipDataBaseRepository extends DataBaseRepository<Tuple<Integ
         }
     }
 
-    /**
-     * adds an entity to the repository
-     * @param entity added to repository
-     * @return
-     * entity, if the entity is already in the repository
-     * null, if the entity has been added
-     *
-     * @throws IOException if reading from database fail
-     */
     @Override
     public Friendship add(Friendship entity) throws IOException, RepositoryException {
         String sql = "insert into friendship (id_left, id_right, date ) values (?, ?, ?)";
@@ -107,14 +87,6 @@ public class FriendshipDataBaseRepository extends DataBaseRepository<Tuple<Integ
 
     }
 
-    /**
-     * deletes the entity with the given id
-     * @param id of the friendship
-     * @return
-     * the entity that was deleted, if the entity was in the repository
-     * null, if the entity did not exist in the repository
-     * @throws IOException if reading from database fails
-     */
     @Override
     public Friendship delete(Tuple<Integer, Integer> id) throws IOException, RepositoryException {
         String sql = "delete from friendship where id_left = ? and id_right = ?";
@@ -134,13 +106,6 @@ public class FriendshipDataBaseRepository extends DataBaseRepository<Tuple<Integ
         }
     }
 
-    /**
-     * replace the given entity with the entity from repository with the same id
-     * @param entity added
-     * @return
-     * the entity that was replaced, if there existed an entity with the same id as the given entity
-     * null, otherwise
-     */
     @Override
     public Friendship update(Friendship entity) throws RepositoryException {
         String sql = "update friendship set date = ? where id_left = ? and id_right = ?";
@@ -163,10 +128,6 @@ public class FriendshipDataBaseRepository extends DataBaseRepository<Tuple<Integ
         }
     }
 
-    /**
-     * gets the number of entities from repository
-     * @return  size of repository as Integer
-     */
     @Override
     public Integer size() throws SQLException {
         try (Connection connection = DriverManager.getConnection(url, username, password);

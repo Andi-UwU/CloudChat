@@ -17,40 +17,10 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
         super(url, username, password);
     }
 
-    /**
-     * Finds a user in the user database
-     * @param id Integer
-     * @return User
-     * @throws RepositoryException if the user doesn't exist
-     * @throws SQLException if the database doesn't exist
-     */
-    private User findUser(Integer id) throws RepositoryException, SQLException {
-
-        String sql = "SELECT * from users where id = ?";
-        try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement(sql)
-        ){
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-
-            resultSet.next();
-            User user = new User(resultSet.getString("first_name"),
-                                 resultSet.getString("last_name"));
-            user.setId(id);
-
-            resultSet.close();
-
-            return user;
-        }
-        catch (SQLException throwable) {
-            throw new RepositoryException("Nonexistent user!\n");
-        }
-    }
-
     @Override
     public FriendRequest find(Tuple<Integer, Integer> id) throws RepositoryException {
 
-        String sql = "SELECT * from friend_requests where id_from = ? and id_to = ?";
+        String sql = "SELECT u1.id, u1.first_name, u1.last_name, u2.id, u2.first_name, u2.last_name, status FROM friend_requests fr INNER JOIN users u1 on fr.id_from = u1.id  INNER JOIN users u2 on fr.id_to = u2.id  WHERE fr.id_from=? AND fr.id_to=?";
 
         try(Connection connection = DriverManager.getConnection(url, username, password);
             PreparedStatement requestStatement = connection.prepareStatement(sql)) {
@@ -58,14 +28,19 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
             requestStatement.setInt(1, id.getLeft());
             requestStatement.setInt(2, id.getRight());
             ResultSet resultSetRequest = requestStatement.executeQuery();
+
             resultSetRequest.next();
 
-            User userFrom = findUser(id.getLeft());
-            User userTo = findUser(id.getRight());
+            User userFrom = new User(   resultSetRequest.getString(2),
+                                        resultSetRequest.getString(3) );
+            User userTo = new User (    resultSetRequest.getString(5),
+                                        resultSetRequest.getString(6) );
 
-            FriendRequestStatus status;
-            try { status = FriendRequestStatus.valueOf(resultSetRequest.getString("status")); }
-            catch (IllegalArgumentException e ) { throw new SQLException("Illegal status from database!\n"); }
+            userFrom.setId( resultSetRequest.getInt(1));
+            userTo.setId( resultSetRequest.getInt(4));
+
+            FriendRequestStatus status = FriendRequestStatus.valueOf
+                    ( resultSetRequest.getString(7) );
 
             FriendRequest request = new FriendRequest(userFrom,userTo,status);
             request.setId(new Tuple<>(id.getLeft(), id.getRight()));
@@ -83,74 +58,35 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
     public List<FriendRequest> getAll() throws SQLException, RepositoryException {
         List<FriendRequest> requests = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT * from friend_requests");
-             ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
-                Integer id_from = resultSet.getInt("id_from");
-                Integer id_to = resultSet.getInt("id_to");
-                FriendRequestStatus status;
-                try { status = FriendRequestStatus.valueOf(resultSet.getString("status")); }
-                catch (IllegalArgumentException e ) { throw new SQLException("Illegal status from database!\n"); }
-
-                FriendRequest request = new FriendRequest(findUser(id_from),findUser(id_to),status);
-                request.setId(new Tuple<>(id_from,id_to));
-                requests.add(request);
-            }
-            return requests;
-        }
-
-    }
-
-    /*
-    Unused so far [!]
-    Optimization code [!]
-    [!] DO NOT DELETE [!]
-
-    private List<FriendRequest> getAllForUser(Integer id) throws SQLException, ValidationException, RepositoryException {
-        List<FriendRequest> requests = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT * from friend_requests where id_to=id");
-             ResultSet resultSet = statement.executeQuery() ) {
-
-            while (resultSet.next()) {
-                Integer id_from = resultSet.getInt("id_from");
-                Integer id_to = resultSet.getInt("id_to");
-                FriendRequestStatus status;
-                try { status = FriendRequestStatus.valueOf(resultSet.getString("status")); }
-                catch (IllegalArgumentException e ) { throw new SQLException("Illegal status from database!\n"); }
-
-                FriendRequest request = new FriendRequest(findUser(id_from),findUser(id_to),status);
-                request.setId(new Tuple<>(id_from,id_to));
-                validator.validate(request);
-                requests.add(request);
-            }
-            return requests;
-        }
-    }
-
-    private List<FriendRequest> getAllFromUser(Integer id) throws SQLException, ValidationException, RepositoryException {
-        List<FriendRequest> requests = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT * from friend_requests where id_from=id");
+             PreparedStatement statement = connection.prepareStatement(
+              "SELECT u1.id, u1.first_name, u1.last_name, u2.id, u2.first_name, u2.last_name, status FROM friend_requests fr INNER JOIN users u1 on fr.id_from = u1.id INNER JOIN users u2 on fr.id_to = u2.id ");
 
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-                Integer id_from = resultSet.getInt("id_from");
-                Integer id_to = resultSet.getInt("id_to");
-                FriendRequestStatus status;
-                try { status = FriendRequestStatus.valueOf(resultSet.getString("status")); }
-                catch (IllegalArgumentException e ) { throw new SQLException("Illegal status from database!\n"); }
+                User userFrom = new User(   resultSet.getString(2),
+                                            resultSet.getString(3) );
+                User userTo = new User (    resultSet.getString(5),
+                                            resultSet.getString(6) );
 
-                FriendRequest request = new FriendRequest(findUser(id_from),findUser(id_to),status);
-                request.setId(new Tuple<>(id_from,id_to));
-                validator.validate(request);
+                userFrom.setId( resultSet.getInt(1));
+                userTo.setId( resultSet.getInt(4));
+
+                FriendRequestStatus status = FriendRequestStatus.valueOf
+                        ( resultSet.getString(7) );
+
+                FriendRequest request = new FriendRequest(userFrom,userTo,status);
+                request.setId(new Tuple<>(userFrom.getId(), userTo.getId()));
                 requests.add(request);
             }
             return requests;
         }
+
     }
-    */
+
+    public List<FriendRequest> getAllFromUser() {
+        return null;
+    }
 
     @Override
     public FriendRequest add(FriendRequest entity) throws IOException, RepositoryException {
