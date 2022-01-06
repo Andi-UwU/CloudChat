@@ -2,8 +2,6 @@ package application.lab_6;
 
 import application.domain.*;
 import application.domain.validator.*;
-import application.exceptions.RepositoryException;
-import application.exceptions.ValidationException;
 import application.repository.Repository;
 import application.repository.database.FriendRequestDataBaseRepository;
 import application.repository.database.FriendshipDataBaseRepository;
@@ -17,7 +15,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.sql.SQLException;
 
 import static application.utils.DatabaseConstants.*;
 
@@ -25,31 +22,31 @@ import static application.utils.DatabaseConstants.*;
 public class NetworkApplication extends Application {
     private SuperService superService;
 
-    private void initialize() throws Exception {
-        try {
-            // User
-            Repository<Integer, User> userRepository = new UserDataBaseRepository(URL, USERNAME, PASSWORD);
-            Validator<User> userValidator = new UserValidator();
-            // Friendship
-            Repository<Tuple<Integer, Integer>, Friendship> friendshipRepository = new FriendshipDataBaseRepository(URL, USERNAME, PASSWORD);
-            Validator<Friendship> friendshipValidator = new FriendshipValidator();
-            // Network
-            Network network = new Network(userRepository, userValidator, friendshipRepository, friendshipValidator);
-            // Friend Request
-            Validator<FriendRequest> friendRequestValidator = new FriendRequestValidator();
-            Repository<Tuple<Integer,Integer>, FriendRequest> requestRepository = new FriendRequestDataBaseRepository(URL, USERNAME, PASSWORD);
-            FriendRequestService friendRequestService = new FriendRequestService(requestRepository,friendRequestValidator);
-            // Message
-            Validator<Message> messageValidator = new MessageValidator();
-            Repository<Integer, Message> messageRepository = new MessageDataBaseRepository(URL, USERNAME, PASSWORD);
-            MessageService messageService = new MessageService(messageRepository, messageValidator);
+    private void initialize() {
+        // User
+        UserDataBaseRepository userRepository = new UserDataBaseRepository(URL, USERNAME, PASSWORD);
+        Validator<User> userValidator = new UserValidator();
 
-            // Super Service
-            this.superService= new SuperService(network, messageService,friendRequestService);
-        } catch (RepositoryException | SQLException | ValidationException e) {
-            System.out.println(e.getMessage());
-            throw new Exception("Unable to connect to database.");
-        }
+        // Friendship
+        Repository<Tuple<Integer, Integer>, Friendship> friendshipRepository = new FriendshipDataBaseRepository(URL, USERNAME, PASSWORD);
+        Validator<Friendship> friendshipValidator = new FriendshipValidator();
+
+        // Network
+        Network network = new Network(userRepository, userValidator, friendshipRepository, friendshipValidator);
+
+        // Friend Request
+        Validator<FriendRequest> friendRequestValidator = new FriendRequestValidator();
+        Repository<Tuple<Integer,Integer>, FriendRequest> requestRepository = new FriendRequestDataBaseRepository(URL, USERNAME, PASSWORD);
+        FriendRequestService friendRequestService = new FriendRequestService(requestRepository,friendRequestValidator);
+
+        // Message
+        Validator<Message> messageValidator = new MessageValidator();
+        Repository<Integer, Message> messageRepository = new MessageDataBaseRepository(URL, USERNAME, PASSWORD);
+        MessageService messageService = new MessageService(messageRepository, messageValidator);
+
+        // Super Service
+        this.superService= new SuperService(network, messageService,friendRequestService);
+
     }
 
     @Override

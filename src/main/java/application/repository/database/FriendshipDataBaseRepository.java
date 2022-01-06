@@ -3,9 +3,7 @@ package application.repository.database;
 import application.domain.Friendship;
 import application.domain.Tuple;
 import application.exceptions.RepositoryException;
-import application.exceptions.ValidationException;
 
-import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -50,7 +48,7 @@ public class FriendshipDataBaseRepository extends DataBaseRepository<Tuple<Integ
     }
 
     @Override
-    public List<Friendship> getAll() throws SQLException, ValidationException {
+    public List<Friendship> getAll() throws SQLException {
         List<Friendship> friendships = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement("SELECT * from friendship");
@@ -68,7 +66,7 @@ public class FriendshipDataBaseRepository extends DataBaseRepository<Tuple<Integ
     }
 
     @Override
-    public Friendship add(Friendship entity) throws IOException, RepositoryException {
+    public Friendship add(Friendship entity) throws RepositoryException {
         String sql = "insert into friendship (id_left, id_right, date ) values (?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -88,7 +86,7 @@ public class FriendshipDataBaseRepository extends DataBaseRepository<Tuple<Integ
     }
 
     @Override
-    public Friendship delete(Tuple<Integer, Integer> id) throws IOException, RepositoryException {
+    public Friendship delete(Tuple<Integer, Integer> id) throws RepositoryException {
         String sql = "delete from friendship where id_left = ? and id_right = ?";
 
         try (Connection connection = DriverManager.getConnection(url, username, password);

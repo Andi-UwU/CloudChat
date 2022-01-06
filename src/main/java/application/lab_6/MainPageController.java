@@ -7,20 +7,16 @@ import application.exceptions.ValidationException;
 import application.service.SuperService;
 import application.utils.WarningBox;
 import application.utils.observer.Observer;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import org.controlsfx.control.action.Action;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -115,14 +111,13 @@ public class MainPageController implements Observer {
             friendsTableView.setItems(friendsList);
         } catch (NumberFormatException e){
             WarningBox.show("The id must be an integer!");
-        } catch (ValidationException | SQLException | RepositoryException | IOException e) {
+        } catch (ValidationException | SQLException | RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
     }
 
     @FXML
     public void changeToAddFriendScene(ActionEvent actionEvent){
-        //changeToScene("resources/application/lab_6/addFriendScene.fxml", actionEvent);
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             AddFriendController addFriendController = new AddFriendController();

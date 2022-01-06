@@ -3,9 +3,7 @@ package application.repository.database;
 import application.domain.Message;
 import application.domain.User;
 import application.exceptions.RepositoryException;
-import application.exceptions.ValidationException;
 
-import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,9 +11,11 @@ import java.util.List;
 
 public class MessageDataBaseRepository extends DataBaseRepository<Integer, Message> {
     //TODO comments
+
     /**
      * constructor
-     * @param url of database
+     *
+     * @param url      of database
      * @param username of the database account
      * @param password of the database account
      */
@@ -28,7 +28,7 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
         String sql = "SELECT * from users where id = ?";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(sql)
-        ){
+        ) {
 
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -43,19 +43,19 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
             resultSet.close();
 
             return user;
-        }
-        catch (SQLException throwable) {
+        } catch (SQLException throwable) {
             throw new RepositoryException("Nonexistent user!\n");
         }
     }
+
     @Override
     public Message find(Integer id) throws RepositoryException {
 
-        try(Connection connection = DriverManager.getConnection(url, username, password);
-            PreparedStatement messageStatement = connection.prepareStatement(
-                    "SELECT * from message where id = ? ");
-            PreparedStatement sendToStatement = connection.prepareStatement(
-                    "SELECT user_id from send_to where message_id = ? ")) {
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement messageStatement = connection.prepareStatement(
+                     "SELECT * from message where id = ? ");
+             PreparedStatement sendToStatement = connection.prepareStatement(
+                     "SELECT user_id from send_to where message_id = ? ")) {
 
 
             //get fields from message table
@@ -75,7 +75,7 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
             ResultSet sendToResultSet = sendToStatement.executeQuery();
 
             List<User> to = new ArrayList<>();
-            while (sendToResultSet.next()){
+            while (sendToResultSet.next()) {
 
                 Integer userId = sendToResultSet.getInt(1);
                 User toUser = findUser(userId);
@@ -87,12 +87,11 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
             message.setId(id);
             //set replyOf field if necessary
             int replyOfId = messageResultSet.getInt("reply_of");
-            if(replyOfId != 0)
+            if (replyOfId != 0)
                 message.setReplyOf(find(replyOfId));
 
             return message;
-        }
-        catch (SQLException throwable) {
+        } catch (SQLException throwable) {
             throw new RepositoryException("Nonexistent message!\n");
         }
     }
@@ -100,16 +99,16 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
     @Override
     public List<Message> getAll() throws RepositoryException {
 
-        try(Connection connection = DriverManager.getConnection(url, username, password);
-            PreparedStatement messageStatement = connection.prepareStatement(
-                    "SELECT * from message")
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement messageStatement = connection.prepareStatement(
+                     "SELECT * from message")
         ) {
 
 
             ResultSet messageResultSet = messageStatement.executeQuery();
             List<Message> messageList = new ArrayList<>();
 
-            while (messageResultSet.next()){
+            while (messageResultSet.next()) {
                 //get fields from message table
 
                 int id = messageResultSet.getInt("id");
@@ -126,7 +125,7 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
                 ResultSet sendToResultSet = sendToStatement.executeQuery();
 
                 List<User> to = new ArrayList<>();
-                while (sendToResultSet.next()){
+                while (sendToResultSet.next()) {
 
                     Integer userId = sendToResultSet.getInt(1);
                     User toUser = findUser(userId);
@@ -138,21 +137,20 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
                 message.setId(id);
 
                 int replyOfId = messageResultSet.getInt("reply_of");
-                if(replyOfId != 0)
+                if (replyOfId != 0)
                     message.setReplyOf(find(replyOfId));
 
                 messageList.add(message);
             }
 
             return messageList;
-        }
-        catch (SQLException throwable) {
+        } catch (SQLException throwable) {
             throw new RepositoryException("Error database extraction!\n");
         }
     }
 
     @Override
-    public Message add(Message message) throws IOException, RepositoryException {
+    public Message add(Message message) throws RepositoryException {
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement messageStatement = connection.prepareStatement(
@@ -177,7 +175,7 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
             messageStatement.executeUpdate();
 
             //insert into send_to table
-            for (User user : message.getTo()){
+            for (User user : message.getTo()) {
                 PreparedStatement sendToStatement = connection.prepareStatement(
                         "insert into send_to (message_id, user_id) values (?, ?)");
                 sendToStatement.setInt(1, messageId);
@@ -193,7 +191,7 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
     }
 
     @Override
-    public Message delete(Integer id) throws IOException, RepositoryException, SQLException, ValidationException {
+    public Message delete(Integer id) throws RepositoryException {
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement messageStatement = connection.prepareStatement(
@@ -226,7 +224,7 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
     }
 
     @Override
-    public Message update(Message message) throws IOException, RepositoryException, SQLException, ValidationException {
+    public Message update(Message message) throws RepositoryException {
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement updateMessageStatement = connection.prepareStatement(
@@ -247,7 +245,7 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
             deleteSendToStatement.executeUpdate();
 
             //add to send_to table
-            for (User user : message.getTo()){
+            for (User user : message.getTo()) {
                 PreparedStatement insertSendToStatement = connection.prepareStatement(
                         "insert into send_to (message_id, user_id) values (?, ?)");
                 insertSendToStatement.setInt(1, message.getId());

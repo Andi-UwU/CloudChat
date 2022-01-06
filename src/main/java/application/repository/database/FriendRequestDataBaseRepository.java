@@ -6,7 +6,6 @@ import application.domain.Tuple;
 import application.domain.User;
 import application.exceptions.RepositoryException;
 
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,7 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
     }
 
     @Override
-    public List<FriendRequest> getAll() throws SQLException, RepositoryException {
+    public List<FriendRequest> getAll() throws SQLException {
         List<FriendRequest> requests = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(
@@ -89,7 +88,7 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
     }
 
     @Override
-    public FriendRequest add(FriendRequest entity) throws IOException, RepositoryException {
+    public FriendRequest add(FriendRequest entity) throws RepositoryException {
         String sql = "insert into friend_requests (id_from, id_to, status ) values (?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -106,7 +105,7 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
     }
 
     @Override
-    public FriendRequest delete(Tuple<Integer, Integer> id) throws IOException, RepositoryException {
+    public FriendRequest delete(Tuple<Integer, Integer> id) throws RepositoryException {
         String sql = "delete from friend_requests where id_from = ? and id_to = ?";
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
@@ -155,7 +154,41 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
 
             return resultSet.getInt("count");
         }
-
     }
+
+    /*
+        List<Friendship> friendships = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement statement = connection.prepareStatement("SELECT * from friendship WHERE id_left = ?");
+             statement.setInt(1, id);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                Integer leftId = resultSet.getInt("id_left");
+                Integer rightId = resultSet.getInt("id_right");
+                LocalDateTime date = LocalDateTime.parse(resultSet.getString("date"));
+                Friendship friendship = new Friendship(date);
+                friendship.setId(new Tuple<>(leftId, rightId));
+                friendships.add(friendship);
+            }
+            return friendships;
+        }
+    List<E> getAllToUser(Integer id);
+        List<Friendship> friendships = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement statement = connection.prepareStatement("SELECT * from friendship WHERE id_right = ?");
+             statement.setInt(1, id);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                Integer leftId = resultSet.getInt("id_left");
+                Integer rightId = resultSet.getInt("id_right");
+                LocalDateTime date = LocalDateTime.parse(resultSet.getString("date"));
+                Friendship friendship = new Friendship(date);
+                friendship.setId(new Tuple<>(leftId, rightId));
+                friendships.add(friendship);
+            }
+            return friendships;
+        }
+     */
+
 }
 

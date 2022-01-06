@@ -21,25 +21,18 @@ public class MessageService {
     private final Validator<Message> validator;
 
 
-    public MessageService(Repository<Integer, Message> repository, Validator<Message> validator) throws RepositoryException, ValidationException, SQLException {
+    public MessageService(Repository<Integer, Message> repository, Validator<Message> validator) {
 
         this.repository = repository;
         this.validator = validator;
     }
 
     /**
-     * Finds and sets the next unused id
-     * @throws ValidationException if the messages are invalid
-     * @throws SQLException if the database cannot be reached
-     */
-
-    /**
      * Returns all messages
      * @return List(Message)
-     * @throws ValidationException if the entities are invalid
      * @throws SQLException if the database cannot be reached
      */
-    public List<Message> getAll() throws RepositoryException, ValidationException, SQLException {
+    public List<Message> getAll() throws RepositoryException, SQLException {
         return repository.getAll();
     }
 
@@ -48,10 +41,8 @@ public class MessageService {
      * @param id Integer
      * @return Message
      * @throws RepositoryException if the message doesn't exist
-     * @throws ValidationException if the message is invalid
-     * @throws SQLException if the database cannot be reached
      */
-    public Message find(Integer id) throws RepositoryException, ValidationException, SQLException {
+    public Message find(Integer id) throws RepositoryException {
         return repository.find(id);
     }
 
@@ -62,12 +53,10 @@ public class MessageService {
      * @param text String
      * @throws ValidationException if the received params are invalid
      * @throws RepositoryException if the message already exists
-     * @throws IOException if the params cannot be parsed
      */
-    public Message addMessage(User from, List<User> to, String text) throws ValidationException, RepositoryException, IOException, SQLException {
+    public Message addMessage(User from, List<User> to, String text) throws ValidationException, RepositoryException {
 
         Message message = new Message(from, to, text, LocalDateTime.now());
-
         validator.validate(message);
 
         return repository.add(message);
@@ -80,9 +69,8 @@ public class MessageService {
      * @param replyTo Message
      * @throws ValidationException if the params are invalid
      * @throws RepositoryException if the message being replied to doesn't exist
-     * @throws IOException if the params can't be parsed
      */
-    public void addReply(User from, String text, Message replyTo) throws ValidationException, RepositoryException, IOException, SQLException {
+    public void addReply(User from, String text, Message replyTo) throws ValidationException, RepositoryException {
         Message message = new Message(from, List.of(replyTo.getFrom()), text, LocalDateTime.now());
 
         message.setReplyOf(replyTo);
@@ -92,7 +80,7 @@ public class MessageService {
         repository.add(message);
     }
 
-    public void addReplyToAll(User from, String text, Message replyMessage) throws ValidationException, SQLException, RepositoryException, IOException {
+    public void addReplyToAll(User from, String text, Message replyMessage) throws ValidationException, RepositoryException {
         List<User> to = replyMessage.getTo();
         to.remove(from);
         if (!from.equals(replyMessage.getFrom()))
@@ -100,7 +88,6 @@ public class MessageService {
         Message message = new Message(from, to, text, LocalDateTime.now());
 
         message.setReplyOf(replyMessage);
-
         validator.validate(message);
 
         repository.add(message);
@@ -115,7 +102,7 @@ public class MessageService {
      * @throws RepositoryException if the message with that id doesn't exist
      * @throws IOException if the message cannot be parsed
      */
-    public Message delete(Integer id) throws ValidationException, SQLException, RepositoryException, IOException {
+    public Message delete(Integer id) throws RepositoryException {
         return repository.delete(id);
     }
 
@@ -130,7 +117,7 @@ public class MessageService {
      * @throws SQLException if the database cannot be reached
      * @throws IOException if the old message is invalid
      */
-    public Message update(Integer messageId, List<User> newTo,  String newText) throws RepositoryException, ValidationException, SQLException, IOException {
+    public Message update(Integer messageId, List<User> newTo,  String newText) throws RepositoryException, ValidationException {
         Message message = repository.find(messageId);
         message.setText(newText);
         message.setTo(newTo);
@@ -143,7 +130,7 @@ public class MessageService {
     /**
      * Returns the size of the repository
      * @return int
-     * @throws SQLException if the database cannot be reached
+     * @throws RepositoryException if the database cannot be reached
      */
     public int size() throws SQLException {
         return repository.size();
@@ -157,7 +144,7 @@ public class MessageService {
      * @throws RepositoryException if the user or his messages don't exist
      * @throws IOException if the message contents cannot be parsed
      */
-    public void deleteMessagesOfUser(User deleted) throws ValidationException, SQLException, RepositoryException, IOException {
+    public void deleteMessagesOfUser(User deleted) throws ValidationException, SQLException, RepositoryException {
         //delete all messages sent by user and user references in to list
 
         List<Message> messages = getAll();
@@ -188,4 +175,6 @@ public class MessageService {
             }
         }
     }
+
+
 }
