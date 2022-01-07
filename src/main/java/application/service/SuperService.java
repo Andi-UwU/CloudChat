@@ -37,7 +37,7 @@ public class SuperService {
      * @param user from which is extracted the friend list
      * @return the friend list of the user as Iterable
      */
-    public List<User> friendList(User user) throws SQLException, RepositoryException, ValidationException {
+    public List<User> friendList(User user) throws RepositoryException, SQLException {
         return network.friendList(user);
     }
 
@@ -49,7 +49,7 @@ public class SuperService {
      * @throws SQLException if the database isn't available
      * @throws RepositoryException if a user doesn't exist
      */
-    public List<String> getFriendshipsOfUser(Integer userId) throws ValidationException, SQLException, RepositoryException {
+    public List<String> getFriendshipsOfUser(Integer userId) throws SQLException, RepositoryException {
         return network.getFriendshipsOfUser(userId);
     }
 
@@ -178,11 +178,9 @@ public class SuperService {
      */
     public User deleteUser(Integer id) throws IOException, RepositoryException, SQLException, ValidationException {
 
-        //delete all messages related to user
-        friendRequestService.deleteRequestsOfUser(id);
-        User deleted = network.findUser(id);
-        messageService.deleteMessagesOfUser(deleted);
-        //delete user
+        friendRequestService.deleteRequestsOfUser(id);  // delete all friend requests
+        User deleted = network.findUser(id);            // delete user
+        messageService.deleteMessagesOfUser(deleted);   // delete all messages related to user
         return network.deleteUser(id);
     }
 
@@ -195,7 +193,7 @@ public class SuperService {
      * @throws ValidationException if the attributes are not valid
      * @throws IOException if reading from data base fail
      */
-    public User updateUser(Integer id, String firstName, String lastName) throws ValidationException, IOException, RepositoryException, SQLException {
+    public User updateUser(Integer id, String firstName, String lastName) throws ValidationException, RepositoryException {
         return network.updateUser(id, firstName, lastName);
     }
 
@@ -203,7 +201,7 @@ public class SuperService {
      * gets all users of the network
      * @return all users as Iterable
      */
-    public List<User> getAllUsers() throws SQLException, ValidationException, RepositoryException {
+    public List<User> getAllUsers() throws SQLException, RepositoryException {
         return network.getAllUsers();
     }
 
@@ -212,13 +210,14 @@ public class SuperService {
      * @param id of the user
      * @return the found user
      */
-    public User findUser(Integer id) throws RepositoryException, ValidationException {
+    public User findUser(Integer id) throws RepositoryException {
         return network.findUser(id);
     }
 
-    public User loginUser(Integer id, String password) {
-        return new User("unused","so far");
+    public int loginUser(String username, String password) throws RepositoryException {
+        return network.loginUser(username, password);
     }
+
     //=================== FRIENDSHIPS =======================
 
 
@@ -230,7 +229,7 @@ public class SuperService {
      * @throws RepositoryException if the friendship already exists
      * @throws IOException if reading from data base fails
      */
-    public void addFriendship(Integer leftId, Integer rightId) throws ValidationException, RepositoryException, IOException, SQLException {
+    public void addFriendship(Integer leftId, Integer rightId) throws ValidationException, RepositoryException {
         network.addFriendship(leftId, rightId);
     }
 
@@ -242,7 +241,7 @@ public class SuperService {
      * @return null if the friendship does not exist
      * @throws IOException
      */
-    public Friendship deleteFriendship(Integer leftId, Integer rightId) throws IOException, RepositoryException, SQLException, ValidationException {
+    public Friendship deleteFriendship(Integer leftId, Integer rightId) throws RepositoryException, SQLException, ValidationException {
         try {
             friendRequestService.deleteRequest(leftId,rightId);
         }
@@ -264,7 +263,7 @@ public class SuperService {
      * @throws ValidationException
      * @throws IOException
      */
-    public Friendship updateFriendship(Integer leftId, Integer rightId, LocalDateTime date) throws ValidationException, IOException, RepositoryException, SQLException {
+    public Friendship updateFriendship(Integer leftId, Integer rightId, LocalDateTime date) throws ValidationException, RepositoryException, SQLException {
 
         return network.updateFriendship(leftId, rightId, date);
     }
@@ -277,7 +276,7 @@ public class SuperService {
      * @return  friendship with the (leftId, rightId) as id
      * @return null if there is no friendship with the (leftId, rightId) as id
      */
-    public Friendship findFriendship(Integer leftId, Integer rightId) throws SQLException, RepositoryException, ValidationException {
+    public Friendship findFriendship(Integer leftId, Integer rightId) throws RepositoryException {
 
         return network.findFriendship(leftId, rightId);
     }
@@ -392,21 +391,21 @@ public class SuperService {
         return Stream.concat(list1.stream(),list2.stream()).collect(Collectors.toList());
     }
 
-    public List<FriendRequest> getAllFriendRequests() throws ValidationException, SQLException, RepositoryException {
+    public List<FriendRequest> getAllFriendRequests() throws SQLException, RepositoryException {
         return friendRequestService.getAll();
     }
 
-    public List<FriendRequest> getAllFriendRequestsForUser(Integer id) throws ValidationException, SQLException, RepositoryException {
+    public List<FriendRequest> getAllFriendRequestsForUser(Integer id) throws SQLException, RepositoryException {
         findUser(id);
         return friendRequestService.getAllToUser(id);
     }
 
-    public List <FriendRequest> getAllFriendRequestsFromUser(Integer id) throws ValidationException, SQLException, RepositoryException {
+    public List <FriendRequest> getAllFriendRequestsFromUser(Integer id) throws SQLException, RepositoryException {
         findUser(id);
         return friendRequestService.getAllFromUser(id);
     }
 
-    public void addFriendRequest(Integer idFrom, Integer idTo) throws ValidationException, SQLException, RepositoryException, IOException {
+    public void addFriendRequest(Integer idFrom, Integer idTo) throws ValidationException, RepositoryException {
         User userFrom = findUser(idFrom);
         User userTo = findUser(idTo);
 
@@ -450,7 +449,7 @@ public class SuperService {
         }
     }
 
-    public FriendRequest updateFriendRequest(Integer idFrom,Integer idTo, String status) throws ValidationException, SQLException, RepositoryException, IOException {
+    public FriendRequest updateFriendRequest(Integer idFrom,Integer idTo, String status) throws ValidationException, RepositoryException {
         FriendRequest request = friendRequestService.updateRequest(idFrom,idTo,status);
         if (status.equals("ACCEPTED")) {
             addFriendship(idFrom,idTo);
@@ -458,7 +457,7 @@ public class SuperService {
         return request;
     }
 
-    public FriendRequest deleteFriendRequest(Integer idFrom, Integer idTo) throws ValidationException, SQLException, RepositoryException, IOException {
+    public FriendRequest deleteFriendRequest(Integer idFrom, Integer idTo) throws ValidationException, RepositoryException {
         return friendRequestService.deleteRequest(idFrom,idTo);
     }
 
@@ -475,4 +474,6 @@ public class SuperService {
      * @param observer Observer object
      */
     public void addObserverForFriendRequests(Observer observer) { friendRequestService.addObserver(observer);}
+
+
 }

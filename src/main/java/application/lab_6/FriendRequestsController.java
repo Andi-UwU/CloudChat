@@ -12,16 +12,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 public class FriendRequestsController implements Observer {
@@ -102,7 +98,7 @@ public class FriendRequestsController implements Observer {
             }
             superService.updateFriendRequest(friendRequestDTO.getIdFrom(),friendRequestDTO.getIdTo(),"ACCEPTED");
             updateTableView();
-        } catch (ValidationException | SQLException | RepositoryException | IOException e) {
+        } catch (ValidationException | RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
     }
@@ -126,7 +122,7 @@ public class FriendRequestsController implements Observer {
 
             superService.updateFriendRequest(friendRequestDTO.getIdFrom(),friendRequestDTO.getIdTo(),"DECLINED");
             updateTableView();
-        } catch (ValidationException | SQLException | RepositoryException | IOException e) {
+        } catch (ValidationException | RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
     }
@@ -145,7 +141,7 @@ public class FriendRequestsController implements Observer {
             }
             superService.deleteFriendRequest(friendRequestDTO.getIdFrom(),friendRequestDTO.getIdTo());
             updateTableView();
-        } catch (ValidationException | SQLException | RepositoryException | IOException e) {
+        } catch (ValidationException | RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
     }
@@ -153,15 +149,6 @@ public class FriendRequestsController implements Observer {
     @FXML
     public void backMenuAction(ActionEvent actionEvent){
         try {
-            /*FXMLLoader fxmlLoader = new FXMLLoader();
-            MainPageController mainPageController = new MainPageController(user,superService);
-            fxmlLoader.setLocation(getClass().getResource("mainpage.fxml"));
-            fxmlLoader.setController(mainPageController);
-            Scene mainScene = new Scene(fxmlLoader.load());
-            Stage mainStage = new Stage();
-            mainStage.setTitle("The Network");
-            mainStage.setScene(mainScene);
-            mainStage.show();*/
             ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
 
         } catch (NumberFormatException e) {

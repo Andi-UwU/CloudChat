@@ -1,7 +1,6 @@
 package application.lab_6;
 
 import application.domain.AddFriendDTO;
-import application.domain.FriendDTO;
 import application.domain.User;
 import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
@@ -11,17 +10,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 public class AddFriendController {
@@ -102,7 +97,7 @@ public class AddFriendController {
             addFriendList.set(tableView.getSelectionModel().getSelectedIndex(), addFriendDTO);
             tableView.setItems(addFriendList);
 
-        } catch (ValidationException | SQLException | RepositoryException | IOException e) {
+        } catch (ValidationException | RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
 

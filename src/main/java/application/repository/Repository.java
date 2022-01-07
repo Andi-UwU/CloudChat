@@ -28,7 +28,7 @@ public interface Repository<ID, E extends Entity<ID>> {
      * @throws ValidationException if the entity is invalid (probable improper storage in repository)
      * @throws RepositoryException if a database has a foreign key towards a nonexistent value
      */
-    List<E> getAll() throws RepositoryException, SQLException, ValidationException;
+    List<E> getAll() throws SQLException, RepositoryException;
 
     /**
      * Adds an entity to the repository
@@ -37,7 +37,7 @@ public interface Repository<ID, E extends Entity<ID>> {
      * @throws RepositoryException if another entity with the same ID already exists in the repository
      * @throws IOException if the entity cannot be parsed
      */
-    E add(E entity) throws IOException, RepositoryException;
+    E add(E entity) throws RepositoryException;
 
     /**
      * Deletes the entity with the given id and returns the old value
@@ -48,7 +48,7 @@ public interface Repository<ID, E extends Entity<ID>> {
      * @throws SQLException if the database cannot be reached
      * @throws IOException if the entity cannot be parsed
      */
-    E delete(ID id) throws IOException, RepositoryException, SQLException, ValidationException;
+    E delete(ID id) throws RepositoryException;
 
     /**
      * Replace an entity with another that has the same id and returns the old value
@@ -59,7 +59,7 @@ public interface Repository<ID, E extends Entity<ID>> {
      * @throws ValidationException if the entity is invalid (improper storage in repository)
      * @throws IOException if the entity cannot be parsed
      */
-    E update(E entity) throws IOException, RepositoryException, SQLException, ValidationException;
+    E update(E entity) throws RepositoryException;
 
     /**
      * Gets the size of the repository
