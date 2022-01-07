@@ -159,15 +159,17 @@ public class SuperService {
     //==================== USERS ==========================
 
     /**
-     * adds a user to the network
-     * @param firstName of the user
-     * @param lastName of the user
-     * @return the user, if there is already a user with the same id
-     * @throws ValidationException if the user is not valid
-     * @throws IOException if reading from data base fail
+     * Adds a user to the database
+     * @param firstName first name of the user
+     * @param lastName last name of the user
+     * @param userName username used by the user
+     * @param passWord password of the user
+     * @return User type object
+     * @throws ValidationException if the params are invalid
+     * @throws RepositoryException if a user with that username already exists
      */
-    public User addUser(String firstName, String lastName) throws ValidationException, IOException, RepositoryException, SQLException {
-        return network.addUser(firstName, lastName);
+    public User addUser(String firstName, String lastName, String userName, String passWord) throws ValidationException, RepositoryException {
+        return network.addUser(new User(firstName,lastName,userName,passWord));
     }
 
     /**
@@ -184,24 +186,15 @@ public class SuperService {
         return network.deleteUser(id);
     }
 
-    /**
-     * update a user
-     * @param id of the user
-     * @param firstName new first name
-     * @param lastName new last name
-     * @return the user that has been replaced
-     * @throws ValidationException if the attributes are not valid
-     * @throws IOException if reading from data base fail
-     */
-    public User updateUser(Integer id, String firstName, String lastName) throws ValidationException, RepositoryException {
-        return network.updateUser(id, firstName, lastName);
+    public User updateUser(String firstName, String lastName, String userName) throws ValidationException, RepositoryException {
+        return network.updateUser(new User(firstName,lastName,userName));
     }
 
     /**
      * gets all users of the network
      * @return all users as Iterable
      */
-    public List<User> getAllUsers() throws SQLException, RepositoryException {
+    public List<User> getAllUsers() throws SQLException {
         return network.getAllUsers();
     }
 

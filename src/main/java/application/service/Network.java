@@ -11,6 +11,8 @@ import application.repository.Repository;
 import application.repository.database.UserDataBaseRepository;
 import application.utils.observer.Observable;
 import application.utils.observer.Observer;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -173,14 +175,15 @@ public class Network implements Observable {
 
     /**
      * Adds a user to the network
-     * @param firstName String
-     * @param lastName String
+     * @param user User type object
      * @throws ValidationException if the user is not valid
+     * @throws RepositoryException if a user with the same username already exists or the database ran out of IDs
      */
-    public User addUser(String firstName, String lastName) throws ValidationException, RepositoryException {
-        User user = new User(firstName, lastName);
-
+    public User addUser(User user) throws ValidationException, RepositoryException {
         userValidator.validate(user);
+
+        Argon2 argon2 = Argon2Factory.create(16,32);
+        user.setPassWord(argon2.hash(6,4096,1,user.getPassWord()));
 
         User added = userRepository.add(user);
         notifyObservers();
@@ -195,7 +198,6 @@ public class Network implements Observable {
      * @throws RepositoryException if the user doesn't exist
      */
     public User deleteUser(Integer id) throws RepositoryException, SQLException {
-
         User deleted = userRepository.delete(id);
 
         deleteFriendshipsOfUser(deleted);
@@ -205,16 +207,12 @@ public class Network implements Observable {
 
     /**
      * Update a user and returns the old value
-     * @param id Integer
-     * @param firstName String
-     * @param lastName String
-     * @return User
+     * @param user object of type User
+     * @return User old value
      * @throws ValidationException if the attributes are not valid
      * @throws RepositoryException if the user doesn't exist
      */
-    public User updateUser(Integer id, String firstName, String lastName) throws ValidationException, RepositoryException {
-        User user = new User(firstName, lastName);
-        user.setId(id);
+    public User updateUser(User user) throws ValidationException, RepositoryException {
         userValidator.validate(user);
 
         User updated = userRepository.update(user);

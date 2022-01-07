@@ -19,7 +19,7 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
     @Override
     public FriendRequest find(Tuple<Integer, Integer> id) throws RepositoryException {
 
-        String sql = "SELECT u1.id, u1.first_name, u1.last_name, u2.id, u2.first_name, u2.last_name, status FROM friend_requests fr INNER JOIN users u1 on fr.id_from = u1.id  INNER JOIN users u2 on fr.id_to = u2.id  WHERE fr.id_from=? AND fr.id_to=?";
+        String sql = "SELECT u1.id, u1.first_name, u1.last_name, u1.username, u2.id, u2.first_name, u2.last_name,u2.username,status FROM friend_requests fr INNER JOIN users u1 on fr.id_from = u1.id  INNER JOIN users u2 on fr.id_to = u2.id  WHERE fr.id_from=? AND fr.id_to=?";
 
         try(Connection connection = DriverManager.getConnection(url, username, password);
             PreparedStatement requestStatement = connection.prepareStatement(sql)) {
@@ -31,15 +31,17 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
             resultSetRequest.next();
 
             User userFrom = new User(   resultSetRequest.getString(2),
-                                        resultSetRequest.getString(3) );
-            User userTo = new User (    resultSetRequest.getString(5),
-                                        resultSetRequest.getString(6) );
+                                        resultSetRequest.getString(3),
+                                        resultSetRequest.getString(4));
+            User userTo = new User( resultSetRequest.getString(6),
+                                    resultSetRequest.getString(7),
+                                    resultSetRequest.getString(8));
 
             userFrom.setId( resultSetRequest.getInt(1));
-            userTo.setId( resultSetRequest.getInt(4));
+            userTo.setId( resultSetRequest.getInt(5));
 
             FriendRequestStatus status = FriendRequestStatus.valueOf
-                    ( resultSetRequest.getString(7) );
+                    ( resultSetRequest.getString(9) );
 
             FriendRequest request = new FriendRequest(userFrom,userTo,status);
             request.setId(new Tuple<>(id.getLeft(), id.getRight()));
@@ -58,21 +60,23 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
         List<FriendRequest> requests = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(
-              "SELECT u1.id, u1.first_name, u1.last_name, u2.id, u2.first_name, u2.last_name, status FROM friend_requests fr INNER JOIN users u1 on fr.id_from = u1.id INNER JOIN users u2 on fr.id_to = u2.id ");
+              "SELECT u1.id, u1.first_name, u1.last_name,u1.username, u2.id, u2.first_name, u2.last_name, u2.username, status FROM friend_requests fr INNER JOIN users u1 on fr.id_from = u1.id INNER JOIN users u2 on fr.id_to = u2.id ");
 
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
                 User userFrom = new User(   resultSet.getString(2),
-                                            resultSet.getString(3) );
+                                            resultSet.getString(3),
+                                            resultSet.getString(4));
                 User userTo = new User (    resultSet.getString(5),
-                                            resultSet.getString(6) );
+                                            resultSet.getString(6),
+                                            resultSet.getString(7));
 
                 userFrom.setId( resultSet.getInt(1));
-                userTo.setId( resultSet.getInt(4));
+                userTo.setId( resultSet.getInt(5));
 
                 FriendRequestStatus status = FriendRequestStatus.valueOf
-                        ( resultSet.getString(7) );
+                        ( resultSet.getString(9) );
 
                 FriendRequest request = new FriendRequest(userFrom,userTo,status);
                 request.setId(new Tuple<>(userFrom.getId(), userTo.getId()));

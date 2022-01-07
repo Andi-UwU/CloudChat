@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -22,10 +23,14 @@ public class NetworkController {
     private TextField textFieldPassword;
     @FXML
     private Label welcomeLabel;
+    @FXML
+    private Label signUpButton;
 
     SuperService superService;
-    public NetworkController (SuperService superService) {
-        this.superService=superService;
+    private Scene signUpScene;
+
+    public NetworkController(SuperService superService) {
+        this.superService = superService;
     }
 
     @FXML
@@ -33,8 +38,8 @@ public class NetworkController {
         try {
             String username = textFieldUser.getText();
             String password = textFieldPassword.getText();
-            Integer id = superService.loginUser(username,password);
-            if ( id > 0 ) {
+            Integer id = superService.loginUser(username, password);
+            if (id > 0) {
                 User user = superService.findUser(id);
                 // create user's main page
                 FXMLLoader fxmlLoader = new FXMLLoader();
@@ -46,13 +51,36 @@ public class NetworkController {
                 mainStage.setTitle("The Network");
                 mainStage.setScene(mainScene);
                 mainStage.show();
+                if (signUpScene!=null)
+                    signUpScene.getWindow().getScene().getWindow().hide();
                 ((Node) (event.getSource())).getScene().getWindow().hide();
-            }
-            else
+            } else
                 WarningBox.show("Invalid login information!");
 
         } catch (RepositoryException | NumberFormatException | IOException e) {
             WarningBox.show(e.getMessage());
         }
     }
+
+    @FXML
+    protected void signUpView(MouseEvent event) {
+        try {
+            if (signUpScene!=null)
+                signUpScene.getWindow().getScene().getWindow().hide();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            SignUpController signUpController = new SignUpController(superService);
+            fxmlLoader.setLocation(getClass().getResource("signUp.fxml"));
+            fxmlLoader.setController(signUpController);
+            Scene mainScene = new Scene(fxmlLoader.load());
+            Stage mainStage = new Stage();
+            mainStage.setTitle("Sign up to the Network!");
+            mainStage.setScene(mainScene);
+            signUpScene=mainScene;
+            mainStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            WarningBox.show(e.getMessage());
+        }
+    }
+
 }
