@@ -6,21 +6,22 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="300.0" prefWidth="430.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" pickOnBounds="false" prefHeight="340.0" prefWidth="430.0" scaleShape="false" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label text="Welcome to The Network!">
+      <Label prefHeight="30.0" prefWidth="250.0" text="Welcome to The Network!" translateY="-10.0">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
          <VBox.margin>
-            <Insets bottom="30.0" />
+            <Insets bottom="60.0" />
          </VBox.margin>
       </Label>
-      <GridPane alignment="CENTER" maxWidth="-Infinity" prefHeight="90.0" prefWidth="400.0" VBox.vgrow="NEVER">
+      <GridPane alignment="CENTER" maxWidth="-Infinity" prefHeight="90.0" prefWidth="400.0" translateY="-30.0" VBox.vgrow="NEVER">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.0" minWidth="10.0" prefWidth="145.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="257.0" minWidth="10.0" prefWidth="255.0" />
@@ -31,21 +32,53 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="User ID" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Username" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
-                  <Insets right="15.0" />
-               </GridPane.margin></Label>
+                  <Insets right="25.0" />
+               </GridPane.margin>
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
             <Label text="Password" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
-                  <Insets right="15.0" />
-               </GridPane.margin></Label>
-            <TextField fx:id="textFieldUser" maxWidth="-Infinity" prefHeight="25.0" prefWidth="220.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <TextField fx:id="textFieldPassword" blendMode="MULTIPLY" maxWidth="-Infinity" prefHeight="25.0" prefWidth="220.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
+                  <Insets right="25.0" />
+               </GridPane.margin>
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <TextField fx:id="textFieldUser" maxWidth="-Infinity" pickOnBounds="false" prefHeight="25.0" prefWidth="235.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="13.0" />
+               </font></TextField>
+            <TextField fx:id="textFieldPassword" blendMode="MULTIPLY" maxWidth="-Infinity" pickOnBounds="false" prefHeight="25.0" prefWidth="235.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+               <font>
+                  <Font size="13.0" />
+               </font></TextField>
          </children>
-      </GridPane>
-      <Button layoutX="50.0" mnemonicParsing="false" onAction="#tryLogin" text="Login">
          <VBox.margin>
-            <Insets top="40.0" />
-         </VBox.margin></Button>
+            <Insets />
+         </VBox.margin>
+      </GridPane>
+      <Button layoutX="50.0" mnemonicParsing="false" onAction="#tryLogin" prefHeight="25.0" prefWidth="60.0" text="Login" translateY="-15.0" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <HBox alignment="CENTER" prefHeight="40.0" prefWidth="430.0" translateY="30.0">
+         <children>
+            <Label text="Don't have an account yet?">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="signUpButton" onMouseClicked="#signUpView" text=" Create one now!" textFill="#0044ff">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
    </children>
 </VBox>

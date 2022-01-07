@@ -17,13 +17,38 @@ public class User extends Entity<Integer>{
     private String lastName;
 
     /**
+     * userName - unique userName on the network for the user
+     */
+    private String userName;
+
+    /**
+     * passWord - used to login a user
+     */
+    private String passWord;
+
+    /**
      * Constructor
      * @param firstName String
      * @param lastName String
      */
-    public User(String firstName, String lastName){
+    public User(String firstName, String lastName, String userName){
         this.firstName = firstName;
         this.lastName = lastName;
+        this.userName = userName;
+    }
+
+    /**
+     * Constructor for adding new users
+     * @param firstName String
+     * @param lastName String
+     * @param userName String
+     * @param passWord String
+     */
+    public User(String firstName, String lastName, String userName, String passWord) {
+        this.firstName=firstName;
+        this.lastName=lastName;
+        this.userName=userName;
+        this.passWord=passWord;
     }
 
     /**
@@ -56,6 +81,38 @@ public class User extends Entity<Integer>{
      */
     public void setLastName(String lastName){
         this.lastName = lastName;
+    }
+
+    /**
+     * Gets the userName
+     * @return String
+     */
+    public String getUserName() {
+        return userName;
+    }
+
+    /**
+     * Sets the userName
+     * @param userName String
+     */
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    /**
+     * Gets the password
+     * @return String
+     */
+    public String getPassWord() {
+        return passWord;
+    }
+
+    /**
+     * Sets the password
+     * @param passWord String
+     */
+    public void setPassWord(String passWord) {
+        this.passWord = passWord;
     }
 
     /**

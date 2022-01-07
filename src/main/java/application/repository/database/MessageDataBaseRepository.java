@@ -25,7 +25,7 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
 
     private User findUser(Integer id) throws RepositoryException {
 
-        String sql = "SELECT * from users where id = ?";
+        String sql = "SELECT first_name,last_name,username from users where id = ?";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(sql)
         ) {
@@ -37,7 +37,8 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
             Integer id1 = resultSet.getInt("id");
             String firstName = resultSet.getString("first_name");
             String lastName = resultSet.getString("last_name");
-            User user = new User(firstName, lastName);
+            String userName = resultSet.getString("username");
+            User user = new User(firstName, lastName,userName);
             user.setId(id1);
 
             resultSet.close();
