@@ -29,8 +29,7 @@ public class UserValidator implements Validator<User>{
         }
         if (user.getUserName().length()<3 || user.getUserName().length()>25)
             errors+= "Username must be between 3 and 25 characters!\n";
-        if (user.getPassWord().length()<4 || user.getPassWord().length()>16)
-            errors+= "Password must be between 4 and 16 characters!\n";
+
 
         if (!errors.equals(""))
             throw new ValidationException(errors);

@@ -6,6 +6,7 @@ import application.domain.validator.Validator;
 import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
 import application.repository.Repository;
+import application.repository.database.MessageDataBaseRepository;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -17,11 +18,11 @@ import java.util.List;
  */
 public class MessageService {
 
-    private final Repository<Integer, Message> repository;
+    private final MessageDataBaseRepository repository;
     private final Validator<Message> validator;
 
 
-    public MessageService(Repository<Integer, Message> repository, Validator<Message> validator) {
+    public MessageService(MessageDataBaseRepository repository, Validator<Message> validator) {
 
         this.repository = repository;
         this.validator = validator;
@@ -174,6 +175,10 @@ public class MessageService {
                 }
             }
         }
+    }
+
+    public List<Message> getConversation(User user1, User user2) throws RepositoryException {
+        return repository.getConversation(user1, user2);
     }
 
 

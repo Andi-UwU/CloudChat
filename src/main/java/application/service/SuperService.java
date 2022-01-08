@@ -338,17 +338,9 @@ public class SuperService {
         return messageService.size();
     }
 
-    public List<Message> getConversation(Integer userId1, Integer userId2) throws ValidationException, SQLException, RepositoryException {
-        List<Message> messages = messageService.getAll();
-        User user1 = network.findUser(userId1);
-        User user2 = network.findUser(userId2);
-        List<Message> conversation = messages
-                .stream()
-                .filter(m -> (m.getFrom().equals(user1) && m.getTo().contains(user2))
-                        || (m.getFrom().equals(user2) && m.getTo().contains(user1)))
-                .sorted(Comparator.comparing(Message::getDate))
-                .collect(Collectors.toList());
-        return conversation;
+    public List<Message> getConversation(User user1, User user2) throws RepositoryException {
+
+        return messageService.getConversation(user1, user2);
     }
 
     // ===================== FRIEND REQUEST ==========================

@@ -41,7 +41,7 @@ public class NetworkApplication extends Application {
 
         // Message
         Validator<Message> messageValidator = new MessageValidator();
-        Repository<Integer, Message> messageRepository = new MessageDataBaseRepository(URL, USERNAME, PASSWORD);
+        MessageDataBaseRepository messageRepository = new MessageDataBaseRepository(URL, USERNAME, PASSWORD);
         MessageService messageService = new MessageService(messageRepository, messageValidator);
 
         // Super Service
