@@ -8,6 +8,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MessageDataBaseRepository extends DataBaseRepository<Integer, Message> {
     //TODO comments
@@ -34,12 +35,12 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
             ResultSet resultSet = statement.executeQuery();
 
             resultSet.next();
-            Integer id1 = resultSet.getInt("id");
+
             String firstName = resultSet.getString("first_name");
             String lastName = resultSet.getString("last_name");
             String userName = resultSet.getString("username");
             User user = new User(firstName, lastName,userName);
-            user.setId(id1);
+            user.setId(id);
 
             resultSet.close();
 
@@ -162,7 +163,7 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
             //get the next id
             ResultSet messageResultSet = nextIdStatement.executeQuery();
             messageResultSet.next();
-            Integer messageId = messageResultSet.getInt("nextval");
+            int messageId = messageResultSet.getInt("nextval");
             //insert into message table
             messageStatement.setInt(1, messageId);
             messageStatement.setInt(2, message.getFrom().getId());
@@ -270,6 +271,60 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
 
             resultSet.next();
             return resultSet.getInt("count");
+        }
+    }
+
+    public List<Message> getConversation(User user1, User user2) throws RepositoryException {
+
+        String sql =
+                "SELECT m.from as from_id, u.id AS to_id,\n" +
+                "       m.id AS message_id, m.text, m.date, m.reply_of\n" +
+                "FROM message m\n" +
+                "INNER JOIN send_to st ON m.id = st.message_id\n" +
+                "INNER JOIN users u ON u.id = st.user_id\n" +
+                "WHERE (u.id = ? OR u.id = ?) AND (m.from = ? OR m.from = ?)\n" +
+                "ORDER BY m.date;";
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement statement = connection.prepareStatement(sql)){
+
+            statement.setInt(1, user1.getId());
+            statement.setInt(2, user2.getId());
+            statement.setInt(3, user1.getId());
+            statement.setInt(4, user2.getId());
+
+            ResultSet resultSet = statement.executeQuery();
+
+            List<Message> messageList = new ArrayList<>();
+
+            while(resultSet.next()){
+                User from, to;
+                if (resultSet.getInt("from_id") == user1.getId()){
+                    from = user1;
+                    to = user2;
+                }
+                else{
+                    from = user2;
+                    to = user1;
+                }
+                int messageId = resultSet.getInt("message_id");
+                String text = resultSet.getString("text");
+                LocalDateTime date = LocalDateTime.parse(resultSet.getString("date"));
+                Integer replyOfId = resultSet.getInt("reply_of");
+                Optional<Message> replyOf = messageList
+                        .stream()
+                        .filter(msg -> msg.getId().equals(replyOfId))
+                        .findFirst();
+
+                Message message = new Message(from, List.of(to), text, date);
+                message.setId(messageId);
+                if(replyOf.isPresent())
+                    message.setReplyOf(replyOf.get());
+
+                messageList.add(message);
+            }
+            return messageList;
+        } catch (SQLException throwables) {
+            throw new RepositoryException(throwables.getMessage());
         }
     }
 }

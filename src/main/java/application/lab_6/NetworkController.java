@@ -36,8 +36,23 @@ public class NetworkController {
     @FXML
     protected void tryLogin(ActionEvent event) {
         try {
+
             String username = textFieldUser.getText();
             String password = textFieldPassword.getText();
+
+            String errors = "";
+
+            if (username.length()<4 || username.length()>16) {
+                errors += "The username must be between 4 and 16 characters long\n";
+            }
+            if (password.length()<4 || password.length()>16) {
+                errors += "The password must be between 4 and 16 characters long\n";
+            }
+
+            if (!errors.equals("")) {
+                WarningBox.show(errors);
+                return;
+            }
             Integer id = superService.loginUser(username, password);
             if (id > 0) {
                 User user = superService.findUser(id);
