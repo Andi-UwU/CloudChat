@@ -68,9 +68,9 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
                 User userFrom = new User(   resultSet.getString(2),
                                             resultSet.getString(3),
                                             resultSet.getString(4));
-                User userTo = new User (    resultSet.getString(5),
-                                            resultSet.getString(6),
-                                            resultSet.getString(7));
+                User userTo = new User (    resultSet.getString(6),
+                                            resultSet.getString(7),
+                                            resultSet.getString(8));
 
                 userFrom.setId( resultSet.getInt(1));
                 userTo.setId( resultSet.getInt(5));

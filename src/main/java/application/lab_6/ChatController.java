@@ -176,16 +176,12 @@ public class ChatController {
     private void updateMessageListView(Integer userId){
         try {
             currentFriendId = userId;
-            messagesList.setAll(superService.getConversation(user.getId(), userId));
+            messagesList.setAll(superService.getConversation(user, superService.findUser(userId)));
             chatMessageListView.setItems(messagesList);
             User friend = superService.findUser(userId);
             friendNameLabel.setText(friend.getFirstName() + " " + friend.getLastName());
-        } catch (ValidationException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
         } catch (RepositoryException e) {
-            e.printStackTrace();
+            WarningBox.show(e.getMessage());
         }
     }
 
@@ -222,14 +218,26 @@ public class ChatController {
 
     }
     private void updateSentToTable(){
-        Message selectedMessage = chatMessageListView.getSelectionModel().getSelectedItem();
-        if (selectedMessage == null){
-            sentToList.clear();
+
+        try {
+            Integer messageId = chatMessageListView.getSelectionModel().getSelectedItem().getId();
+
+            if (messageId == null){
+                sentToList.clear();
+            }
+            else{
+                Message selectedMessage = superService.findMessage(messageId);
+                sentToList.setAll(superService.getUserDtoOfMessage(selectedMessage));
+            }
+            sentToTableView.setItems(sentToList);
+        } catch (ValidationException e) {
+            WarningBox.show(e.getMessage());
+        } catch (SQLException e) {
+            WarningBox.show(e.getMessage());
+        } catch (RepositoryException e) {
+            WarningBox.show(e.getMessage());
         }
-        else{
-            sentToList.setAll(superService.getUserDtoOfMessage(selectedMessage));
-        }
-        sentToTableView.setItems(sentToList);
+
     }
 
     // ===========  Buttons Actions  ================
