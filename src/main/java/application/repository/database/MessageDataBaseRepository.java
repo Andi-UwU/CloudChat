@@ -282,7 +282,7 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
                 "FROM message m\n" +
                 "INNER JOIN send_to st ON m.id = st.message_id\n" +
                 "INNER JOIN users u ON u.id = st.user_id\n" +
-                "WHERE (u.id = ? OR u.id = ?) AND (m.from = ? OR m.from = ?)\n" +
+                "WHERE (u.id = ? AND m.from = ?) OR (m.from = ? AND u.id = ?)\n" +
                 "ORDER BY m.date;";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(sql)){

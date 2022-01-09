@@ -1,21 +1,31 @@
 package application.service;
 
 import application.domain.*;
-import application.domain.FriendDTO;
 import application.exceptions.RepositoryException;
 import application.exceptions.ServiceException;
 import application.exceptions.ValidationException;
+import application.utils.WarningBox;
 import application.utils.observer.Observer;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static application.utils.Constants.DATE_TIME_FORMATTER;
+import static org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER;
+import static org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.TIMES_ROMAN;
 
 public class SuperService {
     private final Network network;
@@ -63,17 +73,6 @@ public class SuperService {
         return network.getFriendshipsOfUserFromMonth(userId, month);
     }
 
-    /**
-     * gets the communities number from the network
-     * @return communities number as int
-     */
-    /*
-    public int getCommunitiesNumber() throws SQLException, ValidationException, RepositoryException {
-        return network.getCommunitiesNumber();
-    }
-
-     */
-
     public List<FriendDTO> getFriendDtoOfUser(Integer id) throws RepositoryException, SQLException, ValidationException {
         return network.getFriendDtoOfUser(id);
     }
@@ -91,7 +90,7 @@ public class SuperService {
     }
 
 
-    public List<User> getNonFriendOfUser(Integer id) throws RepositoryException, ValidationException, SQLException {
+    public List<User> getNonFriendOfUser(Integer id) throws RepositoryException, SQLException {
         List<User> friendsOfUser = friendList(network.findUser(id));
         return getAllUsers()
                 .stream()
@@ -278,14 +277,14 @@ public class SuperService {
      * gets all friendships from the repository
      * @return  all friendship as Iterable
      */
-    public List<Friendship> getAllFriendship() throws SQLException, ValidationException, RepositoryException {
+    public List<Friendship> getAllFriendship() throws SQLException, RepositoryException {
         return network.getAllFriendship();
     }
 
     // ===================== MESSAGE ==========================
 
 
-    public List<Message> getAllMessages() throws ValidationException, SQLException, RepositoryException {
+    public List<Message> getAllMessages() throws SQLException, RepositoryException {
         return messageService.getAll();
     }
 
@@ -315,7 +314,7 @@ public class SuperService {
         messageService.addReplyToAll(from,text,replyTo);
     }
 
-    public Message updateMessage(Integer messageId, String newText) throws ValidationException, SQLException, RepositoryException, IOException {
+    public Message updateMessage(Integer messageId, String newText) throws ValidationException, RepositoryException {
         Message message = messageService.find(messageId);
         return messageService.update(messageId, message.getTo(), newText);
     }
@@ -345,7 +344,7 @@ public class SuperService {
 
     // ===================== FRIEND REQUEST ==========================
 
-    public List<FriendRequestDTO> getAllFriendRequestsDtoForUser(Integer id ) throws ValidationException, RepositoryException, SQLException {
+    public List<FriendRequestDTO> getAllFriendRequestsDtoForUser(Integer id ) throws RepositoryException, SQLException {
         //User user=findUser(id);
         List<FriendRequestDTO> list1 = getAllFriendRequestsFromUser(id)
                 .stream()
@@ -394,7 +393,7 @@ public class SuperService {
         User userFrom = findUser(idFrom);
         User userTo = findUser(idTo);
 
-        try { // if request already exists
+        try { // if request between users already exists
             FriendRequest oldRequest = friendRequestService.findRequest(idFrom, idTo);
             if (oldRequest.getStatus().toString().equals("DECLINED")) { // remove declined request
                 friendRequestService.deleteRequest(idFrom,idTo);
@@ -406,11 +405,10 @@ public class SuperService {
         }
         catch (RepositoryException ignored) { }
 
-        try {
+        try { // see if friendship between users exists
             findFriendship(idFrom, idTo);
             throw new ValidationException("Friendship already exists!\n");
-        } catch (RepositoryException ignored) {
-        }
+        } catch (RepositoryException ignored) { }
 
         try { // see if friend already sent a friend request
             FriendRequest oldRequest = friendRequestService.findRequest(idTo, idFrom); // request from friend exists
@@ -444,6 +442,68 @@ public class SuperService {
 
     public FriendRequest deleteFriendRequest(Integer idFrom, Integer idTo) throws ValidationException, RepositoryException {
         return friendRequestService.deleteRequest(idFrom,idTo);
+    }
+
+    public List<FriendDTO> generateFriendActivity(Integer id, LocalDate startDate, LocalDate endDate) throws SQLException, RepositoryException, ValidationException {
+        LocalDateTime start = startDate.atStartOfDay();
+        LocalDateTime end = endDate.atStartOfDay().plusDays(1);
+        List<FriendDTO> friendList = this.getFriendDtoOfUser(id);
+        return friendList.stream()
+                        .filter(friendDTO-> {
+                                LocalDateTime friendDate = LocalDateTime.parse(friendDTO.getDate(),DATE_TIME_FORMATTER);
+                                return friendDate.isAfter(start) && friendDate.isBefore(end);
+                             })
+                        .collect(Collectors.toList());
+    }
+    public List<Message> generateFriendMessageActivity(User user1, User user2,
+                                                       LocalDate startDate, LocalDate endDate) throws RepositoryException {
+        LocalDateTime start = startDate.atStartOfDay();
+        LocalDateTime end = endDate.atStartOfDay().plusDays(1);
+        return getConversation(user1,user2).stream()
+                .filter( message -> {
+                    LocalDateTime messageDate = message.getDate();
+                    return messageDate.isAfter(start) && messageDate.isBefore(end);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public void generateActivityExportPDF(User currentUser, LocalDate startDate, LocalDate endDate) throws IOException, ValidationException, SQLException, RepositoryException {
+        LocalDateTime start = startDate.atStartOfDay();
+        LocalDateTime end = endDate.atStartOfDay().plusDays(1);
+
+
+        PDDocument document = new PDDocument();
+        PDPage first_page = new PDPage();
+        PDPageContentStream contentStream = new PDPageContentStream(document,first_page);
+        contentStream.setFont(new PDType1Font(TIMES_ROMAN),14);
+        contentStream.setLeading(14.5f);
+        contentStream.beginText();
+        contentStream.showText("This is the user report for "+currentUser.getFirstName()+" "+
+                currentUser.getLastName()+" between "+startDate.toString()+" "+endDate.toString());
+        contentStream.newLine();
+        contentStream.showText("New friends:");
+        contentStream.endText();
+        contentStream.close();
+
+        PDPageContentStream contentStream2 = new PDPageContentStream(document,first_page, PDPageContentStream.AppendMode.APPEND, true);
+        contentStream2.setFont(new PDType1Font(TIMES_ROMAN),12);
+        contentStream2.setLeading(14.5f);
+        contentStream2.beginText();
+        List<FriendDTO> friends = generateFriendActivity(currentUser.getId(),startDate,endDate);
+        friends.forEach(f -> {
+            try {
+                contentStream2.newLine();
+                contentStream2.showText("     "+f.getName() +" - "+f.getDate());
+            } catch (IOException e) {
+                WarningBox.show("Illegal characters in usernames!");
+            }
+        });
+        contentStream2.endText();
+        contentStream2.close();
+
+        Files.createDirectory(Path.of("C:/The Network/"));
+        document.save(new File("C:/The Network/Activity.pdf"));
+        document.close();
     }
 
     /**
