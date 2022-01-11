@@ -4,17 +4,10 @@ import application.domain.*;
 import application.exceptions.RepositoryException;
 import application.exceptions.ServiceException;
 import application.exceptions.ValidationException;
-import application.utils.WarningBox;
+import application.utils.ExporterPDF;
 import application.utils.observer.Observer;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,8 +17,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static application.utils.Constants.DATE_TIME_FORMATTER;
-import static org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER;
-import static org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.TIMES_ROMAN;
 
 public class SuperService {
     private final Network network;
@@ -255,7 +246,7 @@ public class SuperService {
      * @throws ValidationException
      * @throws IOException
      */
-    public Friendship updateFriendship(Integer leftId, Integer rightId, LocalDateTime date) throws ValidationException, RepositoryException, SQLException {
+    public Friendship updateFriendship(Integer leftId, Integer rightId, LocalDateTime date) throws ValidationException, RepositoryException {
 
         return network.updateFriendship(leftId, rightId, date);
     }
@@ -319,7 +310,7 @@ public class SuperService {
         return messageService.update(messageId, message.getTo(), newText);
     }
 
-    public Message deleteMessage(Integer messageId) throws ValidationException, SQLException, RepositoryException, IOException {
+    public Message deleteMessage(Integer messageId) throws RepositoryException {
         return messageService.delete(messageId);
     }
 
@@ -471,39 +462,20 @@ public class SuperService {
         LocalDateTime start = startDate.atStartOfDay();
         LocalDateTime end = endDate.atStartOfDay().plusDays(1);
 
+        List<FriendDTO> friendDTOList = generateFriendActivity(currentUser.getId(),startDate,endDate);
+        List<FriendDTO> fullFriendList = getFriendDtoOfUser(currentUser.getId());
+        List<List<Message>> messageList = new ArrayList<>();
+        for (FriendDTO friend : fullFriendList) {
+            messageList.add(generateFriendMessageActivity(currentUser,findUser(friend.getId()),startDate,endDate)
+                             .stream()
+                             .filter(m -> m.getFrom()!=currentUser)
+                             .collect(Collectors.toList()));
+        }
 
-        PDDocument document = new PDDocument();
-        PDPage first_page = new PDPage();
-        PDPageContentStream contentStream = new PDPageContentStream(document,first_page);
-        contentStream.setFont(new PDType1Font(TIMES_ROMAN),14);
-        contentStream.setLeading(14.5f);
-        contentStream.beginText();
-        contentStream.showText("This is the user report for "+currentUser.getFirstName()+" "+
-                currentUser.getLastName()+" between "+startDate.toString()+" "+endDate.toString());
-        contentStream.newLine();
-        contentStream.showText("New friends:");
-        contentStream.endText();
-        contentStream.close();
-
-        PDPageContentStream contentStream2 = new PDPageContentStream(document,first_page, PDPageContentStream.AppendMode.APPEND, true);
-        contentStream2.setFont(new PDType1Font(TIMES_ROMAN),12);
-        contentStream2.setLeading(14.5f);
-        contentStream2.beginText();
-        List<FriendDTO> friends = generateFriendActivity(currentUser.getId(),startDate,endDate);
-        friends.forEach(f -> {
-            try {
-                contentStream2.newLine();
-                contentStream2.showText("     "+f.getName() +" - "+f.getDate());
-            } catch (IOException e) {
-                WarningBox.show("Illegal characters in usernames!");
-            }
-        });
-        contentStream2.endText();
-        contentStream2.close();
-
-        Files.createDirectory(Path.of("C:/The Network/"));
-        document.save(new File("C:/The Network/Activity.pdf"));
-        document.close();
+        ExporterPDF exporter = new ExporterPDF();   // create a new ExporterPDF instance to create a PDF file
+        exporter.exportActivityToPDF(currentUser, startDate, endDate,
+                friendDTOList, messageList
+        );
     }
 
     /**

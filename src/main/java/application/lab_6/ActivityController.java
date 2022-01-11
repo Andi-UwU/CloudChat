@@ -8,6 +8,7 @@ import application.exceptions.RepositoryException;
 import application.exceptions.ServiceException;
 import application.exceptions.ValidationException;
 import application.service.SuperService;
+import application.utils.InfoBox;
 import application.utils.WarningBox;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -208,18 +209,23 @@ public class ActivityController {
     }
 
     // =================== ACTIVITY
+
+    private boolean verifyDates() {
+        if (startDate.getValue() == null || endDate.getValue() == null) {
+            WarningBox.show("Invalid date!");
+            newFriendsTableView.getItems().clear();
+            chatFriendTableView.getItems().clear();
+            chatMessageListView.getItems().clear();
+            startDate.setDisable(false);
+            endDate.setDisable(false);
+            return false;
+        }
+        return true;
+    }
+
     @FXML
     private void generateActivityAction(ActionEvent event) {
-
-        if (startDate.getValue() == null || endDate.getValue() == null) {
-                WarningBox.show("Invalid date!");
-                newFriendsTableView.getItems().clear();
-                chatFriendTableView.getItems().clear();
-                chatMessageListView.getItems().clear();
-                startDate.setDisable(false);
-                endDate.setDisable(false);
-                return;
-            }
+        if (!verifyDates()) return;
         initializeNewFriendsView(startDate.getValue(),endDate.getValue());
         initializeChatFriendsTableView(startDate.getValue(),endDate.getValue());
         initializeChatMessageListView(startDate.getValue(),endDate.getValue());
@@ -229,17 +235,10 @@ public class ActivityController {
 
     @FXML
     private void exportAction (ActionEvent event) {
-        if (startDate.getValue() == null || endDate.getValue() == null) {
-            WarningBox.show("Invalid date!");
-            newFriendsTableView.getItems().clear();
-            chatFriendTableView.getItems().clear();
-            chatMessageListView.getItems().clear();
-            startDate.setDisable(false);
-            endDate.setDisable(false);
-            return;
-        }
+        if (!verifyDates()) return;
         try {
-                superService.generateActivityExportPDF(user,startDate.getValue(),endDate.getValue());
+            superService.generateActivityExportPDF(user, startDate.getValue(), endDate.getValue());
+            InfoBox.show("PDF file successfully created!");
         } catch (IOException | ValidationException | RepositoryException | SQLException e) {
             e.printStackTrace();
             WarningBox.show("Error exporting file.");
