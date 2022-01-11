@@ -7,6 +7,7 @@ module application.lab_6 {
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
     requires de.mkammerer.argon2;
+    requires org.apache.pdfbox;
 
     opens application.lab_6 to javafx.fxml;
     exports application.lab_6;

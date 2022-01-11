@@ -59,6 +59,10 @@ public class MainPageController implements Observer {
     @FXML
     private Button backToLoginButton;
 
+    //========= Activity button
+    @FXML
+    private Button activityButton;
+
     public MainPageController(User user, SuperService superService) {
         this.superService=superService;
         superService.addObserverForNetwork(this);
@@ -200,6 +204,27 @@ public class MainPageController implements Observer {
             chatStage.setScene(chatScene);
             chatStage.show();
             ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+
+        } catch (NumberFormatException | IOException e) {
+            WarningBox.show(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void changeToActivityScene(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            ActivityController activityController = new ActivityController();
+            activityController.setService(superService);
+            activityController.setUser(user);
+            fxmlLoader.setLocation(getClass().getResource("activityScene.fxml"));
+            fxmlLoader.setController(activityController);
+            Scene activityScene = new Scene(fxmlLoader.load());
+            Stage activityStage = new Stage();
+            activityStage.setTitle("Activity");
+            activityStage.setScene(activityScene);
+            activityStage.show();
+            //((Node)(actionEvent.getSource())).getScene().getWindow().hide();
 
         } catch (NumberFormatException | IOException e) {
             WarningBox.show(e.getMessage());

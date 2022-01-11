@@ -59,7 +59,7 @@ public class FriendRequestsController implements Observer {
         try {
             friendRequestList.setAll(superService.getAllFriendRequestsDtoForUser(user.getId()));
         }
-        catch (RepositoryException | SQLException | ValidationException e) {
+        catch (RepositoryException | SQLException e) {
             WarningBox.show(e.getMessage());
         }
         requestsTableView.setItems(friendRequestList);
