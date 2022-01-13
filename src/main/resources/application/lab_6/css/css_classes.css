@@ -1,0 +1,45 @@
+.custom_button
+{
+
+    -fx-background-color : #DA6700;
+
+    -fx-background-radius :  10;
+}
+.custom_button:hover
+{
+
+    -fx-background-color : #FF7900 ;
+
+    -fx-background-radius :  10;
+}
+.custom_button:pressed
+{
+    -fx-background-color : #EE7000 ;
+
+    -fx-background-radius :  10;
+}
+
+.custom_background
+{
+    -fx-background-color: linear-gradient(to right top, #555555, #6A6A6A);
+}
+
+.custom_text_field
+{
+    -fx-background-color : #FF7900 ;
+}
+.date-picker .text-field {
+    -fx-control-inner-background: #FF7900 ;
+}
+
+.custom_table_view
+{
+    -fx-background-color: linear-gradient(to right top, #555555, #9B9B9B);
+}
+
+.custom_table_view .column_header_background
+{
+    -fx-background-color: linear-gradient(to right top, #DA6700, #FF7900);
+    -fx-padding: 0;
+    -fx-padding: 0;
+}

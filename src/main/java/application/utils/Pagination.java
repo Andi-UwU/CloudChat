@@ -19,7 +19,6 @@ public class Pagination {
             return Collections.emptyList();
         }
 
-        // toIndex exclusive
         return list.subList(startIndex, Math.min(startIndex + pageSize, list.size()));
     }
     public static <E> Integer getNumberOfPages(List<E> list, Integer pageSize){

@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="310.0" prefWidth="370.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="310.0" prefWidth="370.0" styleClass="custom_background" stylesheets="@css/css_classes.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label text="Sign up for free™ now!">
          <font>
@@ -51,7 +51,7 @@
                   <Font size="13.0" />
                </font>
             </Label>
-            <TextField fx:id="firstNameTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="240.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.valignment="CENTER">
+            <TextField fx:id="firstNameTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="240.0" styleClass="custom_text_field" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin>
@@ -59,7 +59,7 @@
                   <Font size="13.0" />
                </font>
             </TextField>
-            <TextField fx:id="lastNameTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="240.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <TextField fx:id="lastNameTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="240.0" styleClass="custom_text_field" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin>
@@ -67,7 +67,7 @@
                   <Font size="13.0" />
                </font>
             </TextField>
-            <TextField fx:id="userNameTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="240.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <TextField fx:id="userNameTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="240.0" styleClass="custom_text_field" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin>
@@ -80,7 +80,7 @@
                   <Font size="13.0" />
                </font>
             </Label>
-            <TextField fx:id="passWordTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="240.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <TextField fx:id="passWordTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="240.0" styleClass="custom_text_field" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <font>
                   <Font size="13.0" />
                </font>
@@ -92,7 +92,7 @@
       </GridPane>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button fx:id="createAccountButton" mnemonicParsing="false" onAction="#createAccountAction" text="Create account">
+            <Button fx:id="createAccountButton" mnemonicParsing="false" onAction="#createAccountAction" styleClass="custom_button" text="Create account">
                <font>
                   <Font size="13.0" />
                </font>
@@ -100,7 +100,7 @@
                   <Insets right="30.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonAction" text="Back">
+            <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonAction" styleClass="custom_button" text="Back">
                <font>
                   <Font size="13.0" />
                </font>

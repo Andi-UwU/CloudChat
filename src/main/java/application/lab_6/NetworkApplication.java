@@ -8,6 +8,7 @@ import application.service.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
 
 import static application.utils.DatabaseConstants.*;
@@ -59,6 +60,7 @@ public class NetworkApplication extends Application {
         stage.setTitle("The Network");
         stage.setScene(loginScene);
         stage.show();
+        DatePicker datePicker = new DatePicker();
     }
 
     public static void main(String[] args) {
