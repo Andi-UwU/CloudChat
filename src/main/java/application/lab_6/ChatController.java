@@ -146,12 +146,14 @@ public class ChatController {
         chatFriendTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FriendDTO>() {
             @Override
             public void changed(ObservableValue<? extends FriendDTO> observable, FriendDTO oldValue, FriendDTO newValue) {
+                currentPage = 1;
+                pageNumberLabel.setText(currentPage.toString());
                 if (newValue != null) {
                     if (oldValue != null) {
                         if (oldValue.getId() == newValue.getId())
                             return;
                     }
-                    currentPage = 1;
+
                     updateMessageListView(newValue.getId(), currentPage);
                 }
             }
@@ -262,7 +264,7 @@ public class ChatController {
     private void backButtonAction(ActionEvent actionEvent){
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
-            MainPageController mainPageController = new MainPageController(user,superService);
+            MainPageController mainPageController = new MainPageController(user, superService, true);
             fxmlLoader.setLocation(getClass().getResource("mainpage.fxml"));
             fxmlLoader.setController(mainPageController);
             Scene mainScene = new Scene(fxmlLoader.load());

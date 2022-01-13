@@ -54,6 +54,8 @@ public class CreateEventController {
             superService.addEvent(user, title, description, date);
             InfoBox.show("Event added!");
 
+            backButtonAction(actionEvent);
+
         } catch (ValidationException e) {
             WarningBox.show(e.getMessage());
         } catch (RepositoryException e) {
@@ -65,7 +67,7 @@ public class CreateEventController {
     public void backButtonAction(ActionEvent actionEvent){
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
-            MainPageController mainPageController = new MainPageController(user,superService);
+            MainPageController mainPageController = new MainPageController(user,superService, true);
             fxmlLoader.setLocation(getClass().getResource("mainpage.fxml"));
             fxmlLoader.setController(mainPageController);
             Scene mainScene = new Scene(fxmlLoader.load());

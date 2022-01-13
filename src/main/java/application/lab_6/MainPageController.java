@@ -78,10 +78,11 @@ public class MainPageController implements Observer {
     @FXML
     private Button activityButton;
 
-    public MainPageController(User user, SuperService superService) {
+    public MainPageController(User user, SuperService superService, Boolean noticed) {
         this.superService=superService;
         superService.addObserverForNetwork(this);
         this.user=user;
+        this.noticed = noticed;
     }
 
     @FXML
@@ -108,6 +109,9 @@ public class MainPageController implements Observer {
 
     private Boolean noticed = false;
 
+    public void setNoticed(){
+        noticed = true;
+    }
 
     final class EventListCell extends ListCell<Event> {
         @Override
