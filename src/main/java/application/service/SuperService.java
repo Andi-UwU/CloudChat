@@ -470,7 +470,7 @@ public class SuperService {
                 .collect(Collectors.toList());
     }
 
-    public void generateActivityExportPDF(User currentUser, LocalDate startDate, LocalDate endDate) throws IOException, ValidationException, SQLException, RepositoryException {
+    public void generateActivityExportPDF(User currentUser, LocalDate startDate, LocalDate endDate, String absolutePath) throws IOException, ValidationException, SQLException, RepositoryException {
         LocalDateTime start = startDate.atStartOfDay();
         LocalDateTime end = endDate.atStartOfDay().plusDays(1);
 
@@ -486,7 +486,7 @@ public class SuperService {
 
         ExporterPDF exporter = new ExporterPDF();   // create a new ExporterPDF instance to create a PDF file
         exporter.exportActivityToPDF(currentUser, startDate, endDate,
-                friendDTOList, messageList
+                friendDTOList, messageList, absolutePath
         );
     }
 
