@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" pickOnBounds="false" prefHeight="340.0" prefWidth="430.0" scaleShape="false" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" pickOnBounds="false" prefHeight="340.0" prefWidth="430.0" scaleShape="false" styleClass="custom_background" stylesheets="@css/css_classes.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label prefHeight="30.0" prefWidth="250.0" text="Welcome to The Network!" translateY="-10.0">
          <font>
@@ -46,11 +46,11 @@
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <TextField fx:id="textFieldUser" maxWidth="-Infinity" pickOnBounds="false" prefHeight="25.0" prefWidth="235.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <TextField fx:id="textFieldUser" maxWidth="-Infinity" pickOnBounds="false" prefHeight="25.0" prefWidth="235.0" style="-fx-background-color: #FF7900;" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <font>
                   <Font size="13.0" />
                </font></TextField>
-            <TextField fx:id="textFieldPassword" blendMode="MULTIPLY" maxWidth="-Infinity" pickOnBounds="false" prefHeight="25.0" prefWidth="235.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+            <TextField fx:id="textFieldPassword" maxWidth="-Infinity" pickOnBounds="false" prefHeight="25.0" prefWidth="235.0" style="-fx-background-color: #FF7900;" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                <font>
                   <Font size="13.0" />
                </font></TextField>
@@ -59,7 +59,7 @@
             <Insets />
          </VBox.margin>
       </GridPane>
-      <Button layoutX="50.0" mnemonicParsing="false" onAction="#tryLogin" prefHeight="25.0" prefWidth="60.0" text="Login" translateY="-15.0" VBox.vgrow="NEVER">
+      <Button layoutX="50.0" mnemonicParsing="false" onAction="#tryLogin" prefHeight="28.0" prefWidth="179.0" styleClass="custom_button" text="Login" translateY="-15.0" VBox.vgrow="NEVER">
          <VBox.margin>
             <Insets />
          </VBox.margin>
@@ -73,7 +73,7 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label fx:id="signUpButton" onMouseClicked="#signUpView" text=" Create one now!" textFill="#0044ff">
+            <Label fx:id="signUpButton" onMouseClicked="#signUpView" text=" Create one now!" textFill="#ffa800">
                <font>
                   <Font size="16.0" />
                </font>

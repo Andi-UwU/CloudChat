@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="601.0" stylesheets="@css/css_classes.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <SplitPane dividerPositions="0.1460843373493976" layoutY="-1.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0">
+      <SplitPane dividerPositions="0.1460843373493976" layoutY="-1.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" styleClass="custom_background">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="43.0" prefWidth="242.0">
                <children>
@@ -24,7 +24,7 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="335.0" prefWidth="599.0">
                <children>
-                  <TableView fx:id="tableView" prefHeight="338.0" prefWidth="334.0">
+                  <TableView fx:id="tableView" prefHeight="338.0" prefWidth="334.0" styleClass="custom_background">
                     <columns>
                       <TableColumn minWidth="9.599975407123566" prefWidth="222.3999908566475" text="User">
                            <columns>
@@ -37,10 +37,10 @@
                   </TableView>
                   <AnchorPane layoutX="334.0" prefHeight="338.0" prefWidth="265.0">
                      <children>
-                        <Button fx:id="addButton" layoutX="86.0" layoutY="99.0" mnemonicParsing="false" onAction="#addFriendRequest" prefHeight="26.0" prefWidth="78.0" text="Add" />
-                        <Button fx:id="backButton" layoutX="86.0" layoutY="251.0" mnemonicParsing="false" onAction="#backButtonAction" prefHeight="26.0" prefWidth="78.0" text="Back" />
-                        <Button fx:id="filterButton" layoutX="86.0" layoutY="55.0" mnemonicParsing="false" onAction="#filterButtonAction" prefHeight="26.0" prefWidth="78.0" text="Filter" />
-                        <TextField fx:id="filterTextField" layoutX="50.0" layoutY="14.0" prefHeight="26.0" prefWidth="158.0" promptText="Name" />
+                        <Button fx:id="addButton" layoutX="86.0" layoutY="99.0" mnemonicParsing="false" onAction="#addFriendRequest" prefHeight="26.0" prefWidth="78.0" styleClass="custom_button" text="Add" />
+                        <Button fx:id="backButton" layoutX="86.0" layoutY="251.0" mnemonicParsing="false" onAction="#backButtonAction" prefHeight="26.0" prefWidth="78.0" styleClass="custom_button" text="Back" />
+                        <Button fx:id="filterButton" layoutX="86.0" layoutY="55.0" mnemonicParsing="false" onAction="#filterButtonAction" prefHeight="26.0" prefWidth="78.0" styleClass="custom_button" text="Filter" />
+                        <TextField fx:id="filterTextField" layoutX="50.0" layoutY="14.0" prefHeight="26.0" prefWidth="158.0" promptText="Name" styleClass="custom_text_field" />
                      </children>
                   </AnchorPane>
                </children>
