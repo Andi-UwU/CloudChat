@@ -46,7 +46,7 @@ public class NetworkController {
                 User user = superService.findUser(id);
                 // create user's main page
                 FXMLLoader fxmlLoader = new FXMLLoader();
-                MainPageController mainPageController = new MainPageController(user, superService);
+                MainPageController mainPageController = new MainPageController(user, superService, false);
                 fxmlLoader.setLocation(getClass().getResource("mainpage.fxml"));
                 fxmlLoader.setController(mainPageController);
                 Scene mainScene = new Scene(fxmlLoader.load());
