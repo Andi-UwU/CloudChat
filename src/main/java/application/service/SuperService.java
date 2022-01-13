@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static application.utils.Constants.DATE_TIME_FORMATTER;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class SuperService {
     private final Network network;
@@ -530,12 +531,27 @@ public class SuperService {
         return eventService.removeSubscriber(event, subscriber);
     }
 
+    public List<Event> getSubscribedEventsForUser(User user) throws RepositoryException {
+        return eventService.getAll()
+                .stream()
+                .filter(event -> event.getSubscribers().contains(user))
+                .sorted((event1, event2) ->
+                {
+                    if (event1.getEventDate().isBefore(event2.getEventDate()))
+                        return -1;
+                    return 1;
+                })
+                .collect(Collectors.toList());
+
+    }
+
     public List<Event> getEventsForUser(User user) throws RepositoryException, SQLException {
         List<Event> eventList = eventService.getAll();
         List<User> friendsList = friendList(user);
 
         return eventList
                 .stream()
+                .filter(event -> event.getEventDate().isAfter(LocalDate.now()) || event.getEventDate().equals(LocalDate.now()))
                 .filter(event -> {
                     if (event.getAuthor().equals(user)) // if the author is the user
                         return true;
@@ -551,6 +567,28 @@ public class SuperService {
 
                     return false;
                 })
+                .sorted((event1, event2) ->
+                {
+                    if (event1.getEventDate().isBefore(event2.getEventDate()))
+                        return -1;
+                    return 1;
+                })
                 .collect(Collectors.toList());
+    }
+
+    public Integer getNumberOfSoonEventsForUser(User user) throws RepositoryException {
+        long notificationsNumber = eventService.getAll()
+                .stream()
+                .filter(event -> event.getSubscribers().contains(user))
+                .filter(event -> DAYS.between(LocalDate.now(), event.getEventDate()) < 2)
+                .filter(event -> event.getEventDate().isAfter(LocalDate.now()) || event.getEventDate().equals(LocalDate.now()))
+                .sorted((event1, event2) ->
+                {
+                    if (event1.getEventDate().isBefore(event2.getEventDate()))
+                        return -1;
+                    return 1;
+                })
+                .count();
+        return (int) notificationsNumber;
     }
 }
