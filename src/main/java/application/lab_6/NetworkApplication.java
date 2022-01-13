@@ -3,14 +3,8 @@ package application.lab_6;
 import application.domain.*;
 import application.domain.validator.*;
 import application.repository.Repository;
-import application.repository.database.FriendRequestDataBaseRepository;
-import application.repository.database.FriendshipDataBaseRepository;
-import application.repository.database.MessageDataBaseRepository;
-import application.repository.database.UserDataBaseRepository;
-import application.service.FriendRequestService;
-import application.service.MessageService;
-import application.service.Network;
-import application.service.SuperService;
+import application.repository.database.*;
+import application.service.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -44,8 +38,14 @@ public class NetworkApplication extends Application {
         MessageDataBaseRepository messageRepository = new MessageDataBaseRepository(URL, USERNAME, PASSWORD);
         MessageService messageService = new MessageService(messageRepository, messageValidator);
 
+        // Event
+        Validator<Event> eventValidator = new EventValidator();
+        EventDataBaseRepository eventDataBaseRepository = new EventDataBaseRepository(URL, USERNAME, PASSWORD);
+        EventService eventService = new EventService(eventDataBaseRepository, eventValidator);
+
+
         // Super Service
-        this.superService= new SuperService(network, messageService,friendRequestService);
+        this.superService= new SuperService(network, messageService, friendRequestService, eventService);
 
     }
 

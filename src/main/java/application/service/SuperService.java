@@ -23,11 +23,13 @@ public class SuperService {
 
     private final MessageService messageService;
     private final FriendRequestService friendRequestService;
+    private final EventService eventService;
 
-    public SuperService(Network network, MessageService messageService, FriendRequestService friendRequestService) {
+    public SuperService(Network network, MessageService messageService, FriendRequestService friendRequestService, EventService eventService) {
         this.network = network;
         this.messageService = messageService;
         this.friendRequestService = friendRequestService;
+        this.eventService = eventService;
     }
 
     //TODO some comments down there
@@ -46,7 +48,6 @@ public class SuperService {
      * gets a string list of all the friendships the user has
      * @param userId Integer
      * @return List(String)
-     * @throws ValidationException if data is not valid
      * @throws SQLException if the database isn't available
      * @throws RepositoryException if a user doesn't exist
      */
@@ -74,8 +75,7 @@ public class SuperService {
                 .map(user -> {
                     Integer id = user.getId();
                     String name = user.getFirstName() + " " + user.getLastName();
-                    UserDTO userDTO = new UserDTO(id, name);
-                    return userDTO;
+                    return new UserDTO(id, name);
                 })
                 .collect(Collectors.toList());
     }
@@ -439,6 +439,9 @@ public class SuperService {
         LocalDateTime start = startDate.atStartOfDay();
         LocalDateTime end = endDate.atStartOfDay().plusDays(1);
         List<FriendDTO> friendList = this.getFriendDtoOfUser(id);
+
+
+
         return friendList.stream()
                         .filter(friendDTO-> {
                                 LocalDateTime friendDate = LocalDateTime.parse(friendDTO.getDate(),DATE_TIME_FORMATTER);
@@ -493,4 +496,61 @@ public class SuperService {
     public void addObserverForFriendRequests(Observer observer) { friendRequestService.addObserver(observer);}
 
 
+    // ===================== EVENTS ==========================
+
+    public List<Event> getAllEvents() throws RepositoryException {
+        return eventService.getAll();
+    }
+
+    public Event findEvent(Integer eventId) throws RepositoryException {
+        return eventService.find(eventId);
+    }
+
+    public Event addEvent(User author, String title, String description, LocalDate eventDate) throws ValidationException, RepositoryException {
+        return eventService.add(author, title, description, eventDate);
+    }
+
+    public Event deleteEvent(Integer eventId) throws RepositoryException {
+        return eventService.delete(eventId);
+    }
+
+    public Event updateEvent(Event oldEvent, String newTitle, String newDescription) throws RepositoryException, ValidationException {
+        return eventService.update(oldEvent, newTitle, newDescription);
+    }
+
+    public Integer getNoOfEvents() throws SQLException {
+        return eventService.size();
+    }
+
+    public Event addSubscriber(Event event, User subscriber) throws RepositoryException {
+        return eventService.addSubscriber(event, subscriber);
+    }
+
+    public Event removeSubscriber(Event event, User subscriber) throws RepositoryException{
+        return eventService.removeSubscriber(event, subscriber);
+    }
+
+    public List<Event> getEventsForUser(User user) throws RepositoryException, SQLException {
+        List<Event> eventList = eventService.getAll();
+        List<User> friendsList = friendList(user);
+
+        return eventList
+                .stream()
+                .filter(event -> {
+                    if (event.getAuthor().equals(user)) // if the author is the user
+                        return true;
+                    if (friendsList.contains(event.getAuthor())) // if the author is one of the user's friend
+                        return true;
+                    List<User> intersectionList = friendsList  // intersection of friends of the user and subscribers of the event
+                            .stream()
+                            .distinct()
+                            .filter(event.getSubscribers()::contains)
+                            .collect(Collectors.toList());
+                    if (intersectionList.size() > 0) // if there is one of the user's friend subscribed to this event
+                        return true;
+
+                    return false;
+                })
+                .collect(Collectors.toList());
+    }
 }

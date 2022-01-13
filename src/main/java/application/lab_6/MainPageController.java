@@ -1,5 +1,7 @@
 package application.lab_6;
 
+import application.domain.Event;
+import application.domain.Message;
 import application.domain.User;
 import application.domain.FriendDTO;
 import application.exceptions.RepositoryException;
@@ -12,14 +14,21 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+
+import static application.utils.Constants.DATE_FORMATTER;
+import static application.utils.Constants.DATE_TIME_FORMATTER;
 
 
 public class MainPageController implements Observer {
@@ -31,6 +40,8 @@ public class MainPageController implements Observer {
 
     @FXML
     private Label welcomeLabel;
+
+    /*
     //========= Friends Table ===============
     @FXML
     private TableColumn<FriendDTO, Integer> friendsTableColumnId;
@@ -42,7 +53,7 @@ public class MainPageController implements Observer {
     private TableView<FriendDTO> friendsTableView;
 
     private ObservableList<FriendDTO> friendsList = FXCollections.observableArrayList();
-
+    */
     //========= Delete Friend Button
     @FXML
     private Button deleteFriendButton;
@@ -69,10 +80,85 @@ public class MainPageController implements Observer {
         this.user=user;
     }
 
-
     @FXML
     private Button chatButton;
 
+    //========== Events
+    @FXML
+    private ListView<Event> eventListView;
+
+    private ObservableList<Event> eventObservableList = FXCollections.observableArrayList();
+
+    @FXML
+    private Button subscribeButton;
+    @FXML
+    private Button unsubscribeButton;
+    @FXML
+    private Button createEventButton;
+
+
+    final class EventListCell extends ListCell<Event> {
+        @Override
+        protected void updateItem(Event event, boolean empty) {
+            super.updateItem(event, empty);
+            if (empty) {
+                setGraphic(null);
+            } else {
+
+                // Create the VBox
+                VBox eventBox = new VBox();
+                //eventBox.setAlignment(Pos.CENTER);
+
+                // Title
+                VBox titleBox = new VBox();
+                Text title = new Text(event.getTitle());
+                title.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
+                titleBox.getChildren().add(title);
+                titleBox.setAlignment(Pos.CENTER);
+                // Description
+                Label description = new Label(event.getDescription() + "\n\n" );
+                description.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
+                description.setTextAlignment(TextAlignment.JUSTIFY);
+                description.setMaxWidth(380);
+                description.setWrapText(true);
+                // Date of the event
+                Label eventDate = new Label("Date: " + event.getEventDate().format(DATE_FORMATTER));
+                eventDate.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
+                // Author
+                Label authorLabel = new Label("Author: " + event.getAuthor().getUserName());
+                // Subscribed/Unsubscribed
+                String subscribedText;
+                if (event.getSubscribers().contains(user))
+                    subscribedText = "You are subscribed.";
+                else
+                    subscribedText = "You are not subscribed.";
+                Label subscribedLabel = new Label(subscribedText);
+
+                eventBox.getChildren().addAll(titleBox, description, eventDate, authorLabel, subscribedLabel);
+                setGraphic(eventBox);
+            }
+        }
+    }
+
+    private void updateEventListView(){
+
+        try {
+            eventObservableList.setAll(superService.getEventsForUser(user));
+            if (eventListView != null)
+                eventListView.setItems(eventObservableList);
+        } catch (RepositoryException e) {
+            WarningBox.show(e.getMessage());
+        } catch (SQLException e) {
+            WarningBox.show(e.getMessage());
+        }
+    }
+
+    @Override
+    public void observerUpdate() {
+        //updateFriendsTableView();
+    }
+
+    /*
     private void updateFriendsTableView(){
         try {
             friendsList.setAll(superService.getFriendDtoOfUser(user.getId())); }
@@ -81,26 +167,28 @@ public class MainPageController implements Observer {
         friendsTableView.setItems(friendsList);
     }
 
-    @Override
-    public void observerUpdate() {
-        updateFriendsTableView();
-    }
-
     private void initializeFriendsTableView(){
         friendsTableColumnId.setCellValueFactory(new PropertyValueFactory<FriendDTO, Integer>("id"));
         friendsTableColumnName.setCellValueFactory(new PropertyValueFactory<FriendDTO, String>("name"));
         friendsTableColumnFriendshipDate.setCellValueFactory(new PropertyValueFactory<FriendDTO, String>("date"));
         updateFriendsTableView();
     }
-
+    */
     @FXML
     public void initialize() {
-        welcomeLabel.setText("Welcome " + user.getFirstName() + " " + user.getLastName() + "!");
-        initializeFriendsTableView();
+        welcomeLabel.setText("Welcome " + user.getUserName() + " (" + user.getFirstName() + " " + user.getLastName() + ") " + "!");
+        //initializeFriendsTableView();
+
+        eventListView.setCellFactory(eventListView -> new EventListCell());
+
+        updateEventListView();
     }
+
+
 
     @FXML
     public void deleteFriendButtonAction(ActionEvent actionEvent){
+        /*
         try{
             //delete from repository
             FriendDTO friendDto = friendsTableView.getSelectionModel().getSelectedItem();
@@ -118,7 +206,61 @@ public class MainPageController implements Observer {
         } catch (ValidationException | SQLException | RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
+
+         */
     }
+
+    @FXML
+    public void subscribeButtonAction(ActionEvent actionEvent){
+        try{
+            Event selectedEvent = eventListView.getSelectionModel().getSelectedItem();
+            if (selectedEvent == null) {
+                WarningBox.show("You have to select an event to subscribe to!");
+                return;
+            }
+            superService.addSubscriber(selectedEvent, user);
+            updateEventListView();
+        } catch (RepositoryException e) {
+            WarningBox.show(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void unsubscribeButtonAction(ActionEvent actionEvent){
+        try{
+            Event selectedEvent = eventListView.getSelectionModel().getSelectedItem();
+            if (selectedEvent == null) {
+                WarningBox.show("You have to select an event to unsubscribe to!");
+                return;
+            }
+            superService.removeSubscriber(selectedEvent, user);
+            updateEventListView();
+        } catch (RepositoryException e) {
+            WarningBox.show(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void createEventButtonAction(ActionEvent actionEvent){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            CreateEventController createEventController = new CreateEventController();
+            createEventController.setService(superService);
+            createEventController.setUser(user);
+            fxmlLoader.setLocation(getClass().getResource("createEventScene.fxml"));
+            fxmlLoader.setController(createEventController);
+            Scene createEventScene = new Scene(fxmlLoader.load());
+            Stage createEventStage = new Stage();
+            createEventStage.setTitle("Create Event!");
+            createEventStage.setScene(createEventScene);
+            createEventStage.show();
+            ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+
+        } catch (NumberFormatException | IOException e) {
+            WarningBox.show(e.getMessage());
+        }
+    }
+
 
     @FXML
     public void changeToAddFriendScene(ActionEvent actionEvent){

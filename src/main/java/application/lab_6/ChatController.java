@@ -123,6 +123,29 @@ public class ChatController {
         }
 
     }
+
+
+    private void initializeChatFriendsTableView(){
+        chatIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        chatNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        chatSelectColumn.setCellValueFactory(new PropertyValueFactory<>("select"));
+        updateChatFriendsTableView();
+
+        chatFriendTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FriendDTO>() {
+            @Override
+            public void changed(ObservableValue<? extends FriendDTO> observable, FriendDTO oldValue, FriendDTO newValue) {
+                if (newValue != null) {
+                    if (oldValue != null)
+                        if (oldValue.getId() == newValue.getId())
+                            return;
+                    updateMessageListView(newValue.getId());
+                }
+            }
+        });
+    }
+
+    // ===========  Messages  ================
+
     final class CustomAlignmentListViewCell extends ListCell<Message> {
         @Override
         protected void updateItem(Message item, boolean empty) {
@@ -151,28 +174,6 @@ public class ChatController {
             }
         }
     }
-
-    private void initializeChatFriendsTableView(){
-        chatIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        chatNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        chatSelectColumn.setCellValueFactory(new PropertyValueFactory<>("select"));
-        updateChatFriendsTableView();
-
-        chatFriendTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FriendDTO>() {
-            @Override
-            public void changed(ObservableValue<? extends FriendDTO> observable, FriendDTO oldValue, FriendDTO newValue) {
-                if (newValue != null) {
-                    if (oldValue != null)
-                        if (oldValue.getId() == newValue.getId())
-                            return;
-                    updateMessageListView(newValue.getId());
-                }
-            }
-        });
-    }
-
-    // ===========  Messages  ================
-
     private void updateMessageListView(Integer userId){
         try {
             currentFriendId = userId;
