@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="783.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TableView fx:id="chatFriendTableView" accessibleRole="BUTTON" layoutX="22.0" layoutY="54.0" prefHeight="158.0" prefWidth="222.0">
         <columns>
@@ -18,10 +18,10 @@
             <TableColumn fx:id="chatSelectColumn" prefWidth="41.5999755859375" text="Select" />
         </columns>
       </TableView>
-      <ListView fx:id="chatMessageListView" layoutX="265.0" layoutY="54.0" prefHeight="266.0" prefWidth="369.0" />
-      <TextField fx:id="messageTextField" layoutX="265.0" layoutY="320.0" prefHeight="26.0" prefWidth="370.0" />
+      <ListView fx:id="chatMessageListView" layoutX="265.0" layoutY="54.0" prefHeight="266.0" prefWidth="498.0" />
+      <TextField fx:id="messageTextField" layoutX="265.0" layoutY="320.0" prefHeight="26.0" prefWidth="498.0" />
       <Button fx:id="sendMessageButton" layoutX="265.0" layoutY="360.0" mnemonicParsing="false" onAction="#sendButtonAction" prefHeight="26.0" prefWidth="48.0" text="Send" />
-      <Label fx:id="friendNameLabel" layoutX="265.0" layoutY="23.0" prefHeight="26.0" prefWidth="278.0" text="Friend Name">
+      <Label fx:id="friendNameLabel" layoutX="265.0" layoutY="23.0" prefHeight="26.0" prefWidth="206.0" text="Friend Name">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
@@ -47,5 +47,8 @@
       </Label>
       <Button fx:id="sendToSelectedButton" layoutX="325.0" layoutY="360.0" mnemonicParsing="false" onAction="#sendToSelectedButtonAction" prefHeight="26.0" prefWidth="104.0" text="Send to selected" />
       <Button fx:id="deleteMessageButton" layoutX="584.0" layoutY="360.0" mnemonicParsing="false" onAction="#deleteMessageButtonAction" text="Delete" />
+      <Button fx:id="nextPage" layoutX="701.0" layoutY="14.0" mnemonicParsing="false" onAction="#nextPageAction" prefHeight="26.0" prefWidth="61.0" text="Next" />
+      <Button fx:id="previousPage" layoutX="593.0" layoutY="14.0" mnemonicParsing="false" onAction="#previousPageAction" text="Previous" />
+      <Label fx:id="pageNumberLabel" layoutX="665.0" layoutY="18.0" prefHeight="18.0" prefWidth="24.0" text="x" />
    </children>
 </AnchorPane>

@@ -55,7 +55,7 @@ public class EventService {
         return repository.removeSubscriber(event, subscriber);
     }
 
-    public Integer size() throws SQLException {
+    public Integer size() throws RepositoryException {
         return repository.size();
     }
 }

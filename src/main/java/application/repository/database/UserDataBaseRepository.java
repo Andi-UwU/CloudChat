@@ -1,8 +1,10 @@
 package application.repository.database;
 
+import application.domain.Friendship;
 import application.domain.User;
 import application.exceptions.RepositoryException;
 
+import application.utils.Pagination;
 import de.mkammerer.argon2.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -78,7 +80,7 @@ public class UserDataBaseRepository extends DataBaseRepository<Integer, User> {
     }
 
     @Override
-    public List<User> getAll() throws SQLException {
+    public List<User> getAll() throws RepositoryException {
         List<User> users = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement("SELECT id,first_name,last_name,username from users");
@@ -88,11 +90,13 @@ public class UserDataBaseRepository extends DataBaseRepository<Integer, User> {
                 String firstName = resultSet.getString("first_name");
                 String lastName = resultSet.getString("last_name");
                 String userName = resultSet.getString("username");
-                User user = new User(firstName, lastName,userName);
+                User user = new User(firstName, lastName, userName);
                 user.setId(id);
                 users.add(user);
             }
             return users;
+        }catch (SQLException e){
+            throw new RepositoryException(e.getMessage());
         }
     }
 
@@ -155,15 +159,29 @@ public class UserDataBaseRepository extends DataBaseRepository<Integer, User> {
     }
 
     @Override
-    public Integer size() throws SQLException {
+    public Integer size() throws RepositoryException {
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) as count from users");
              ResultSet resultSet = statement.executeQuery()) {
 
                 resultSet.next();
                 return resultSet.getInt("count");
+        }catch (SQLException e){
+            throw new RepositoryException(e.getMessage());
         }
     }
 
+    @Override
+    public List<User> getPage(Integer page) throws RepositoryException, IllegalArgumentException {
+        return Pagination.<User>getPage(getAll(), page, pageSize);
+    }
 
+    @Override
+    public int getNumberOfPages() throws RepositoryException {
+        int size = size();
+        int mod = size % pageSize;
+        int additionalPage = 0;
+        if (mod > 0) additionalPage = 1;
+        return (size / pageSize + additionalPage);
+    }
 }
