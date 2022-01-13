@@ -7,6 +7,7 @@ import application.domain.FriendDTO;
 import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
 import application.service.SuperService;
+import application.utils.InfoBox;
 import application.utils.WarningBox;
 import application.utils.observer.Observer;
 import javafx.collections.FXCollections;
@@ -14,21 +15,24 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import static application.utils.Constants.DATE_FORMATTER;
 import static application.utils.Constants.DATE_TIME_FORMATTER;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 
 public class MainPageController implements Observer {
@@ -96,6 +100,14 @@ public class MainPageController implements Observer {
     @FXML
     private Button createEventButton;
 
+    @FXML
+    private CheckBox subscribedCheckBox;
+
+    @FXML
+    private Label eventsLabel;
+
+    private Boolean noticed = false;
+
 
     final class EventListCell extends ListCell<Event> {
         @Override
@@ -134,6 +146,10 @@ public class MainPageController implements Observer {
                     subscribedText = "You are not subscribed.";
                 Label subscribedLabel = new Label(subscribedText);
 
+                // Events that will take place soon -> different background color
+                if (DAYS.between(LocalDate.now(), event.getEventDate()) < 2)
+                    eventBox.setBackground(new Background(new BackgroundFill(Color.valueOf("BFBFBF"), CornerRadii.EMPTY, Insets.EMPTY)));
+
                 eventBox.getChildren().addAll(titleBox, description, eventDate, authorLabel, subscribedLabel);
                 setGraphic(eventBox);
             }
@@ -143,7 +159,10 @@ public class MainPageController implements Observer {
     private void updateEventListView(){
 
         try {
-            eventObservableList.setAll(superService.getEventsForUser(user));
+            if (!subscribedCheckBox.isSelected())
+                eventObservableList.setAll(superService.getEventsForUser(user));
+            else
+                eventObservableList.setAll(superService.getSubscribedEventsForUser(user));
             if (eventListView != null)
                 eventListView.setItems(eventObservableList);
         } catch (RepositoryException e) {
@@ -151,6 +170,28 @@ public class MainPageController implements Observer {
         } catch (SQLException e) {
             WarningBox.show(e.getMessage());
         }
+    }
+
+    @FXML
+    public void subscribedCheckBoxAction(ActionEvent actionEvent){
+
+        try {
+            if (subscribedCheckBox.isSelected()){
+                eventObservableList.setAll(superService.getSubscribedEventsForUser(user));
+                eventListView.setItems(eventObservableList);
+            }
+            else{
+                eventObservableList.setAll(superService.getEventsForUser(user));
+                eventListView.setItems(eventObservableList);
+            }
+
+        } catch (RepositoryException e) {
+            WarningBox.show(e.getMessage());
+        } catch (SQLException throwables) {
+            WarningBox.show(throwables.getMessage());
+        }
+
+
     }
 
     @Override
@@ -182,6 +223,23 @@ public class MainPageController implements Observer {
         eventListView.setCellFactory(eventListView -> new EventListCell());
 
         updateEventListView();
+
+        try {
+            String eventLabelText = "Events: ";
+            Integer nr = superService.getNumberOfSoonEventsForUser(user);
+            if (nr > 0){
+                eventLabelText += "-> " + nr.toString() + " events will take place soon!";
+                if (!noticed) {
+                    InfoBox.show(nr.toString() + " events you are subscribed to will take place soon! " +
+                            "\n Check your subscribed events to find more.");
+                    noticed = true;
+                }
+            }
+            eventsLabel.setText(eventLabelText);
+
+        } catch (RepositoryException e) {
+            WarningBox.show(e.getMessage());
+        }
     }
 
 

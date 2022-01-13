@@ -87,8 +87,4 @@ public class CreateEventController {
     public void setUser(User user) {
         this.user = user;
     }
-
-
-
-
 }
