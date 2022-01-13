@@ -45,7 +45,7 @@ public class MainPageController implements Observer {
     @FXML
     private Label welcomeLabel;
 
-    /*
+
     //========= Friends Table ===============
     @FXML
     private TableColumn<FriendDTO, Integer> friendsTableColumnId;
@@ -57,7 +57,7 @@ public class MainPageController implements Observer {
     private TableView<FriendDTO> friendsTableView;
 
     private ObservableList<FriendDTO> friendsList = FXCollections.observableArrayList();
-    */
+
     //========= Delete Friend Button
     @FXML
     private Button deleteFriendButton;
@@ -196,10 +196,10 @@ public class MainPageController implements Observer {
 
     @Override
     public void observerUpdate() {
-        //updateFriendsTableView();
+        updateFriendsTableView();
     }
 
-    /*
+
     private void updateFriendsTableView(){
         try {
             friendsList.setAll(superService.getFriendDtoOfUser(user.getId())); }
@@ -214,11 +214,11 @@ public class MainPageController implements Observer {
         friendsTableColumnFriendshipDate.setCellValueFactory(new PropertyValueFactory<FriendDTO, String>("date"));
         updateFriendsTableView();
     }
-    */
+
     @FXML
     public void initialize() {
         welcomeLabel.setText("Welcome " + user.getUserName() + " (" + user.getFirstName() + " " + user.getLastName() + ") " + "!");
-        //initializeFriendsTableView();
+        initializeFriendsTableView();
 
         eventListView.setCellFactory(eventListView -> new EventListCell());
 
@@ -246,7 +246,7 @@ public class MainPageController implements Observer {
 
     @FXML
     public void deleteFriendButtonAction(ActionEvent actionEvent){
-        /*
+
         try{
             //delete from repository
             FriendDTO friendDto = friendsTableView.getSelectionModel().getSelectedItem();
@@ -264,8 +264,6 @@ public class MainPageController implements Observer {
         } catch (ValidationException | SQLException | RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
-
-         */
     }
 
     @FXML

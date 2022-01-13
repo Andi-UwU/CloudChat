@@ -5,11 +5,13 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="custom_background" stylesheets="@css/css_classes.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="839.0" styleClass="custom_background" stylesheets="@css/css_classes.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="welcomeLabel" prefHeight="77.0" prefWidth="594.0" text="Welcome">
          <padding>
@@ -25,17 +27,24 @@
                <font>
                   <Font size="16.0" />
                </font></Label>
-            <Button fx:id="deleteFriendButton" layoutX="446.0" layoutY="88.0" mnemonicParsing="false" onAction="#deleteFriendButtonAction" prefHeight="26.0" prefWidth="102.0" styleClass="custom_button" text="Delete Friend" />
-            <Button fx:id="addFriendButton" layoutX="447.0" layoutY="42.0" mnemonicParsing="false" onAction="#changeToAddFriendScene" prefHeight="26.0" prefWidth="101.0" styleClass="custom_button" text="Add Friends" />
-            <Button fx:id="friendRequestsButton" layoutX="446.0" layoutY="133.0" mnemonicParsing="false" onAction="#friendRequestsView" prefHeight="25.0" prefWidth="102.0" styleClass="custom_button" text="Friend Requests" />
-            <Button fx:id="backToLoginButton" layoutX="446.0" layoutY="289.0" mnemonicParsing="false" onAction="#backToLoginAction" prefHeight="26.0" prefWidth="102.0" styleClass="custom_button" text="Back to Login" />
-            <Button fx:id="chatButton" layoutX="446.0" layoutY="175.0" mnemonicParsing="false" onAction="#changeToChatScene" prefHeight="26.0" prefWidth="102.0" styleClass="custom_button" text="Chat" />
-            <Button fx:id="activityButton" layoutX="446.0" layoutY="218.0" mnemonicParsing="false" onAction="#changeToActivityScene" prefHeight="26.0" prefWidth="102.0" styleClass="custom_button" text="Activity" />
-            <ListView fx:id="eventListView" layoutX="14.0" layoutY="61.0" prefHeight="215.0" prefWidth="399.0" styleClass="custom_background" />
+            <Button fx:id="deleteFriendButton" layoutX="504.0" layoutY="289.0" mnemonicParsing="false" onAction="#deleteFriendButtonAction" prefHeight="26.0" prefWidth="102.0" styleClass="custom_button" text="Delete Friend" />
+            <Button fx:id="addFriendButton" layoutX="721.0" layoutY="105.0" mnemonicParsing="false" onAction="#changeToAddFriendScene" prefHeight="26.0" prefWidth="101.0" styleClass="custom_button" text="Add Friends" />
+            <Button fx:id="friendRequestsButton" layoutX="721.0" layoutY="149.0" mnemonicParsing="false" onAction="#friendRequestsView" prefHeight="25.0" prefWidth="102.0" styleClass="custom_button" text="Friend Requests" />
+            <Button fx:id="backToLoginButton" layoutX="720.0" layoutY="250.0" mnemonicParsing="false" onAction="#backToLoginAction" prefHeight="26.0" prefWidth="102.0" styleClass="custom_button" text="Back to Login" />
+            <Button fx:id="chatButton" layoutX="721.0" layoutY="61.0" mnemonicParsing="false" onAction="#changeToChatScene" prefHeight="26.0" prefWidth="102.0" styleClass="custom_button" text="Chat" />
+            <Button fx:id="activityButton" layoutX="721.0" layoutY="194.0" mnemonicParsing="false" onAction="#changeToActivityScene" prefHeight="26.0" prefWidth="102.0" styleClass="custom_button" text="Activity" />
+            <ListView fx:id="eventListView" layoutX="14.0" layoutY="61.0" prefHeight="215.0" prefWidth="374.0" styleClass="custom_background" />
             <Button fx:id="subscribeButton" layoutX="14.0" layoutY="289.0" mnemonicParsing="false" onAction="#subscribeButtonAction" prefHeight="26.0" prefWidth="102.0" styleClass="custom_button" text="Subscribe" />
-            <Button fx:id="unsubscribeButton" layoutX="162.0" layoutY="289.0" mnemonicParsing="false" onAction="#unsubscribeButtonAction" prefHeight="26.0" prefWidth="102.0" styleClass="custom_button" text="Unsubscribe" />
-            <Button fx:id="createEventButton" layoutX="310.0" layoutY="289.0" mnemonicParsing="false" onAction="#createEventButtonAction" prefHeight="26.0" prefWidth="102.0" styleClass="custom_button" text="Create Event" />
+            <Button fx:id="unsubscribeButton" layoutX="150.0" layoutY="289.0" mnemonicParsing="false" onAction="#unsubscribeButtonAction" prefHeight="26.0" prefWidth="102.0" styleClass="custom_button" text="Unsubscribe" />
+            <Button fx:id="createEventButton" layoutX="285.0" layoutY="289.0" mnemonicParsing="false" onAction="#createEventButtonAction" prefHeight="26.0" prefWidth="102.0" styleClass="custom_button" text="Create Event" />
             <CheckBox fx:id="subscribedCheckBox" layoutX="14.0" layoutY="33.0" mnemonicParsing="false" onAction="#subscribedCheckBoxAction" text="Show only subscribed events" />
+            <TableView fx:id="friendsTableView" layoutX="402.0" layoutY="62.0" prefHeight="215.0" prefWidth="310.0" styleClass="custom_table_view">
+              <columns>
+                <TableColumn fx:id="friendsTableColumnId" prefWidth="29.60003662109375" styleClass="column_header_background" text="ID" />
+                <TableColumn fx:id="friendsTableColumnName" prefWidth="167.99996948242188" styleClass="column_header_background" text="Name" />
+                  <TableColumn fx:id="friendsTableColumnFriendshipDate" prefWidth="111.199951171875" styleClass="column_header_background" text="Friends since" />
+              </columns>
+            </TableView>
          </children>
          <VBox.margin>
             <Insets left="10.0" right="10.0" />

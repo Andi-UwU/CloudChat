@@ -11,11 +11,11 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" styleClass="custom_background" stylesheets="@css/css_classes.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <TableView fx:id="chatFriendTableView" accessibleRole="BUTTON" layoutX="274.0" layoutY="212.0" prefHeight="241.0" prefWidth="222.0" styleClass="custom_background">
+        <TableView fx:id="chatFriendTableView" accessibleRole="BUTTON" layoutX="274.0" layoutY="212.0" prefHeight="241.0" prefWidth="222.0" styleClass="custom_table_view">
             <columns>
-                <TableColumn fx:id="chatIdColumn" prefWidth="38.4000244140625" text="ID" />
-                <TableColumn fx:id="chatNameColumn" minWidth="1.600006103515625" prefWidth="140.0" text="Name" />
-                <TableColumn fx:id="chatSelectColumn" prefWidth="41.5999755859375" text="Select" />
+                <TableColumn fx:id="chatIdColumn" prefWidth="38.4000244140625" styleClass="column_header_background" text="ID" />
+                <TableColumn fx:id="chatNameColumn" minWidth="1.600006103515625" prefWidth="140.0" styleClass="column_header_background" text="Name" />
+                <TableColumn fx:id="chatSelectColumn" prefWidth="41.5999755859375" styleClass="column_header_background" text="Select" />
             </columns>
         </TableView>
         <ListView fx:id="chatMessageListView" layoutX="517.0" layoutY="212.0" prefHeight="241.0" prefWidth="369.0" styleClass="custom_background" />
@@ -56,10 +56,10 @@
             <Font size="13.0" />
          </font>
       </Button>
-      <TableView fx:id="newFriendsTableView" accessibleRole="BUTTON" layoutX="29.0" layoutY="212.0" prefHeight="241.0" prefWidth="222.0" styleClass="custom_background">
+      <TableView fx:id="newFriendsTableView" accessibleRole="BUTTON" layoutX="29.0" layoutY="212.0" prefHeight="241.0" prefWidth="222.0" styleClass="custom_table_view">
          <columns>
-            <TableColumn fx:id="newFriendsIdColumn" prefWidth="38.4000244140625" text="ID" />
-            <TableColumn fx:id="newFriendsNameColumn" minWidth="1.600006103515625" prefWidth="182.0" text="Name" />
+            <TableColumn fx:id="newFriendsIdColumn" prefWidth="38.4000244140625" styleClass="column_header_background" text="ID" />
+            <TableColumn fx:id="newFriendsNameColumn" minWidth="1.600006103515625" prefWidth="182.0" styleClass="column_header_background" text="Name" />
          </columns>
       </TableView>
       <Label layoutX="29.0" layoutY="181.0" prefHeight="25.0" prefWidth="190.0" text="New friends:">
