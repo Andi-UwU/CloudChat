@@ -7,6 +7,7 @@ import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
 import application.repository.Repository;
 import application.repository.database.MessageDataBaseRepository;
+import application.utils.Pagination;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -133,7 +134,7 @@ public class MessageService {
      * @return int
      * @throws RepositoryException if the database cannot be reached
      */
-    public int size() throws SQLException {
+    public int size() throws RepositoryException {
         return repository.size();
     }
 
@@ -179,6 +180,22 @@ public class MessageService {
 
     public List<Message> getConversation(User user1, User user2) throws RepositoryException {
         return repository.getConversation(user1, user2);
+    }
+
+    public Integer getPageSize(){
+
+        return Repository.getPageSize();
+    }
+
+    public Integer getNumberOfConversationPages(User user1, User user2) throws RepositoryException {
+        return Pagination.<Message>getNumberOfPages(getConversation(user1, user2), getPageSize());
+
+    }
+
+    public List<Message> getConversationPage(User user1, User user2, Integer page) throws RepositoryException {
+        List<Message> conversation = getConversation(user1, user2);
+
+        return Pagination.<Message>getPage(conversation, page, getPageSize());
     }
 
 

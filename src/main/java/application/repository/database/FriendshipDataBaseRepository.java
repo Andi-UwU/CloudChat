@@ -1,8 +1,10 @@
 package application.repository.database;
 
+import application.domain.FriendRequest;
 import application.domain.Friendship;
 import application.domain.Tuple;
 import application.exceptions.RepositoryException;
+import application.utils.Pagination;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -48,7 +50,7 @@ public class FriendshipDataBaseRepository extends DataBaseRepository<Tuple<Integ
     }
 
     @Override
-    public List<Friendship> getAll() throws SQLException {
+    public List<Friendship> getAll() throws RepositoryException {
         List<Friendship> friendships = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement("SELECT * from friendship");
@@ -62,6 +64,8 @@ public class FriendshipDataBaseRepository extends DataBaseRepository<Tuple<Integ
                 friendships.add(friendship);
             }
             return friendships;
+        }catch (SQLException e){
+            throw new RepositoryException(e.getMessage());
         }
     }
 
@@ -127,13 +131,29 @@ public class FriendshipDataBaseRepository extends DataBaseRepository<Tuple<Integ
     }
 
     @Override
-    public Integer size() throws SQLException {
+    public Integer size() throws RepositoryException {
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) as count from friendship");
              ResultSet resultSet = statement.executeQuery()) {
 
             resultSet.next();
             return resultSet.getInt("count");
+        }catch (SQLException e){
+            throw new RepositoryException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<Friendship> getPage(Integer page) throws RepositoryException, IllegalArgumentException {
+        return Pagination.<Friendship>getPage(getAll(), page, pageSize);
+    }
+
+    @Override
+    public int getNumberOfPages() throws RepositoryException {
+        int size = size();
+        int mod = size % pageSize;
+        int additionalPage = 0;
+        if (mod > 0) additionalPage = 1;
+        return (size / pageSize + additionalPage);
     }
 }

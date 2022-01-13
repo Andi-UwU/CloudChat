@@ -1,10 +1,8 @@
 package application.repository.database;
 
-import application.domain.FriendRequest;
-import application.domain.FriendRequestStatus;
-import application.domain.Tuple;
-import application.domain.User;
+import application.domain.*;
 import application.exceptions.RepositoryException;
+import application.utils.Pagination;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -56,7 +54,7 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
     }
 
     @Override
-    public List<FriendRequest> getAll() throws SQLException {
+    public List<FriendRequest> getAll() throws RepositoryException {
         List<FriendRequest> requests = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(
@@ -83,6 +81,8 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
                 requests.add(request);
             }
             return requests;
+        }catch (SQLException e){
+            throw new RepositoryException(e.getMessage());
         }
 
     }
@@ -149,7 +149,7 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
     }
 
     @Override
-    public Integer size() throws SQLException {
+    public Integer size() throws RepositoryException {
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) as count from friendship");
              ResultSet resultSet = statement.executeQuery()) {
@@ -157,7 +157,23 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
             resultSet.next();
 
             return resultSet.getInt("count");
+        }catch (SQLException e){
+            throw new RepositoryException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<FriendRequest> getPage(Integer page) throws RepositoryException, IllegalArgumentException {
+        return Pagination.<FriendRequest>getPage(getAll(), page, pageSize);
+    }
+
+    @Override
+    public int getNumberOfPages() throws RepositoryException {
+        int size = size();
+        int mod = size % pageSize;
+        int additionalPage = 0;
+        if (mod > 0) additionalPage = 1;
+        return (size / pageSize + additionalPage);
     }
 
     /*

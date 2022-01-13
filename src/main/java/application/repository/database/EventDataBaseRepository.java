@@ -3,6 +3,7 @@ package application.repository.database;
 import application.domain.Event;
 import application.domain.User;
 import application.exceptions.RepositoryException;
+import application.utils.Pagination;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -258,13 +259,29 @@ public class EventDataBaseRepository extends DataBaseRepository<Integer, Event>{
     }
 
     @Override
-    public Integer size() throws SQLException {
+    public Integer size() throws RepositoryException {
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) as count from event");
              ResultSet resultSet = statement.executeQuery()) {
 
             resultSet.next();
             return resultSet.getInt("count");
+        } catch (SQLException e){
+            throw new RepositoryException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<Event> getPage(Integer page) throws RepositoryException, IllegalArgumentException {
+        return Pagination.<Event>getPage(getAll(), page, pageSize);
+    }
+
+    @Override
+    public int getNumberOfPages() throws RepositoryException {
+        int size = size();
+        int mod = size % pageSize;
+        int additionalPage = 0;
+        if (mod > 0) additionalPage = 1;
+        return (size / pageSize + additionalPage);
     }
 }

@@ -225,7 +225,7 @@ public class Network implements Observable {
      * @return List(User)
      * @throws SQLException if the database cannot be reached
      */
-    public List<User> getAllUsers() throws SQLException {
+    public List<User> getAllUsers() throws RepositoryException {
         return userRepository.getAll();
     }
 

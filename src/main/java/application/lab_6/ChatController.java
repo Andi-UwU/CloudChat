@@ -33,6 +33,7 @@ public class ChatController {
     private SuperService superService;
     private User user;
     private Integer currentFriendId;
+    private Integer currentPage;
 
     // ===========  Messages List Fields ================
     @FXML
@@ -45,6 +46,9 @@ public class ChatController {
 
     @FXML
     private Label friendNameLabel;
+
+    @FXML
+    private Label pageNumberLabel;
 
     // ===========  Friends Table Fields ================
 
@@ -93,6 +97,12 @@ public class ChatController {
     @FXML
     private Button deleteMessageButton;
 
+    @FXML
+    private Button previousPage;
+
+    @FXML
+    private Button nextPage;
+
     // ===========  Setters  ================
 
     public void setService(SuperService superService){
@@ -106,9 +116,11 @@ public class ChatController {
     @FXML
     public void initialize() {
         currentFriendId = 0;
+        currentPage = 1;
         initializeChatFriendsTableView();
         initializeChatMessageListView();
         initializeSentToTable();
+        pageNumberLabel.setText(currentPage.toString());
     }
 
     // ===========  Friends Table  ================
@@ -135,10 +147,12 @@ public class ChatController {
             @Override
             public void changed(ObservableValue<? extends FriendDTO> observable, FriendDTO oldValue, FriendDTO newValue) {
                 if (newValue != null) {
-                    if (oldValue != null)
+                    if (oldValue != null) {
                         if (oldValue.getId() == newValue.getId())
                             return;
-                    updateMessageListView(newValue.getId());
+                    }
+                    currentPage = 1;
+                    updateMessageListView(newValue.getId(), currentPage);
                 }
             }
         });
@@ -174,12 +188,13 @@ public class ChatController {
             }
         }
     }
-    private void updateMessageListView(Integer userId){
+    private void updateMessageListView(Integer userId, Integer page){
         try {
             currentFriendId = userId;
-            messagesList.setAll(superService.getConversation(user, superService.findUser(userId)));
-            chatMessageListView.setItems(messagesList);
             User friend = superService.findUser(userId);
+            messagesList.setAll(superService.getConversationPage(user, friend, page));
+            chatMessageListView.setItems(messagesList);
+
             friendNameLabel.setText(friend.getFirstName() + " " + friend.getLastName());
         } catch (RepositoryException e) {
             WarningBox.show(e.getMessage());
@@ -192,7 +207,7 @@ public class ChatController {
 
         if (friendsList.size() > 0){
             currentFriendId = friendsList.get(0).getId();
-            updateMessageListView(currentFriendId);
+            updateMessageListView(currentFriendId, currentPage);
         }
         else
             friendNameLabel.setText("");
@@ -298,7 +313,7 @@ public class ChatController {
             WarningBox.show(e.getMessage());
         }
 
-        updateMessageListView(currentFriendId);
+        updateMessageListView(currentFriendId, currentPage);
         messageTextField.clear();
     }
 
@@ -320,7 +335,7 @@ public class ChatController {
             WarningBox.show(e.getMessage());
         }
 
-        updateMessageListView(currentFriendId);
+        updateMessageListView(currentFriendId, currentPage);
         messageTextField.clear();
     }
 
@@ -342,7 +357,7 @@ public class ChatController {
                 WarningBox.show(e.getMessage());
             }
         }
-        updateMessageListView(currentFriendId);
+        updateMessageListView(currentFriendId, currentPage);
         messageTextField.clear();
     }
 
@@ -360,5 +375,31 @@ public class ChatController {
         } catch (ValidationException | SQLException |  RepositoryException| ServiceException | IOException e) {
             WarningBox.show(e.getMessage());
         }
+    }
+
+    @FXML
+    private void previousPageAction(ActionEvent actionEvent){
+        if (currentPage > 1 && !currentFriendId.equals(0)) {
+            currentPage--;
+            updateMessageListView(currentFriendId, currentPage);
+            pageNumberLabel.setText(currentPage.toString());
+        }
+
+    }
+    @FXML
+    private void nextPageAction(ActionEvent actionEvent){
+        try {
+            if (!currentFriendId.equals(0)) {
+                User currentFriend = superService.findUser(currentFriendId);
+                if (currentPage < superService.getNumberOfConversationPages(user, currentFriend)) {
+                    currentPage++;
+                    updateMessageListView(currentFriendId, currentPage);
+                    pageNumberLabel.setText(currentPage.toString());
+                }
+            }
+        } catch (RepositoryException e) {
+            WarningBox.show(e.getMessage());
+        }
+
     }
 }

@@ -185,7 +185,7 @@ public class SuperService {
      * gets all users of the network
      * @return all users as Iterable
      */
-    public List<User> getAllUsers() throws SQLException {
+    public List<User> getAllUsers() throws RepositoryException {
         return network.getAllUsers();
     }
 
@@ -325,13 +325,21 @@ public class SuperService {
         return message;
     }
 
-    public Integer getMessagesSize() throws SQLException {
+    public Integer getMessagesSize() throws RepositoryException {
         return messageService.size();
     }
 
     public List<Message> getConversation(User user1, User user2) throws RepositoryException {
 
         return messageService.getConversation(user1, user2);
+    }
+
+    public List<Message> getConversationPage(User user1, User user2, Integer page) throws RepositoryException {
+        return messageService.getConversationPage(user1, user2, page);
+    }
+
+    public Integer getNumberOfConversationPages(User user1, User user2) throws RepositoryException {
+        return messageService.getNumberOfConversationPages(user1, user2);
     }
 
     // ===================== FRIEND REQUEST ==========================
@@ -519,7 +527,7 @@ public class SuperService {
         return eventService.update(oldEvent, newTitle, newDescription);
     }
 
-    public Integer getNoOfEvents() throws SQLException {
+    public Integer getNoOfEvents() throws RepositoryException {
         return eventService.size();
     }
 
