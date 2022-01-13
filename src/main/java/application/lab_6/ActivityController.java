@@ -23,8 +23,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -237,8 +239,16 @@ public class ActivityController {
     private void exportAction (ActionEvent event) {
         if (!verifyDates()) return;
         try {
-            superService.generateActivityExportPDF(user, startDate.getValue(), endDate.getValue());
-            InfoBox.show("PDF file successfully created!");
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            File selectedDirectory = directoryChooser.showDialog(((Node) event.getSource()).getScene().getWindow());
+            if(selectedDirectory == null) {
+                WarningBox.show("No directory selected!");
+            }
+            else {
+                superService.generateActivityExportPDF(user, startDate.getValue(), endDate.getValue(),selectedDirectory.getAbsolutePath());
+                InfoBox.show("PDF file successfully created!");
+            }
+
         } catch (IOException | ValidationException | RepositoryException | SQLException e) {
             e.printStackTrace();
             WarningBox.show("Error exporting file.");
