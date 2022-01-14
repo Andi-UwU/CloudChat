@@ -8,10 +8,12 @@ import application.exceptions.ValidationException;
 import application.repository.Repository;
 import application.repository.database.MessageDataBaseRepository;
 import application.utils.Pagination;
+import application.utils.WarningBox;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -183,19 +185,23 @@ public class MessageService {
     }
 
     public Integer getPageSize(){
-
-        return Repository.getPageSize();
+        return repository.getPageSize();
     }
 
     public Integer getNumberOfConversationPages(User user1, User user2) throws RepositoryException {
-        return Pagination.<Message>getNumberOfPages(getConversation(user1, user2), getPageSize());
-
+        return repository.getNumberOfPages(user1, user2);
     }
 
     public List<Message> getConversationPage(User user1, User user2, Integer page) throws RepositoryException {
-        List<Message> conversation = getConversation(user1, user2);
+        int maxPage = getNumberOfConversationPages(user1,user2);
+        if (page <= 0 || page > maxPage )
+            throw new RepositoryException( "Invalid page: " + page + "!\n");
 
-        return Pagination.<Message>getPage(conversation, page, getPageSize());
+        List<Message> conversation = repository.getPage(user1, user2, page);
+
+        if ( conversation == null)
+            return Collections.emptyList();
+        else return conversation;
     }
 
 

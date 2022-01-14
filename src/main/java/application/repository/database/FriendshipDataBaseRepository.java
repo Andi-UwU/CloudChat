@@ -3,15 +3,18 @@ package application.repository.database;
 import application.domain.FriendRequest;
 import application.domain.Friendship;
 import application.domain.Tuple;
+import application.domain.User;
 import application.exceptions.RepositoryException;
 import application.utils.Pagination;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FriendshipDataBaseRepository extends DataBaseRepository<Tuple<Integer, Integer>, Friendship> {
+    private int pageSize = 20;
     /**
      * Constructor
      * @param url database URL
@@ -144,16 +147,17 @@ public class FriendshipDataBaseRepository extends DataBaseRepository<Tuple<Integ
     }
 
     @Override
-    public List<Friendship> getPage(Integer page) throws RepositoryException, IllegalArgumentException {
-        return Pagination.<Friendship>getPage(getAll(), page, pageSize);
+    public List<Friendship> getPage(User u1, User u2, Integer page) throws RepositoryException, IllegalArgumentException {
+        return Collections.emptyList();
     }
 
     @Override
-    public int getNumberOfPages() throws RepositoryException {
-        int size = size();
-        int mod = size % pageSize;
-        int additionalPage = 0;
-        if (mod > 0) additionalPage = 1;
-        return (size / pageSize + additionalPage);
+    public Integer getNumberOfPages(User u1, User u2) throws RepositoryException {
+        return 0;
+    }
+
+    @Override
+    public Integer getPageSize() {
+        return pageSize;
     }
 }

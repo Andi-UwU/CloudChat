@@ -6,9 +6,11 @@ import application.utils.Pagination;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<Integer, Integer>, FriendRequest> {
+    private int pageSize = 20;
 
     public FriendRequestDataBaseRepository(String url, String username, String password) {
         super(url, username, password);
@@ -163,18 +165,21 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
     }
 
     @Override
-    public List<FriendRequest> getPage(Integer page) throws RepositoryException, IllegalArgumentException {
-        return Pagination.<FriendRequest>getPage(getAll(), page, pageSize);
+    public List<FriendRequest> getPage(User u1, User u2, Integer page) throws RepositoryException, IllegalArgumentException {
+        return Collections.emptyList();
     }
 
     @Override
-    public int getNumberOfPages() throws RepositoryException {
-        int size = size();
-        int mod = size % pageSize;
-        int additionalPage = 0;
-        if (mod > 0) additionalPage = 1;
-        return (size / pageSize + additionalPage);
+    public Integer getNumberOfPages(User u1, User u2) throws RepositoryException {
+        return 0;
     }
+
+    @Override
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+
 
     /*
         List<Friendship> friendships = new ArrayList<>();

@@ -11,7 +11,6 @@ import java.util.List;
 
 public interface Repository<ID, E extends Entity<ID>> {
 
-    int pageSize = 10;
     /**
      * Finds the entity with a specific id
      * @param id generic type ID
@@ -68,16 +67,5 @@ public interface Repository<ID, E extends Entity<ID>> {
      * @throws SQLException if the database cannot be reached
      */
     Integer size() throws  RepositoryException;
-
-    List<E> getPage(Integer page) throws RepositoryException, IllegalArgumentException;
-
-    int getNumberOfPages() throws RepositoryException;
-
-    static int getPageSize(){
-        return pageSize;
-    }
-
-
-
 
 }
