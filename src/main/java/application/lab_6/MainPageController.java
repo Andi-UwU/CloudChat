@@ -169,9 +169,7 @@ public class MainPageController implements Observer {
                 eventObservableList.setAll(superService.getSubscribedEventsForUser(user));
             if (eventListView != null)
                 eventListView.setItems(eventObservableList);
-        } catch (RepositoryException e) {
-            WarningBox.show(e.getMessage());
-        } catch (SQLException e) {
+        } catch (RepositoryException | SQLException e) {
             WarningBox.show(e.getMessage());
         }
     }

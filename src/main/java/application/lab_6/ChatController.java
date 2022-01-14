@@ -146,7 +146,10 @@ public class ChatController {
         chatFriendTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FriendDTO>() {
             @Override
             public void changed(ObservableValue<? extends FriendDTO> observable, FriendDTO oldValue, FriendDTO newValue) {
-                currentPage = 1;
+                try {
+                    User friend = superService.findUser(newValue.getId());
+                    currentPage = superService.getNumberOfConversationPages(user,friend);
+                } catch (RepositoryException ignored) { }
                 pageNumberLabel.setText(currentPage.toString());
                 if (newValue != null) {
                     if (oldValue != null) {
@@ -248,11 +251,7 @@ public class ChatController {
                 sentToList.setAll(superService.getUserDtoOfMessage(selectedMessage));
             }
             sentToTableView.setItems(sentToList);
-        } catch (ValidationException e) {
-            WarningBox.show(e.getMessage());
-        } catch (SQLException e) {
-            WarningBox.show(e.getMessage());
-        } catch (RepositoryException e) {
+        } catch (ValidationException | SQLException | RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
 

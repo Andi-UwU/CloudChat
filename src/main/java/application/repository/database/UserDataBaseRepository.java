@@ -8,9 +8,12 @@ import application.utils.Pagination;
 import de.mkammerer.argon2.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class UserDataBaseRepository extends DataBaseRepository<Integer, User> {
+    private int pageSize = 20;
+
     /**
      * Constructor for database
      * @param url database postgres url
@@ -172,16 +175,17 @@ public class UserDataBaseRepository extends DataBaseRepository<Integer, User> {
     }
 
     @Override
-    public List<User> getPage(Integer page) throws RepositoryException, IllegalArgumentException {
-        return Pagination.<User>getPage(getAll(), page, pageSize);
+    public List<User> getPage(User u1, User u2, Integer page) throws RepositoryException, IllegalArgumentException {
+        return Collections.emptyList();
     }
 
     @Override
-    public int getNumberOfPages() throws RepositoryException {
-        int size = size();
-        int mod = size % pageSize;
-        int additionalPage = 0;
-        if (mod > 0) additionalPage = 1;
-        return (size / pageSize + additionalPage);
+    public Integer getNumberOfPages(User u1, User u2) throws RepositoryException {
+        return 1;
+    }
+
+    @Override
+    public Integer getPageSize() {
+        return pageSize;
     }
 }
