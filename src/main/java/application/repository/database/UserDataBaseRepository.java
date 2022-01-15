@@ -1,10 +1,8 @@
 package application.repository.database;
 
-import application.domain.Friendship;
 import application.domain.User;
 import application.exceptions.RepositoryException;
 
-import application.utils.Pagination;
 import de.mkammerer.argon2.*;
 import java.sql.*;
 import java.util.ArrayList;

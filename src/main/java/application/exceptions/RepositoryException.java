@@ -5,6 +5,10 @@ package application.exceptions;
  */
 public class RepositoryException extends Exception{
 
+    /**
+     * Creates an exception with a specific message
+     * @param message String
+     */
     public RepositoryException(String message){
         super(message);
     }

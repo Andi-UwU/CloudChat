@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 import static application.utils.Constants.DATE_TIME_FORMATTER;
 
 public class Network implements Observable {
-    //TODO missing comments
 
     // ===================== NETWORK ==========================
     private final UserDataBaseRepository userRepository; // stores the users of the network
@@ -40,7 +39,6 @@ public class Network implements Observable {
      * @param userValidator Validator(User)
      * @param friendshipRepository Repository(Tuple(Integer,Integer),Friendship)
      * @param friendshipValidator Validator(Friendship)
-     * @throws RepositoryException if the pre-loaded friendships are invalid
      */
     public Network(UserDataBaseRepository userRepository,
                    Validator<User> userValidator,
@@ -59,10 +57,9 @@ public class Network implements Observable {
      * Gets the friend list of the given user
      * @param user List(User)
      * @return the friend list of the user as Iterable
-     * @throws SQLException if the database cannot be reached
      * @throws RepositoryException if the user doesn't exist
      */
-    public List<User> friendList(User user) throws SQLException, RepositoryException {
+    public List<User> friendList(User user) throws RepositoryException {
         List<User> list = new ArrayList<>();
 
         for (Friendship f : friendshipRepository.getAll()){
@@ -80,10 +77,9 @@ public class Network implements Observable {
      * Gets a string list of all the friendships the user has
      * @param userId Integer
      * @return List(String)
-     * @throws SQLException if the database isn't available
      * @throws RepositoryException if a user doesn't exist
      */
-    public List<String> getFriendshipsOfUser(Integer userId) throws SQLException, RepositoryException {
+    public List<String> getFriendshipsOfUser(Integer userId) throws RepositoryException {
 
         List<Friendship> userFriendship = friendshipRepository.getAll();
         userRepository.find(userId);
@@ -121,10 +117,9 @@ public class Network implements Observable {
      * @param month Integer
      * @return List(String)
      * @throws ValidationException if the friendships are invalid
-     * @throws SQLException if the database cannot be reached
      * @throws RepositoryException if the user doesn't exist
      */
-    public List<String> getFriendshipsOfUserFromMonth(Integer userId, Integer month) throws ValidationException, SQLException, RepositoryException {
+    public List<String> getFriendshipsOfUserFromMonth(Integer userId, Integer month) throws ValidationException, RepositoryException {
         if (month < 1 || month > 12) throw new ValidationException("Invalid month!");
         List<String> unfilteredList = getFriendshipsOfUser(userId);
         return unfilteredList
@@ -137,7 +132,13 @@ public class Network implements Observable {
                 .collect(Collectors.toList());
     }
 
-    public List<FriendDTO> getFriendDtoOfUser(Integer userId) throws RepositoryException, SQLException {
+    /**
+     * Gets a user's list of friends for the UI
+     * @param userId Integer
+     * @return List(FriendDTO)
+     * @throws RepositoryException if the user isn't found
+     */
+    public List<FriendDTO> getFriendDtoOfUser(Integer userId) throws RepositoryException {
         List<Friendship> userFriendship = friendshipRepository.getAll();
         userRepository.find(userId);
         return userFriendship
@@ -177,7 +178,7 @@ public class Network implements Observable {
      * Adds a user to the network
      * @param user User type object
      * @throws ValidationException if the user is not valid
-     * @throws RepositoryException if a user with the same username already exists or the database ran out of IDs
+     * @throws RepositoryException if a user with the same username already exists
      */
     public User addUser(User user) throws ValidationException, RepositoryException {
         userValidator.validate(user);
@@ -194,10 +195,9 @@ public class Network implements Observable {
      * Deletes a user from the network and returns his value
      * @param id Integer
      * @return User
-     * @throws SQLException if the database cannot be reached
      * @throws RepositoryException if the user doesn't exist
      */
-    public User deleteUser(Integer id) throws RepositoryException, SQLException {
+    public User deleteUser(Integer id) throws RepositoryException {
         User deleted = userRepository.delete(id);
 
         deleteFriendshipsOfUser(deleted);
@@ -223,7 +223,7 @@ public class Network implements Observable {
     /**
      * Gets all users of the network
      * @return List(User)
-     * @throws SQLException if the database cannot be reached
+     * @throws RepositoryException if the users aren't found
      */
     public List<User> getAllUsers() throws RepositoryException {
         return userRepository.getAll();
@@ -244,10 +244,9 @@ public class Network implements Observable {
     /**
      * Deletes friendships of a specific user
      * @param user User
-     * @throws SQLException if the database cannot be reached
      * @throws RepositoryException if the user doesn't exist
      */
-    private void deleteFriendshipsOfUser(User user) throws SQLException, RepositoryException {
+    private void deleteFriendshipsOfUser(User user) throws RepositoryException {
         boolean done = false;
         while (!done) {
             for (Friendship f : friendshipRepository.getAll()) {
@@ -385,9 +384,8 @@ public class Network implements Observable {
      * Gets all friendships from the repository
      * @return  List(Friendship)
      * @throws RepositoryException if the users assigned to the friendships don't exist
-     * @throws SQLException if the database cannot be reached
      */
-    public List<Friendship> getAllFriendship() throws SQLException, RepositoryException {
+    public List<Friendship> getAllFriendship() throws RepositoryException {
         List<Friendship> friendships = friendshipRepository.getAll();
         addUsersToFriendshipList(friendships);
         return friendships;

@@ -8,7 +8,6 @@ import application.utils.ExporterPDF;
 import application.utils.observer.Observer;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,15 +32,13 @@ public class SuperService {
         this.eventService = eventService;
     }
 
-    //TODO some comments down there
-
     // ===================== NETWORK ==========================
     /**
      * gets the friend list of the given user
      * @param user from which is extracted the friend list
      * @return the friend list of the user as Iterable
      */
-    public List<User> friendList(User user) throws RepositoryException, SQLException {
+    public List<User> friendList(User user) throws RepositoryException {
         return network.friendList(user);
     }
 
@@ -49,10 +46,9 @@ public class SuperService {
      * gets a string list of all the friendships the user has
      * @param userId Integer
      * @return List(String)
-     * @throws SQLException if the database isn't available
      * @throws RepositoryException if a user doesn't exist
      */
-    public List<String> getFriendshipsOfUser(Integer userId) throws SQLException, RepositoryException {
+    public List<String> getFriendshipsOfUser(Integer userId) throws RepositoryException {
         return network.getFriendshipsOfUser(userId);
     }
 
@@ -62,14 +58,25 @@ public class SuperService {
      * @param month Integer
      * @return List(String)
      */
-    public List<String> getFriendshipsOfUserFromMonth(Integer userId, Integer month) throws ValidationException, SQLException, RepositoryException {
+    public List<String> getFriendshipsOfUserFromMonth(Integer userId, Integer month) throws ValidationException, RepositoryException {
         return network.getFriendshipsOfUserFromMonth(userId, month);
     }
 
-    public List<FriendDTO> getFriendDtoOfUser(Integer id) throws RepositoryException, SQLException, ValidationException {
+    /**
+     * Gets friend data transfer objects of given user
+     * @param id Integer
+     * @return List(FriendDTO)
+     * @throws RepositoryException if there is no user with given ID
+     */
+    public List<FriendDTO> getFriendDtoOfUser(Integer id) throws RepositoryException {
         return network.getFriendDtoOfUser(id);
     }
 
+    /**
+     * Gets list of message receivers
+     * @param message Message
+     * @return List(UserDTO)
+     */
     public List<UserDTO> getUserDtoOfMessage(Message message){
         return message.getTo()
                 .stream()
@@ -81,8 +88,13 @@ public class SuperService {
                 .collect(Collectors.toList());
     }
 
-
-    public List<User> getNonFriendOfUser(Integer id) throws RepositoryException, SQLException {
+    /**
+     * Gets users that are not friends of the user
+     * @param id Integer
+     * @return List(User)
+     * @throws RepositoryException if the user doesn't exist
+     */
+    public List<User> getNonFriendOfUser(Integer id) throws RepositoryException {
         List<User> friendsOfUser = friendList(network.findUser(id));
         return getAllUsers()
                 .stream()
@@ -90,7 +102,13 @@ public class SuperService {
                 .collect(Collectors.toList());
     }
 
-    public List<AddFriendDTO> getAddFriendDtoOfUser(Integer id) throws ValidationException, SQLException, RepositoryException {
+    /**
+     * Gets a list of added friends for a user
+     * @param id Integer
+     * @return List(AddFriendDTO)
+     * @throws RepositoryException if the user with the given id doesn't exist
+     */
+    public List<AddFriendDTO> getAddFriendDtoOfUser(Integer id) throws RepositoryException {
 
         List<Integer> pendingRequests = friendRequestService.getAllFromUser(id)
                 .stream()
@@ -117,7 +135,14 @@ public class SuperService {
                 .collect(Collectors.toList());
     }
 
-    public List<AddFriendDTO> getAddFriendDtoOfUserByName(Integer id, String name) throws ValidationException, SQLException, RepositoryException {
+    /**
+     * Gets list of users that are not friends filtered by name
+     * @param id Integer
+     * @param name String
+     * @return List(AddFriendDTO)
+     * @throws RepositoryException if the user doesn't exist
+     */
+    public List<AddFriendDTO> getAddFriendDtoOfUserByName(Integer id, String name) throws RepositoryException {
         List<Integer> pendingRequests = friendRequestService.getAllFromUser(id)
                 .stream()
                 .filter(request -> request.getStatus().equals(FriendRequestStatus.PENDING))
@@ -167,9 +192,10 @@ public class SuperService {
      * deletes a user from the network
      * @param id of the user that will be deleted
      * @return the user that was deleted
-     * @throws IOException if reading from data base fail
+     * @throws ValidationException if the user is invalid
+     * @throws RepositoryException if the user doesn't exist
      */
-    public User deleteUser(Integer id) throws IOException, RepositoryException, SQLException, ValidationException {
+    public User deleteUser(Integer id) throws RepositoryException, ValidationException {
 
         friendRequestService.deleteRequestsOfUser(id);  // delete all friend requests
         User deleted = network.findUser(id);            // delete user
@@ -177,6 +203,15 @@ public class SuperService {
         return network.deleteUser(id);
     }
 
+    /**
+     * Updates a user
+     * @param firstName String
+     * @param lastName String
+     * @param userName String
+     * @return User
+     * @throws ValidationException if the attributes are invalid
+     * @throws RepositoryException if the username already exists
+     */
     public User updateUser(String firstName, String lastName, String userName) throws ValidationException, RepositoryException {
         return network.updateUser(new User(firstName,lastName,userName));
     }
@@ -184,20 +219,28 @@ public class SuperService {
     /**
      * gets all users of the network
      * @return all users as Iterable
+     * @throws RepositoryException if the repository is empty
      */
     public List<User> getAllUsers() throws RepositoryException {
         return network.getAllUsers();
     }
 
     /**
-     * finds a user with the given id
-     * @param id of the user
-     * @return the found user
+     * Finds a user with the given id
+     * @param id Integer
+     * @return User
      */
     public User findUser(Integer id) throws RepositoryException {
         return network.findUser(id);
     }
 
+    /**
+     * Logs a user in and returns their ID if it is successful
+     * @param username String
+     * @param password String
+     * @return int
+     * @throws RepositoryException if the password is invalid
+     */
     public int loginUser(String username, String password) throws RepositoryException {
         return network.loginUser(username, password);
     }
@@ -206,26 +249,24 @@ public class SuperService {
 
 
     /**
-     * adds a friendship
+     * Adds a friendship
      * @param leftId id of a user
      * @param rightId id of another user
      * @throws ValidationException if the friendship is not valid
      * @throws RepositoryException if the friendship already exists
-     * @throws IOException if reading from data base fails
      */
     public void addFriendship(Integer leftId, Integer rightId) throws ValidationException, RepositoryException {
         network.addFriendship(leftId, rightId);
     }
 
     /**
-     * deletes a friendship
-     * @param leftId
-     * @param rightId
+     * Deletes a friendship
+     * @param leftId Integer
+     * @param rightId Integer
      * @return the friendship that has been deleted
-     * @return null if the friendship does not exist
-     * @throws IOException
+     * @throws RepositoryException if the friendship isn't found
      */
-    public Friendship deleteFriendship(Integer leftId, Integer rightId) throws RepositoryException, SQLException, ValidationException {
+    public Friendship deleteFriendship(Integer leftId, Integer rightId) throws RepositoryException {
         try {
             friendRequestService.deleteRequest(leftId,rightId);
         }
@@ -238,53 +279,70 @@ public class SuperService {
     }
 
     /**
-     * updates a friendship
-     * @param leftId
-     * @param rightId
-     * @param date
+     * Updates a friendship
+     * @param leftId Integer
+     * @param rightId Integer
+     * @param date LocalDateTime
      * @return  the friendship that has been updated
      * @return null, if there is no friendship with (leftId, rightId) as id
-     * @throws ValidationException
-     * @throws IOException
+     * @throws ValidationException if the date is invalid
+     * @throws  RepositoryException if the friendship doesn't exist
      */
     public Friendship updateFriendship(Integer leftId, Integer rightId, LocalDateTime date) throws ValidationException, RepositoryException {
-
         return network.updateFriendship(leftId, rightId, date);
     }
 
-
     /**
-     * finds a friendship
-     * @param leftId
-     * @param rightId
-     * @return  friendship with the (leftId, rightId) as id
-     * @return null if there is no friendship with the (leftId, rightId) as id
+     * Finds a friendship
+     * @param leftId Integer
+     * @param rightId Integer
+     * @return  Friendship
+     * @throws RepositoryException if the friendship doesn't exist
      */
     public Friendship findFriendship(Integer leftId, Integer rightId) throws RepositoryException {
-
         return network.findFriendship(leftId, rightId);
     }
 
     /**
-     * gets all friendships from the repository
-     * @return  all friendship as Iterable
+     * Gets all friendships from the repository
+     * @return List(Friendship)
      */
-    public List<Friendship> getAllFriendship() throws SQLException, RepositoryException {
+    public List<Friendship> getAllFriendship() throws RepositoryException {
         return network.getAllFriendship();
     }
 
     // ===================== MESSAGE ==========================
 
 
-    public List<Message> getAllMessages() throws SQLException, RepositoryException {
+    /**
+     * Gets all messages
+     * @return Lits(Message)
+     * @throws RepositoryException
+     */
+    public List<Message> getAllMessages() throws RepositoryException {
         return messageService.getAll();
     }
 
-    public Message findMessage(Integer id) throws ValidationException, SQLException, RepositoryException {
+    /**
+     * Finds a message
+     * @param id Integer
+     * @return Message
+     * @throws RepositoryException if the message doesn't exist
+     */
+    public Message findMessage(Integer id) throws RepositoryException {
         return messageService.find(id);
     }
 
-    public Message addMessage(Integer fromId, List<Integer> toIds, String text) throws ValidationException, SQLException, RepositoryException, IOException {
+    /**
+     * Adds a message
+     * @param fromId Integer
+     * @param toIds List(Integer)
+     * @param text String
+     * @return Message
+     * @throws ValidationException if the message attributes are invalid
+     * @throws RepositoryException if the message can't be added
+     */
+    public Message addMessage(Integer fromId, List<Integer> toIds, String text) throws ValidationException, RepositoryException {
         User from = network.findUser(fromId);
         List<User> to = new ArrayList<>();
         for(Integer id : toIds){
@@ -294,28 +352,66 @@ public class SuperService {
         return messageService.addMessage(from, to, text);
     }
 
-    public void addReply(Integer fromId, Integer replyToId, String text) throws ValidationException, SQLException, RepositoryException, IOException {
+    /**
+     * Adds a reply to a message
+     * @param fromId Integer
+     * @param replyToId Integer
+     * @param text String
+     * @throws ValidationException if the message attributes are invalid
+     * @throws RepositoryException if the message replying to is not found
+     */
+    public void addReply(Integer fromId, Integer replyToId, String text) throws ValidationException, RepositoryException {
         User from = network.findUser(fromId);
         Message replyTo = messageService.find(replyToId);
         messageService.addReply(from, text, replyTo);
     }
 
-    public void addReplyToAll(Integer fromId, Integer replyToId, String text) throws RepositoryException, ValidationException, SQLException, IOException {
+    /**
+     * Adds a reply to all receivers of previous message
+     * @param fromId Integer
+     * @param replyToId Integer
+     * @param text String
+     * @throws RepositoryException if the message replying to, doesn't exist
+     * @throws ValidationException if the message attributes are invalid
+     */
+    public void addReplyToAll(Integer fromId, Integer replyToId, String text) throws RepositoryException, ValidationException {
         User from = network.findUser(fromId);
         Message replyTo = messageService.find(replyToId);
         messageService.addReplyToAll(from,text,replyTo);
     }
 
+    /**
+     * Updates a message
+     * @param messageId Integer
+     * @param newText String
+     * @return Message
+     * @throws ValidationException if the message attributes are invalid
+     * @throws RepositoryException if the message doesn't exist
+     */
     public Message updateMessage(Integer messageId, String newText) throws ValidationException, RepositoryException {
         Message message = messageService.find(messageId);
         return messageService.update(messageId, message.getTo(), newText);
     }
 
+    /**
+     * Deletes a message
+     * @param messageId Integer
+     * @return Message
+     * @throws RepositoryException if the message doesn't exist
+     */
     public Message deleteMessage(Integer messageId) throws RepositoryException {
         return messageService.delete(messageId);
     }
 
-    public Message userDeleteMessage(User user, Integer messageId) throws ValidationException, SQLException, RepositoryException, ServiceException, IOException {
+    /**
+     * Deletes a message in a conversation between users
+     * @param user User
+     * @param messageId Integer
+     * @return Message
+     * @throws RepositoryException if the message doesn't exist
+     * @throws ServiceException if the message doesn't belong to the user
+     */
+    public Message userDeleteMessage(User user, Integer messageId) throws RepositoryException, ServiceException {
         Message message = findMessage(messageId);
         if (!message.getFrom().equals(user))
             throw new ServiceException("This message does not belong to you!\n");
@@ -325,26 +421,59 @@ public class SuperService {
         return message;
     }
 
+    /**
+     * Gets size of message repository
+     * @return Integer
+     * @throws RepositoryException
+     */
     public Integer getMessagesSize() throws RepositoryException {
         return messageService.size();
     }
 
+    /**
+     * Gets a conversation between two users
+     * @param user1 User
+     * @param user2 User
+     * @return List(Message)
+     * @throws RepositoryException if the users don't exist
+     */
     public List<Message> getConversation(User user1, User user2) throws RepositoryException {
 
         return messageService.getConversation(user1, user2);
     }
 
+    /**
+     * Gets a page from a conversation between two users
+     * @param user1 User
+     * @param user2 User
+     * @param page Integer
+     * @return List(Message)
+     * @throws RepositoryException if the users are not found
+     */
     public List<Message> getConversationPage(User user1, User user2, Integer page) throws RepositoryException {
         return messageService.getConversationPage(user1, user2, page);
     }
 
+    /**
+     * Gets the number of pages a conversation between two users has
+     * @param user1 User
+     * @param user2 User
+     * @return Integer
+     * @throws RepositoryException if the users are not found
+     */
     public Integer getNumberOfConversationPages(User user1, User user2) throws RepositoryException {
         return messageService.getNumberOfConversationPages(user1, user2);
     }
 
     // ===================== FRIEND REQUEST ==========================
 
-    public List<FriendRequestDTO> getAllFriendRequestsDtoForUser(Integer id ) throws RepositoryException, SQLException {
+    /**
+     * Gets all friend requests for a user
+     * @param id Integer
+     * @return List(FriendRequestDTO)
+     * @throws RepositoryException if the user isn't found
+     */
+    public List<FriendRequestDTO> getAllFriendRequestsDtoForUser(Integer id ) throws RepositoryException {
         //User user=findUser(id);
         List<FriendRequestDTO> list1 = getAllFriendRequestsFromUser(id)
                 .stream()
@@ -375,20 +504,44 @@ public class SuperService {
         return Stream.concat(list1.stream(),list2.stream()).collect(Collectors.toList());
     }
 
-    public List<FriendRequest> getAllFriendRequests() throws SQLException, RepositoryException {
+    /**
+     * Gets all friend requests
+     * @return List(FriendRequest)
+     * @throws RepositoryException if there are no friend requests
+     */
+    public List<FriendRequest> getAllFriendRequests() throws RepositoryException {
         return friendRequestService.getAll();
     }
 
-    public List<FriendRequest> getAllFriendRequestsForUser(Integer id) throws SQLException, RepositoryException {
+    /**
+     * Gets all friend requests for a user
+     * @param id Integer
+     * @return List(FriendRequest)
+     * @throws RepositoryException if the user doesn't exist
+     */
+    public List<FriendRequest> getAllFriendRequestsForUser(Integer id) throws RepositoryException {
         findUser(id);
         return friendRequestService.getAllToUser(id);
     }
 
-    public List <FriendRequest> getAllFriendRequestsFromUser(Integer id) throws SQLException, RepositoryException {
+    /**
+     * Gets all friend requests from a user
+     * @param id Integer
+     * @return List(FriendRequests)
+     * @throws RepositoryException if the user doesn't exist
+     */
+    public List <FriendRequest> getAllFriendRequestsFromUser(Integer id) throws RepositoryException {
         findUser(id);
         return friendRequestService.getAllFromUser(id);
     }
 
+    /**
+     * Adds friend request
+     * @param idFrom Integer
+     * @param idTo Integer
+     * @throws ValidationException if the attributes are invalid
+     * @throws RepositoryException if the friendship already exists
+     */
     public void addFriendRequest(Integer idFrom, Integer idTo) throws ValidationException, RepositoryException {
         User userFrom = findUser(idFrom);
         User userTo = findUser(idTo);
@@ -432,6 +585,15 @@ public class SuperService {
         }
     }
 
+    /**
+     * Updates a friend request
+     * @param idFrom Integer
+     * @param idTo Integer
+     * @param status String
+     * @return FriendRequest
+     * @throws ValidationException if the attributes are invalid
+     * @throws RepositoryException if the friend request doesn't exist
+     */
     public FriendRequest updateFriendRequest(Integer idFrom,Integer idTo, String status) throws ValidationException, RepositoryException {
         FriendRequest request = friendRequestService.updateRequest(idFrom,idTo,status);
         if (status.equals("ACCEPTED")) {
@@ -440,11 +602,26 @@ public class SuperService {
         return request;
     }
 
-    public FriendRequest deleteFriendRequest(Integer idFrom, Integer idTo) throws ValidationException, RepositoryException {
+    /**
+     * Deletes a friend request
+     * @param idFrom Integer
+     * @param idTo Integer
+     * @return FriendRequest
+     * @throws RepositoryException if the friend request doesn't exist
+     */
+    public FriendRequest deleteFriendRequest(Integer idFrom, Integer idTo) throws RepositoryException {
         return friendRequestService.deleteRequest(idFrom,idTo);
     }
 
-    public List<FriendDTO> generateFriendActivity(Integer id, LocalDate startDate, LocalDate endDate) throws SQLException, RepositoryException, ValidationException {
+    /**
+     * Generates a user's list of friends made during a time period
+     * @param id Integer
+     * @param startDate LocalDate
+     * @param endDate LocalDate
+     * @return List(FriendDTO)
+     * @throws RepositoryException if the user isn't found
+     */
+    public List<FriendDTO> generateFriendActivity(Integer id, LocalDate startDate, LocalDate endDate) throws RepositoryException {
         LocalDateTime start = startDate.atStartOfDay();
         LocalDateTime end = endDate.atStartOfDay().plusDays(1);
         List<FriendDTO> friendList = this.getFriendDtoOfUser(id);
@@ -458,6 +635,16 @@ public class SuperService {
                              })
                         .collect(Collectors.toList());
     }
+
+    /**
+     * Generates a list of messages a user has received from another in a specific timeframe
+     * @param user1 User
+     * @param user2 User
+     * @param startDate LocalDate
+     * @param endDate LocalDate
+     * @return List(Message)
+     * @throws RepositoryException if one of the users doesn't exist
+     */
     public List<Message> generateFriendMessageActivity(User user1, User user2,
                                                        LocalDate startDate, LocalDate endDate) throws RepositoryException {
         LocalDateTime start = startDate.atStartOfDay();
@@ -470,7 +657,16 @@ public class SuperService {
                 .collect(Collectors.toList());
     }
 
-    public void generateActivityExportPDF(User currentUser, LocalDate startDate, LocalDate endDate, String absolutePath) throws IOException, ValidationException, SQLException, RepositoryException {
+    /**
+     * Exports a user's message and new friend activities to a .PDF file
+     * @param currentUser User
+     * @param startDate LocalDate
+     * @param endDate LocalDate
+     * @param absolutePath String
+     * @throws IOException if application is unable to save local file
+     * @throws RepositoryException if the user cannot be found
+     */
+    public void generateActivityExportPDF(User currentUser, LocalDate startDate, LocalDate endDate, String absolutePath) throws IOException, RepositoryException {
         LocalDateTime start = startDate.atStartOfDay();
         LocalDateTime end = endDate.atStartOfDay().plusDays(1);
 
@@ -507,38 +703,99 @@ public class SuperService {
 
     // ===================== EVENTS ==========================
 
+    /**
+     * Returns a list of all events
+     * @return List(Event)
+     * @throws RepositoryException if there are no events
+     */
     public List<Event> getAllEvents() throws RepositoryException {
         return eventService.getAll();
     }
 
+    /**
+     * Finds an event
+     * @param eventId Integer
+     * @return Event
+     * @throws RepositoryException if event doesn't exist
+     */
     public Event findEvent(Integer eventId) throws RepositoryException {
         return eventService.find(eventId);
     }
 
+    /**
+     * Adds an event
+     * @param author User
+     * @param title String
+     * @param description String
+     * @param eventDate LocalDate
+     * @return Event
+     * @throws ValidationException if the event attributes are invalid
+     * @throws RepositoryException if the event already exists
+     */
     public Event addEvent(User author, String title, String description, LocalDate eventDate) throws ValidationException, RepositoryException {
         return eventService.add(author, title, description, eventDate);
     }
 
+    /**
+     * Deletes an event
+     * @param eventId Integer
+     * @return Event
+     * @throws RepositoryException if the event cannot be found
+     */
     public Event deleteEvent(Integer eventId) throws RepositoryException {
         return eventService.delete(eventId);
     }
 
+    /**
+     * Updates an event
+     * @param oldEvent Event
+     * @param newTitle String
+     * @param newDescription String
+     * @return Event
+     * @throws RepositoryException if the event cannot be found
+     * @throws ValidationException if the attributes are invalid
+     */
     public Event updateEvent(Event oldEvent, String newTitle, String newDescription) throws RepositoryException, ValidationException {
         return eventService.update(oldEvent, newTitle, newDescription);
     }
 
+    /**
+     * Gets number of events
+     * @return Integer
+     * @throws RepositoryException
+     */
     public Integer getNoOfEvents() throws RepositoryException {
         return eventService.size();
     }
 
+    /**
+     * Adds a subscriber to an event
+     * @param event Event
+     * @param subscriber User
+     * @return Event
+     * @throws RepositoryException if the event doesn't exist
+     */
     public Event addSubscriber(Event event, User subscriber) throws RepositoryException {
         return eventService.addSubscriber(event, subscriber);
     }
 
+    /**
+     * Removes a subscriber from an event
+     * @param event Event
+     * @param subscriber User
+     * @return Event
+     * @throws RepositoryException if the event doesn't exist
+     */
     public Event removeSubscriber(Event event, User subscriber) throws RepositoryException{
         return eventService.removeSubscriber(event, subscriber);
     }
 
+    /**
+     * Gets a list of events a user has subscribed to
+     * @param user User
+     * @return List(Event)
+     * @throws RepositoryException if the user doesn't exist
+     */
     public List<Event> getSubscribedEventsForUser(User user) throws RepositoryException {
         return eventService.getAll()
                 .stream()
@@ -553,7 +810,13 @@ public class SuperService {
 
     }
 
-    public List<Event> getEventsForUser(User user) throws RepositoryException, SQLException {
+    /**
+     * Gets a list of events for a user
+     * @param user User
+     * @return List(Event)
+     * @throws RepositoryException if the user doesn't exist
+     */
+    public List<Event> getEventsForUser(User user) throws RepositoryException {
         List<Event> eventList = eventService.getAll();
         List<User> friendsList = friendList(user);
 
@@ -584,6 +847,12 @@ public class SuperService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Gets number of events that will happen soon for a user
+     * @param user User
+     * @return Integer
+     * @throws RepositoryException if the user doesn't exist
+     */
     public Integer getNumberOfSoonEventsForUser(User user) throws RepositoryException {
         long notificationsNumber = eventService.getAll()
                 .stream()

@@ -169,7 +169,7 @@ public class MainPageController implements Observer {
                 eventObservableList.setAll(superService.getSubscribedEventsForUser(user));
             if (eventListView != null)
                 eventListView.setItems(eventObservableList);
-        } catch (RepositoryException | SQLException e) {
+        } catch (RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
     }
@@ -189,8 +189,6 @@ public class MainPageController implements Observer {
 
         } catch (RepositoryException e) {
             WarningBox.show(e.getMessage());
-        } catch (SQLException throwables) {
-            WarningBox.show(throwables.getMessage());
         }
 
 
@@ -205,7 +203,7 @@ public class MainPageController implements Observer {
     private void updateFriendsTableView(){
         try {
             friendsList.setAll(superService.getFriendDtoOfUser(user.getId())); }
-        catch (RepositoryException | SQLException | ValidationException e) {
+        catch (RepositoryException e) {
             WarningBox.show(e.getMessage()); }
         friendsTableView.setItems(friendsList);
     }
@@ -263,7 +261,7 @@ public class MainPageController implements Observer {
             friendsTableView.setItems(friendsList);
         } catch (NumberFormatException e){
             WarningBox.show("The id must be an integer!");
-        } catch (ValidationException | SQLException | RepositoryException e) {
+        } catch (RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
     }
@@ -362,7 +360,6 @@ public class MainPageController implements Observer {
             //((Node) (actionEvent.getSource())).getScene().getWindow().hide();
         } catch (NumberFormatException | IOException e) {
             WarningBox.show(e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -384,7 +381,6 @@ public class MainPageController implements Observer {
             ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
         } catch (NumberFormatException | IOException e) {
             WarningBox.show(e.getMessage());
-            e.printStackTrace();
         }
     }
 

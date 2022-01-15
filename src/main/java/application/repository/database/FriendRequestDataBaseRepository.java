@@ -2,7 +2,6 @@ package application.repository.database;
 
 import application.domain.*;
 import application.exceptions.RepositoryException;
-import application.utils.Pagination;
 
 import java.sql.*;
 import java.util.ArrayList;

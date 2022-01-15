@@ -59,7 +59,7 @@ public class FriendRequestsController implements Observer {
         try {
             friendRequestList.setAll(superService.getAllFriendRequestsDtoForUser(user.getId()));
         }
-        catch (RepositoryException | SQLException e) {
+        catch (RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
         requestsTableView.setItems(friendRequestList);
@@ -141,7 +141,7 @@ public class FriendRequestsController implements Observer {
             }
             superService.deleteFriendRequest(friendRequestDTO.getIdFrom(),friendRequestDTO.getIdTo());
             updateTableView();
-        } catch (ValidationException | RepositoryException e) {
+        } catch (RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
     }
