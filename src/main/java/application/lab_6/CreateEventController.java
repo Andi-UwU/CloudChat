@@ -72,7 +72,7 @@ public class CreateEventController {
             fxmlLoader.setController(mainPageController);
             Scene mainScene = new Scene(fxmlLoader.load());
             Stage mainStage = new Stage();
-            mainStage.setTitle("The Network");
+            mainStage.setTitle("Cloud Chat");
             mainStage.setScene(mainScene);
             mainStage.show();
             ((Node)(actionEvent.getSource())).getScene().getWindow().hide();

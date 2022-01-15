@@ -47,7 +47,7 @@
 /*  Background  */
 .custom_background
 {
-    -fx-background-color: linear-gradient(#00BDFE, #55DCFE);
+    -fx-background-color: linear-gradient(#00BDFE, #87E7FE);
 }
 
 /*  Text field  */
@@ -107,10 +107,12 @@
 }
 
 /*  List View  */
+
 .list-view .scroll-bar:horizontal /*  hide horizontal scroll bar  */
 {
     -fx-opacity: 0;
     -fx-padding:-7;
+    -fx-background-image: url("application/lab_6/images/clouds_event.jpg");
 }
 /*  Message List View  */
 .message_list-view .scroll-bar:horizontal /*  hide horizontal scroll bar  */
@@ -201,5 +203,45 @@
     -fx-background-radius: 5;
 }
 
+/*  Events  */
+
+.event_title_text
+{
+    -fx-text-fill: #00BDFE;
+    -fx-font-size: 20px;
+    -fx-font-family: "verdana";
+    -fx-font-weight: bold;
+
+    -fx-padding: 5px;
+    -fx-background-color: #D4F4FF;
+    -fx-background-radius: 5;
+}
+
+.event_description_text
+{
+    -fx-font-size: 12px;
+    -fx-font-family: "verdana";
+    -fx-font-weight: normal;
+    -fx-text-fill: #00BDFE;
+    -fx-max-width: 360px;
+    -fx-wrap-text: true;
+}
+.event_details_text
+{
+    -fx-font-size: 11px;
+    -fx-font-family: "verdana";
+    -fx-font-weight: normal;
+    -fx-text-alignment: justify;
+    -fx-text-fill: #00BDFE;
+
+    -fx-padding: 5px;
+    -fx-background-color: #D4F4FF;
+    -fx-background-radius: 5;
+}
+
+.event_background
+{
+    -fx-background-image: url("application/lab_6/images/clouds_event.jpg");
+}
 
 

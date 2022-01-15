@@ -14,8 +14,7 @@
         <TableView fx:id="chatFriendTableView" accessibleRole="BUTTON" layoutX="274.0" layoutY="212.0" prefHeight="241.0" prefWidth="222.0" styleClass="custom_table_view">
             <columns>
                 <TableColumn fx:id="chatIdColumn" prefWidth="38.4000244140625" styleClass="column" text="ID" />
-                <TableColumn fx:id="chatNameColumn" minWidth="1.600006103515625" prefWidth="140.0" styleClass="column" text="Name" />
-                <TableColumn fx:id="chatSelectColumn" prefWidth="41.5999755859375" styleClass="column" text="Select" />
+                <TableColumn fx:id="chatNameColumn" minWidth="1.600006103515625" prefWidth="181.5999755859375" styleClass="column" text="Name" />
             </columns>
         </TableView>
         <ListView fx:id="chatMessageListView" layoutX="517.0" layoutY="212.0" prefHeight="241.0" prefWidth="369.0" />

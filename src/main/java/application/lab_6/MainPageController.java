@@ -123,25 +123,23 @@ public class MainPageController implements Observer {
 
                 // Create the VBox
                 VBox eventBox = new VBox();
-                //eventBox.setAlignment(Pos.CENTER);
-
                 // Title
                 VBox titleBox = new VBox();
-                Text title = new Text(event.getTitle());
-                title.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
+                titleBox.getStyleClass().add("event_background");
+                Label title = new Label(event.getTitle());
+                title.getStyleClass().add("event_title_text");
                 titleBox.getChildren().add(title);
                 titleBox.setAlignment(Pos.CENTER);
                 // Description
                 Label description = new Label(event.getDescription() + "\n\n" );
-                description.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
-                description.setTextAlignment(TextAlignment.JUSTIFY);
-                description.setMaxWidth(360);
-                description.setWrapText(true);
+                description.getStyleClass().add("event_description_text");
+
                 // Date of the event
                 Label eventDate = new Label("Date: " + event.getEventDate().format(DATE_FORMATTER));
-                eventDate.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
+                eventDate.getStyleClass().add("event_details_text");
                 // Author
                 Label authorLabel = new Label("Author: " + event.getAuthor().getUserName());
+                authorLabel.getStyleClass().add("event_details_text");
                 // Subscribed/Unsubscribed
                 String subscribedText;
                 if (event.getSubscribers().contains(user))
@@ -149,10 +147,10 @@ public class MainPageController implements Observer {
                 else
                     subscribedText = "You are not subscribed.";
                 Label subscribedLabel = new Label(subscribedText);
-
+                subscribedLabel.getStyleClass().add("event_details_text");
                 // Events that will take place soon -> different background color
-                if (DAYS.between(LocalDate.now(), event.getEventDate()) < 2)
-                    eventBox.setBackground(new Background(new BackgroundFill(Color.valueOf("BFBFBF"), CornerRadii.EMPTY, Insets.EMPTY)));
+                //if (DAYS.between(LocalDate.now(), event.getEventDate()) < 2)
+                //    eventBox.setBackground(new Background(new BackgroundFill(Color.valueOf("BFBFBF"), CornerRadii.EMPTY, Insets.EMPTY)));
 
                 eventBox.getChildren().addAll(titleBox, description, eventDate, authorLabel, subscribedLabel);
                 setGraphic(eventBox);
@@ -230,6 +228,7 @@ public class MainPageController implements Observer {
     @FXML
     private void initializeEventListView(){
         eventListView.setCellFactory(eventListView -> new EventListCell());
+
         // Place Holder
         HBox placeHolderBox = new HBox();
         placeHolderBox.setAlignment(Pos.CENTER);
@@ -263,6 +262,7 @@ public class MainPageController implements Observer {
 
     @FXML
     public void initialize() {
+
         welcomeLabel.setText("Welcome " + user.getUserName() + " (" + user.getFirstName() + " " + user.getLastName() + ") " + "!");
         initializeFriendsTableView();
         initializeEventListView();

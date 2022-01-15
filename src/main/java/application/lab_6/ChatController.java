@@ -205,28 +205,36 @@ public class ChatController {
     }
 
 
-    private void initializeChatMessageListView(){
+    private void initializeChatMessageListView() {
         chatMessageListView.setCellFactory(messageListView -> new MessageListViewCell());
+        try {
+            if (friendsList.size() > 0){
+                currentFriendId = friendsList.get(0).getId();
+                currentPage = 0;
 
-        if (friendsList.size() > 0){
-            currentFriendId = friendsList.get(0).getId();
-            updateMessageListView(currentFriendId, currentPage);
-        }
-        else
-            friendNameLabel.setText("");
+                currentPage = superService.getNumberOfConversationPages(user, superService.findUser(currentFriendId));
 
-        chatMessageListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Message>() {
-            @Override
-            public void changed(ObservableValue<? extends Message> observable, Message oldValue, Message newValue) {
-                if (newValue != null) {
-                    if (oldValue != null) {
-                        if (oldValue.getId() == newValue.getId())
-                            return;
-                    }
-                    updateSentToTable();
-                }
+                updateMessageListView(currentFriendId, currentPage);
             }
-        });
+            else
+                friendNameLabel.setText("");
+
+            chatMessageListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Message>() {
+                @Override
+                public void changed(ObservableValue<? extends Message> observable, Message oldValue, Message newValue) {
+                    if (newValue != null) {
+                        if (oldValue != null) {
+                            if (oldValue.getId() == newValue.getId())
+                                return;
+                        }
+                        updateSentToTable();
+                    }
+                }
+            });
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
+
     }
 
     // ===========  Sent To Table  ================
@@ -266,7 +274,7 @@ public class ChatController {
             fxmlLoader.setController(mainPageController);
             Scene mainScene = new Scene(fxmlLoader.load());
             Stage mainStage = new Stage();
-            mainStage.setTitle("The Network");
+            mainStage.setTitle("Cloud Chat");
             mainStage.setScene(mainScene);
             mainStage.show();
             ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
@@ -285,13 +293,15 @@ public class ChatController {
         else{
             try {
                 Message message = superService.addMessage(user.getId(), List.of(currentFriendId), text);
-                messagesList.add(message);
-                chatMessageListView.setItems(messagesList);
+                //messagesList.add(message);
+                //chatMessageListView.setItems(messagesList);
+                updateMessageListView(currentFriendId, currentPage);
+                messageTextField.clear();
             } catch (ValidationException | RepositoryException e) {
                 WarningBox.show(e.getMessage());
             }
         }
-        messageTextField.clear();
+
     }
 
     @FXML
@@ -369,8 +379,7 @@ public class ChatController {
         }
         try {
             superService.userDeleteMessage(user, selectedMessage.getId());
-            messagesList.remove(selectedMessage);
-            chatMessageListView.setItems(messagesList);
+            updateMessageListView(currentFriendId,currentPage);
         } catch (ServiceException | RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
