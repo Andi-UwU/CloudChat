@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -11,74 +15,91 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" pickOnBounds="false" prefHeight="340.0" prefWidth="430.0" scaleShape="false" styleClass="custom_background" stylesheets="@css/css_classes.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" pickOnBounds="false" prefHeight="341.0" prefWidth="430.0" scaleShape="false" styleClass="custom_background" stylesheets="@css/css_classes.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label prefHeight="30.0" prefWidth="250.0" text="Welcome to The Network!" translateY="-10.0">
-         <font>
-            <Font name="System Bold" size="20.0" />
-         </font>
-         <VBox.margin>
-            <Insets bottom="60.0" />
-         </VBox.margin>
-      </Label>
-      <GridPane alignment="CENTER" maxWidth="-Infinity" prefHeight="90.0" prefWidth="400.0" translateY="-30.0" VBox.vgrow="NEVER">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.0" minWidth="10.0" prefWidth="145.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="257.0" minWidth="10.0" prefWidth="255.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+      <AnchorPane prefHeight="340.0" prefWidth="430.0">
          <children>
-            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Username" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets right="25.0" />
-               </GridPane.margin>
+            <AnchorPane prefHeight="113.0" prefWidth="430.0">
+               <children>
+                  <ImageView fitHeight="152.0" fitWidth="179.0" layoutX="139.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/cloud_icon.png" />
+                     </image>
+                  </ImageView>
+                  <HBox layoutX="146.0" layoutY="14.0" prefHeight="35.0" prefWidth="137.0">
+                     <children>
+                        <Label styleClass="text_title" text="Cloud">
+                           <font>
+                              <Font name="System Bold" size="24.0" />
+                           </font>
+                        </Label>
+                        <Label prefHeight="26.0" prefWidth="62.0" styleClass="text_title_filled" text="Chat" />
+                     </children>
+                  </HBox>
+                  <GridPane alignment="CENTER" layoutX="23.0" layoutY="137.0" maxWidth="-Infinity" prefHeight="90.0" prefWidth="430.0">
+                    <columnConstraints>
+                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="195.0" minWidth="10.0" prefWidth="95.80001220703124" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="357.6" minWidth="10.0" prefWidth="334.3999877929688" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="20.0" prefWidth="72.0" styleClass="text_on_background_small" text="Username" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets right="25.0" />
+                           </GridPane.margin>
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" graphicTextGap="1.0" styleClass="text_on_background_small" text="Password" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets right="25.0" />
+                           </GridPane.margin>
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="textFieldUser" maxWidth="-Infinity" pickOnBounds="false" prefHeight="25.0" prefWidth="235.0" styleClass="custom_text_field" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="textFieldPassword" maxWidth="-Infinity" pickOnBounds="false" prefHeight="25.0" prefWidth="235.0" styleClass="custom_text_field" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                  </GridPane>
+               </children>
+            </AnchorPane>
+            <Button layoutX="125.0" layoutY="247.0" mnemonicParsing="false" onAction="#tryLogin" prefHeight="28.0" prefWidth="179.0" styleClass="custom_button" text="Login">
                <font>
                   <Font size="14.0" />
-               </font></Label>
-            <Label text="Password" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
-               <GridPane.margin>
-                  <Insets right="25.0" />
-               </GridPane.margin>
-               <font>
-                  <Font size="14.0" />
-               </font></Label>
-            <TextField fx:id="textFieldUser" maxWidth="-Infinity" pickOnBounds="false" prefHeight="25.0" prefWidth="235.0" style="-fx-background-color: #FF7900;" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="13.0" />
-               </font></TextField>
-            <TextField fx:id="textFieldPassword" maxWidth="-Infinity" pickOnBounds="false" prefHeight="25.0" prefWidth="235.0" style="-fx-background-color: #FF7900;" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2">
-               <font>
-                  <Font size="13.0" />
-               </font></TextField>
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-      </GridPane>
-      <Button layoutX="50.0" mnemonicParsing="false" onAction="#tryLogin" prefHeight="28.0" prefWidth="179.0" styleClass="custom_button" text="Login" translateY="-15.0" VBox.vgrow="NEVER">
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-         <font>
-            <Font size="14.0" />
-         </font></Button>
-      <HBox alignment="CENTER" prefHeight="40.0" prefWidth="430.0" translateY="30.0">
-         <children>
-            <Label text="Don't have an account yet?">
-               <font>
-                  <Font size="16.0" />
                </font>
-            </Label>
-            <Label fx:id="signUpButton" onMouseClicked="#signUpView" text=" Create one now!" textFill="#ffa800">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
+            </Button>
+            <HBox alignment="CENTER" layoutY="298.0" prefHeight="27.0" prefWidth="430.0">
+               <children>
+                  <Label styleClass="text_on_background" text="Don't have an account yet?">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="signUpButton" onMouseClicked="#signUpView" styleClass="text_create_account" text=" Create one now!" textFill="#ffa800" underline="true">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Label>
+               </children>
+            </HBox>
          </children>
-      </HBox>
+      </AnchorPane>
    </children>
 </VBox>

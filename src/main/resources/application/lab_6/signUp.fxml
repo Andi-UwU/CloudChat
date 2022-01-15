@@ -13,7 +13,7 @@
 
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="310.0" prefWidth="370.0" styleClass="custom_background" stylesheets="@css/css_classes.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label text="Sign up for free™ now!">
+      <Label styleClass="text_on_background" text="Sign up for free™ now!">
          <font>
             <Font name="System Italic" size="18.0" />
          </font>
@@ -36,17 +36,17 @@
             <Insets top="40.0" />
          </VBox.margin>
          <children>
-            <Label text="First name">
+            <Label styleClass="text_on_background_small" text="First name">
                <font>
                   <Font size="13.0" />
                </font>
             </Label>
-            <Label text="Last name" GridPane.rowIndex="1">
+            <Label styleClass="text_on_background_small" text="Last name" GridPane.rowIndex="1">
                <font>
                   <Font size="13.0" />
                </font>
             </Label>
-            <Label text="Username" GridPane.rowIndex="2">
+            <Label styleClass="text_on_background_small" text="Username" GridPane.rowIndex="2">
                <font>
                   <Font size="13.0" />
                </font>
@@ -75,7 +75,7 @@
                   <Font size="13.0" />
                </font>
             </TextField>
-            <Label text="Password" GridPane.rowIndex="3">
+            <Label styleClass="text_on_background_small" text="Password" GridPane.rowIndex="3">
                <font>
                   <Font size="13.0" />
                </font>

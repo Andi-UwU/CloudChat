@@ -18,7 +18,7 @@
             <TableColumn fx:id="chatSelectColumn" prefWidth="41.5999755859375" styleClass="column_header_background" text="Select" />
         </columns>
       </TableView>
-      <ListView fx:id="chatMessageListView" layoutX="265.0" layoutY="54.0" prefHeight="242.0" prefWidth="523.0" styleClass="custom_background" />
+      <ListView fx:id="chatMessageListView" layoutX="265.0" layoutY="54.0" prefHeight="242.0" prefWidth="523.0" />
       <TextField fx:id="messageTextField" layoutX="265.0" layoutY="300.0" prefHeight="26.0" prefWidth="523.0" styleClass="custom_text_field" />
       <Button fx:id="sendMessageButton" layoutX="262.0" layoutY="347.0" mnemonicParsing="false" onAction="#sendButtonAction" prefHeight="26.0" prefWidth="70.0" styleClass="custom_button" text="Send" />
       <Label fx:id="friendNameLabel" layoutX="265.0" layoutY="23.0" prefHeight="26.0" prefWidth="329.0" text="Friend Name">
