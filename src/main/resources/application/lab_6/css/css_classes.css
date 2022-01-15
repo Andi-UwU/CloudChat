@@ -1,3 +1,4 @@
+/*  Buttons  */
 .custom_button
 {
 
@@ -43,29 +44,40 @@
     -fx-cursor: hand;
 }
 
+/*  Background  */
 .custom_background
 {
-    -fx-background-color: linear-gradient(#00CBFE, #00BDFE);
+    -fx-background-color: linear-gradient(#00BDFE, #55DCFE);
 }
 
+/*  Text field  */
 .custom_text_field
 {
     -fx-background-color : #FFFFFF ;
 }
+
+/*  Date Picker  */
 .date-picker .text-field {
     -fx-control-inner-background: #FFFFFF ;
 }
 
+/*  Table View  */
 .custom_table_view
 {
-    -fx-background-color: linear-gradient(to right top, #FFFFFF, #D4F4FF);
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill : #00BDFE;
+    -fx-font-size: 12px;
 }
 
-.custom_table_view .column_header_background
+/*  Table View Column  */
+.custom_table_view .column
 {
-    -fx-background-color: linear-gradient(to right top, #FFFFFF, #D4F4FF);
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill : #00BDFE;
+    -fx-font-size: 12px;
     -fx-padding: 0;
     -fx-padding: 0;
+    -fx-font-weight: bold;
 }
 .custom_table_view *.scroll-bar:horizontal *.increment-button,
 .custom_table_view *.scroll-bar:horizontal *.decrement-button {
@@ -83,10 +95,33 @@
     -fx-padding: 0;
     -fx-shape: null;
 }
+/*  Table View Header  */
+.custom_table_view .column .label
+{
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill : #00BDFE;
+    -fx-font-size: 12px;
+    -fx-padding: 0;
+    -fx-padding: 0;
+    -fx-font-weight: bold;
+}
 
-.list-view .scroll-bar:horizontal {
+/*  List View  */
+.list-view .scroll-bar:horizontal /*  hide horizontal scroll bar  */
+{
     -fx-opacity: 0;
     -fx-padding:-7;
+}
+/*  Message List View  */
+.message_list-view .scroll-bar:horizontal /*  hide horizontal scroll bar  */
+{
+    -fx-opacity: 0;
+    -fx-padding: -7;
+}
+.message_list-view .scroll-bar:vertical /*  hide horizontal scroll bar  */
+{
+    -fx-opacity: 0;
+    -fx-padding: -7;
 }
 
 .text_title_filled {
@@ -137,6 +172,31 @@
     -fx-font-size: 18px;
     -fx-text-fill: #D4F4FF;
     -fx-font-weight: bold;
+}
+/*  Messages  */
+.message_user
+{
+    -fx-background-color: #E6F9FF;
+    -fx-text-fill: #00BDFE;
+    -fx-font-size: 13px;
+    -fx-float: right;
+    -fx-padding: 5px;
+    -fx-margin: 0;
+    -fx-font-family: 'verdana';
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+}
+.message_friend
+{
+    -fx-background-color: #00BDFE;
+    -fx-text-fill: #E6F9FF;
+    -fx-font-size: 13px;
+    -fx-float: left;
+    -fx-padding: 5px;
+    -fx-margin: 0;
+    -fx-font-family: 'verdana';
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
 }
 
 

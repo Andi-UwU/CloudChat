@@ -9,46 +9,46 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="814.0" styleClass="custom_background" stylesheets="@css/css_classes.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="454.0" prefWidth="814.0" styleClass="custom_background" stylesheets="@css/css_classes.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TableView fx:id="chatFriendTableView" accessibleRole="BUTTON" layoutX="22.0" layoutY="54.0" prefHeight="158.0" prefWidth="222.0" styleClass="custom_table_view">
+      <TableView fx:id="chatFriendTableView" accessibleRole="BUTTON" layoutX="22.0" layoutY="54.0" prefHeight="180.0" prefWidth="222.0" styleClass="custom_table_view">
         <columns>
-          <TableColumn fx:id="chatIdColumn" prefWidth="38.4000244140625" styleClass="column_header_background" text="ID" />
-          <TableColumn fx:id="chatNameColumn" minWidth="1.600006103515625" prefWidth="140.0" styleClass="column_header_background" text="Name" />
-            <TableColumn fx:id="chatSelectColumn" prefWidth="41.5999755859375" styleClass="column_header_background" text="Select" />
+          <TableColumn fx:id="chatIdColumn" prefWidth="38.4000244140625" styleClass="column" text="ID" />
+          <TableColumn fx:id="chatNameColumn" minWidth="1.600006103515625" prefWidth="140.0" styleClass="column" text="Name" />
+            <TableColumn fx:id="chatSelectColumn" prefWidth="41.5999755859375" styleClass="column" text="Select" />
         </columns>
       </TableView>
-      <ListView fx:id="chatMessageListView" layoutX="265.0" layoutY="54.0" prefHeight="242.0" prefWidth="523.0" />
-      <TextField fx:id="messageTextField" layoutX="265.0" layoutY="300.0" prefHeight="26.0" prefWidth="523.0" styleClass="custom_text_field" />
-      <Button fx:id="sendMessageButton" layoutX="262.0" layoutY="347.0" mnemonicParsing="false" onAction="#sendButtonAction" prefHeight="26.0" prefWidth="70.0" styleClass="custom_button" text="Send" />
-      <Label fx:id="friendNameLabel" layoutX="265.0" layoutY="23.0" prefHeight="26.0" prefWidth="329.0" text="Friend Name">
+      <ListView fx:id="chatMessageListView" layoutX="265.0" layoutY="54.0" prefHeight="322.0" prefWidth="523.0" styleClass="message_list-view" />
+      <TextField fx:id="messageTextField" layoutX="265.0" layoutY="376.0" prefHeight="26.0" prefWidth="523.0" styleClass="custom_text_field" />
+      <Button fx:id="sendMessageButton" layoutX="265.0" layoutY="408.0" mnemonicParsing="false" onAction="#sendButtonAction" prefHeight="26.0" prefWidth="70.0" styleClass="custom_button" text="Send" />
+      <Label fx:id="friendNameLabel" layoutX="265.0" layoutY="23.0" prefHeight="26.0" prefWidth="329.0" styleClass="text_on_background" text="Friend Name">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Button fx:id="backButton" layoutX="98.0" layoutY="360.0" mnemonicParsing="false" onAction="#backButtonAction" prefHeight="26.0" prefWidth="70.0" styleClass="custom_button" text="Back" />
-      <Button fx:id="replyButton" layoutX="454.0" layoutY="347.0" mnemonicParsing="false" onAction="#replyButtonAction" prefHeight="26.0" prefWidth="106.0" styleClass="custom_button" text="Reply" />
-      <Button fx:id="replyToAllButton" layoutX="569.0" layoutY="347.0" mnemonicParsing="false" onAction="#replyToAllButtonAction" prefHeight="26.0" prefWidth="106.0" styleClass="custom_button" text="Reply to All" />
-      <Label layoutX="22.0" layoutY="23.0" prefHeight="18.0" prefWidth="118.0" text="Friends:">
+      <Button fx:id="backButton" layoutX="22.0" layoutY="408.0" mnemonicParsing="false" onAction="#backButtonAction" prefHeight="37.0" prefWidth="62.0" styleClass="custom_button" text="Back" />
+      <Button fx:id="replyButton" layoutX="376.0" layoutY="407.0" mnemonicParsing="false" onAction="#replyButtonAction" prefHeight="26.0" prefWidth="106.0" styleClass="custom_button" text="Reply" />
+      <Button fx:id="replyToAllButton" layoutX="527.0" layoutY="408.0" mnemonicParsing="false" onAction="#replyToAllButtonAction" prefHeight="37.0" prefWidth="118.0" styleClass="custom_button" text="Reply to All" />
+      <Label layoutX="22.0" layoutY="23.0" prefHeight="18.0" prefWidth="118.0" styleClass="text_on_background" text="Friends:">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <TableView fx:id="sentToTableView" layoutX="22.0" layoutY="254.0" prefHeight="92.0" prefWidth="222.0" styleClass="custom_table_view">
+      <TableView fx:id="sentToTableView" layoutX="22.0" layoutY="271.0" prefHeight="130.0" prefWidth="222.0" styleClass="custom_table_view">
          <columns>
-            <TableColumn fx:id="sentToColumnId" prefWidth="38.4000244140625" styleClass="column_header_background" text="ID" />
-            <TableColumn fx:id="sentToColumnName" prefWidth="180.800048828125" styleClass="column_header_background" text="Name" />
+            <TableColumn fx:id="sentToColumnId" prefWidth="38.4000244140625" styleClass="column" text="ID" />
+            <TableColumn fx:id="sentToColumnName" prefWidth="180.800048828125" styleClass="column" text="Name" />
          </columns>
       </TableView>
-      <Label layoutX="22.0" layoutY="225.0" prefHeight="18.0" prefWidth="150.0" text="Sent to:">
+      <Label layoutX="23.0" layoutY="240.0" prefHeight="18.0" prefWidth="150.0" styleClass="text_on_background" text="Sent to:">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Button fx:id="sendToSelectedButton" layoutX="340.0" layoutY="347.0" mnemonicParsing="false" onAction="#sendToSelectedButtonAction" prefHeight="26.0" prefWidth="106.0" styleClass="custom_button" text="Send to selected" />
-      <Button fx:id="deleteMessageButton" layoutX="684.0" layoutY="347.0" mnemonicParsing="false" onAction="#deleteMessageButtonAction" prefHeight="26.0" prefWidth="106.0" styleClass="custom_button" text="Delete" />
-      <Button fx:id="nextPage" layoutX="701.0" layoutY="23.0" mnemonicParsing="false" onAction="#nextPageAction" prefHeight="26.0" prefWidth="61.0" styleClass="custom_button" text="Next" />
-      <Button fx:id="previousPage" layoutX="609.0" layoutY="23.0" mnemonicParsing="false" onAction="#previousPageAction" styleClass="custom_button" text="Previous" />
-      <Label fx:id="pageNumberLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="670.0" layoutY="27.0" prefHeight="18.0" prefWidth="30.0" text="x" textAlignment="CENTER" />
+      <Button fx:id="sendToSelectedButton" layoutX="98.0" layoutY="408.0" mnemonicParsing="false" onAction="#sendToSelectedButtonAction" prefHeight="38.0" prefWidth="150.0" styleClass="custom_button" text="Send to selected" />
+      <Button fx:id="deleteMessageButton" layoutX="681.0" layoutY="409.0" mnemonicParsing="false" onAction="#deleteMessageButtonAction" prefHeight="26.0" prefWidth="106.0" styleClass="custom_button" text="Delete" />
+      <Button fx:id="nextPage" layoutX="726.0" layoutY="9.0" mnemonicParsing="false" onAction="#nextPageAction" prefHeight="26.0" prefWidth="61.0" styleClass="custom_button" text="Next" />
+      <Button fx:id="previousPage" layoutX="609.0" layoutY="9.0" mnemonicParsing="false" onAction="#previousPageAction" styleClass="custom_button" text="Previous" />
+      <Label fx:id="pageNumberLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="695.0" layoutY="18.0" prefHeight="18.0" prefWidth="30.0" text="x" textAlignment="CENTER" />
    </children>
 </AnchorPane>

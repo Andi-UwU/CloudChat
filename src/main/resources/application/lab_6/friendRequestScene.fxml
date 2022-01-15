@@ -23,27 +23,27 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="124.0" prefWidth="598.0">
                <children>
-                  <TableView fx:id="requestsTableView" layoutX="2.0" layoutY="-3.0" prefHeight="332.0" prefWidth="435.0" styleClass="custom_table_view">
+                  <TableView fx:id="requestsTableView" layoutX="14.0" layoutY="-3.0" prefHeight="320.0" prefWidth="423.0" styleClass="custom_table_view">
                     <columns>
-                        <TableColumn editable="false" minWidth="55.0" prefWidth="180.0" styleClass="column_header_background" text="From">
+                        <TableColumn editable="false" minWidth="55.0" prefWidth="180.0" styleClass="column" text="From">
                            <columns>
-                            <TableColumn fx:id="idFromColumn" editable="false" minWidth="30.0" prefWidth="30.0" styleClass="column_header_background" text="ID" />
-                              <TableColumn fx:id="nameFromColumn" editable="false" minWidth="25.0" prefWidth="150.0" styleClass="column_header_background" text="Name" />
+                            <TableColumn fx:id="idFromColumn" editable="false" minWidth="30.0" prefWidth="30.0" styleClass="column" text="ID" />
+                              <TableColumn fx:id="nameFromColumn" editable="false" minWidth="25.0" prefWidth="150.0" styleClass="column" text="Name" />
                            </columns>
                         </TableColumn>
-                      <TableColumn editable="false" minWidth="55.0" prefWidth="180.0" styleClass="column_header_background" text="To">
+                      <TableColumn editable="false" minWidth="55.0" prefWidth="180.0" styleClass="column" text="To">
                            <columns>
-                              <TableColumn fx:id="idToColumn" editable="false" minWidth="30.0" prefWidth="30.0" styleClass="column_header_background" text="ID" />
-                              <TableColumn fx:id="nameToColumn" editable="false" minWidth="25.0" prefWidth="150.0" styleClass="column_header_background" text="Name" />
+                              <TableColumn fx:id="idToColumn" editable="false" minWidth="30.0" prefWidth="30.0" styleClass="column" text="ID" />
+                              <TableColumn fx:id="nameToColumn" editable="false" minWidth="25.0" prefWidth="150.0" styleClass="column" text="Name" />
                            </columns>
                         </TableColumn>
-                        <TableColumn fx:id="statusColumn" editable="false" minWidth="50.0" prefWidth="75.0" styleClass="column_header_background" text="Status" />
+                        <TableColumn fx:id="statusColumn" editable="false" minWidth="50.0" prefWidth="75.0" styleClass="column" text="Status" />
                     </columns>
                   </TableView>
-                  <Button fx:id="acceptButton" layoutX="467.0" layoutY="76.0" mnemonicParsing="false" onAction="#acceptFriendRequestAction" prefHeight="25.0" prefWidth="100.0" styleClass="custom_button" text="Accept" />
-                  <Button fx:id="declineButton" layoutX="467.0" layoutY="112.0" mnemonicParsing="false" onAction="#declineFriendRequestAction" prefHeight="25.0" prefWidth="100.0" styleClass="custom_button" text="Decline" />
-                  <Button fx:id="cancelButton" layoutX="467.0" layoutY="149.0" mnemonicParsing="false" onAction="#cancelFriendRequestAction" prefHeight="25.0" prefWidth="100.0" styleClass="custom_button" text="Cancel" />
-                  <Button fx:id="backButton" layoutX="467.0" layoutY="293.0" mnemonicParsing="false" onAction="#backMenuAction" prefHeight="25.0" prefWidth="100.0" styleClass="custom_button" text="Back" />
+                  <Button fx:id="acceptButton" layoutX="467.0" layoutY="33.0" mnemonicParsing="false" onAction="#acceptFriendRequestAction" prefHeight="25.0" prefWidth="100.0" styleClass="custom_button" text="Accept" />
+                  <Button fx:id="declineButton" layoutX="467.0" layoutY="90.0" mnemonicParsing="false" onAction="#declineFriendRequestAction" prefHeight="25.0" prefWidth="100.0" styleClass="custom_button" text="Decline" />
+                  <Button fx:id="cancelButton" layoutX="467.0" layoutY="145.0" mnemonicParsing="false" onAction="#cancelFriendRequestAction" prefHeight="25.0" prefWidth="100.0" styleClass="custom_button" text="Cancel" />
+                  <Button fx:id="backButton" layoutX="467.0" layoutY="273.0" mnemonicParsing="false" onAction="#backMenuAction" prefHeight="25.0" prefWidth="100.0" styleClass="custom_button" text="Back" />
                </children>
             </AnchorPane>
         </items>

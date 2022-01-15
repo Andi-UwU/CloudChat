@@ -26,13 +26,13 @@
                <children>
                   <TableView fx:id="tableView" prefHeight="338.0" prefWidth="334.0" styleClass="custom_table_view">
                     <columns>
-                      <TableColumn minWidth="9.599975407123566" prefWidth="222.3999908566475" styleClass="column_header_background" text="User">
+                      <TableColumn minWidth="9.599975407123566" prefWidth="222.3999908566475" styleClass="column" text="User">
                            <columns>
-                              <TableColumn fx:id="idColumn" prefWidth="35.20001298189163" styleClass="column_header_background" text="Id" />
-                              <TableColumn fx:id="nameColumn" prefWidth="142.3999900817871" styleClass="column_header_background" text="Name" />
+                              <TableColumn fx:id="idColumn" prefWidth="35.20001298189163" styleClass="column" text="Id" />
+                              <TableColumn fx:id="nameColumn" prefWidth="142.3999900817871" styleClass="column" text="Name" />
                            </columns>
                         </TableColumn>
-                      <TableColumn fx:id="requestColumn" editable="false" minWidth="0.0" prefWidth="152.80006408691406" sortable="false" styleClass="column_header_background" text="Friendship request" />
+                      <TableColumn fx:id="requestColumn" editable="false" minWidth="0.0" prefWidth="152.80006408691406" sortable="false" styleClass="column" text="Friendship request" />
                     </columns>
                   </TableView>
                   <AnchorPane layoutX="334.0" prefHeight="338.0" prefWidth="265.0">

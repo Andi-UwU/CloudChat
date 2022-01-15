@@ -40,9 +40,9 @@
             <CheckBox fx:id="subscribedCheckBox" layoutX="14.0" layoutY="33.0" mnemonicParsing="false" onAction="#subscribedCheckBoxAction" styleClass="text_on_background_small" text="Show only subscribed events" />
             <TableView fx:id="friendsTableView" layoutX="402.0" layoutY="62.0" prefHeight="222.0" prefWidth="312.0" styleClass="custom_table_view">
               <columns>
-                <TableColumn fx:id="friendsTableColumnId" prefWidth="29.60003662109375" styleClass="column_header_background" text="ID" />
-                <TableColumn fx:id="friendsTableColumnName" prefWidth="167.99996948242188" styleClass="column_header_background" text="Name" />
-                  <TableColumn fx:id="friendsTableColumnFriendshipDate" prefWidth="111.99993896484375" styleClass="column_header_background" text="Friends since" />
+                <TableColumn fx:id="friendsTableColumnId" prefWidth="29.60003662109375" styleClass="column" text="ID" />
+                <TableColumn fx:id="friendsTableColumnName" prefWidth="167.99996948242188" styleClass="column" text="Name" />
+                  <TableColumn fx:id="friendsTableColumnFriendshipDate" prefWidth="111.99993896484375" styleClass="column" text="Friends since" />
               </columns>
             </TableView>
             <Label layoutX="402.0" layoutY="16.0" prefHeight="30.0" prefWidth="102.0" styleClass="text_on_background" text="Friends:" textFill="#ff9d00">

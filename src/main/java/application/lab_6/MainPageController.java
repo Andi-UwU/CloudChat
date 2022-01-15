@@ -215,7 +215,7 @@ public class MainPageController implements Observer {
         HBox placeHolderBox = new HBox();
         placeHolderBox.setAlignment(Pos.CENTER);
         Label placeHolderLabel = new Label("You have no friends =(");
-        placeHolderLabel.setStyle("-fx-font-size: 22px;\n" +
+        placeHolderLabel.setStyle("-fx-font-size: 14px;\n" +
                 "    -fx-text-fill: #FFFFFF;\n" +
                 "    -fx-font-weight: bold;");
         placeHolderBox.getChildren().add(placeHolderLabel);
@@ -234,7 +234,7 @@ public class MainPageController implements Observer {
         HBox placeHolderBox = new HBox();
         placeHolderBox.setAlignment(Pos.CENTER);
         Label placeHolderLabel = new Label("There are no events available for you.\nTry to make some friends");
-        placeHolderLabel.setStyle("-fx-font-size: 22px;\n" +
+        placeHolderLabel.setStyle("-fx-font-size: 14px;\n" +
                 "    -fx-text-fill: #FFFFFF;\n" +
                 "    -fx-font-weight: bold;");
         placeHolderBox.getChildren().add(placeHolderLabel);
