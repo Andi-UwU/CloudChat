@@ -125,7 +125,6 @@ public class MainPageController implements Observer {
                 VBox eventBox = new VBox();
                 // Title
                 VBox titleBox = new VBox();
-                titleBox.getStyleClass().add("event_background");
                 Label title = new Label(event.getTitle());
                 title.getStyleClass().add("event_title_text");
                 titleBox.getChildren().add(title);
@@ -355,7 +354,7 @@ public class MainPageController implements Observer {
             fxmlLoader.setController(addFriendController);
             Scene addFriendScene = new Scene(fxmlLoader.load());
             Stage addFriendStage = new Stage();
-            addFriendStage.setTitle("The Network");
+            addFriendStage.setTitle("Cloud Chat");
             addFriendStage.setScene(addFriendScene);
             addFriendStage.show();
             addFriendWindow = addFriendScene;
@@ -377,7 +376,7 @@ public class MainPageController implements Observer {
             fxmlLoader.setController(friendRequestsController);
             Scene friendRequestScene = new Scene(fxmlLoader.load());
             Stage friendRequestStage = new Stage();
-            friendRequestStage.setTitle("The Network");
+            friendRequestStage.setTitle("Cloud Chat");
             friendRequestStage.setScene(friendRequestScene);
             friendRequestStage.show();
 
@@ -397,7 +396,7 @@ public class MainPageController implements Observer {
             fxmlLoader.setController(networkController);
             Scene loginScene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
-            stage.setTitle("The Network");
+            stage.setTitle("Cloud Chat");
             stage.setScene(loginScene);
             stage.show();
             if (friendRequestWindow!=null)

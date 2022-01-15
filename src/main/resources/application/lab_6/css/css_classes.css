@@ -112,14 +112,13 @@
 {
     -fx-opacity: 0;
     -fx-padding:-7;
-    -fx-background-image: url("application/lab_6/images/clouds_event.jpg");
 }
-/*  Message List View  */
-.message_list-view .scroll-bar:horizontal /*  hide horizontal scroll bar  */
+/*  Message List View
+.message_list-view .scroll-bar:horizontal /*  hide horizontal scroll bar
 {
     -fx-opacity: 0;
     -fx-padding: -7;
-}
+}*/
 .message_list-view .scroll-bar:vertical /*  hide horizontal scroll bar  */
 {
     -fx-opacity: 0;
@@ -239,9 +238,5 @@
     -fx-background-radius: 5;
 }
 
-.event_background
-{
-    -fx-background-image: url("application/lab_6/images/clouds_event.jpg");
-}
 
 
