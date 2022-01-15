@@ -14,17 +14,17 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Label layoutX="221.0" layoutY="96.0" prefHeight="20.0" prefWidth="78.0" text="Title:">
+      <Label layoutX="213.0" layoutY="96.0" prefHeight="20.0" prefWidth="86.0" styleClass="text_on_background_small" text="Title:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="221.0" layoutY="135.0" prefHeight="20.0" prefWidth="78.0" text="Description:">
+      <Label layoutX="213.0" layoutY="135.0" prefHeight="20.0" prefWidth="86.0" styleClass="text_on_background_small" text="Description:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="221.0" layoutY="180.0" prefHeight="20.0" prefWidth="78.0" text="Date: ">
+      <Label layoutX="213.0" layoutY="180.0" prefHeight="20.0" prefWidth="86.0" styleClass="text_on_background_small" text="Date: ">
          <font>
             <Font size="14.0" />
          </font>

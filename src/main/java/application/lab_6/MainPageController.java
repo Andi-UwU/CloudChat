@@ -135,7 +135,7 @@ public class MainPageController implements Observer {
                 Label description = new Label(event.getDescription() + "\n\n" );
                 description.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
                 description.setTextAlignment(TextAlignment.JUSTIFY);
-                description.setMaxWidth(380);
+                description.setMaxWidth(360);
                 description.setWrapText(true);
                 // Date of the event
                 Label eventDate = new Label("Date: " + event.getEventDate().format(DATE_FORMATTER));
@@ -209,18 +209,37 @@ public class MainPageController implements Observer {
     }
 
     private void initializeFriendsTableView(){
+        friendsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //hides side scrollbar
+
+        // Place Holder
+        HBox placeHolderBox = new HBox();
+        placeHolderBox.setAlignment(Pos.CENTER);
+        Label placeHolderLabel = new Label("You have no friends =(");
+        placeHolderLabel.setStyle("-fx-font-size: 14px;\n" +
+                "    -fx-text-fill: #FFFFFF;\n" +
+                "    -fx-font-weight: bold;");
+        placeHolderBox.getChildren().add(placeHolderLabel);
+        friendsTableView.setPlaceholder(placeHolderBox);
+
         friendsTableColumnId.setCellValueFactory(new PropertyValueFactory<FriendDTO, Integer>("id"));
         friendsTableColumnName.setCellValueFactory(new PropertyValueFactory<FriendDTO, String>("name"));
         friendsTableColumnFriendshipDate.setCellValueFactory(new PropertyValueFactory<FriendDTO, String>("date"));
+
         updateFriendsTableView();
     }
-
     @FXML
-    public void initialize() {
-        welcomeLabel.setText("Welcome " + user.getUserName() + " (" + user.getFirstName() + " " + user.getLastName() + ") " + "!");
-        initializeFriendsTableView();
-
+    private void initializeEventListView(){
         eventListView.setCellFactory(eventListView -> new EventListCell());
+        // Place Holder
+        HBox placeHolderBox = new HBox();
+        placeHolderBox.setAlignment(Pos.CENTER);
+        Label placeHolderLabel = new Label("There are no events available for you.\nTry to make some friends");
+        placeHolderLabel.setStyle("-fx-font-size: 14px;\n" +
+                "    -fx-text-fill: #FFFFFF;\n" +
+                "    -fx-font-weight: bold;");
+        placeHolderBox.getChildren().add(placeHolderLabel);
+        eventListView.setPlaceholder(placeHolderBox);
+
 
         updateEventListView();
 
@@ -240,6 +259,13 @@ public class MainPageController implements Observer {
         } catch (RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
+    }
+
+    @FXML
+    public void initialize() {
+        welcomeLabel.setText("Welcome " + user.getUserName() + " (" + user.getFirstName() + " " + user.getLastName() + ") " + "!");
+        initializeFriendsTableView();
+        initializeEventListView();
     }
 
 

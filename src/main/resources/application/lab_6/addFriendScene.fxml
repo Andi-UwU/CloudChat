@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="601.0" stylesheets="@css/css_classes.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="399.0" prefWidth="600.0" stylesheets="@css/css_classes.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <SplitPane dividerPositions="0.1460843373493976" layoutY="-1.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" styleClass="custom_background">
         <items>
@@ -22,17 +22,17 @@
                   </Label>
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="335.0" prefWidth="599.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="343.0" prefWidth="630.0">
                <children>
-                  <TableView fx:id="tableView" prefHeight="338.0" prefWidth="334.0" styleClass="custom_background">
+                  <TableView fx:id="tableView" prefHeight="338.0" prefWidth="334.0" styleClass="custom_table_view">
                     <columns>
-                      <TableColumn minWidth="9.599975407123566" prefWidth="222.3999908566475" text="User">
+                      <TableColumn minWidth="9.599975407123566" prefWidth="222.3999908566475" styleClass="column" text="User">
                            <columns>
-                              <TableColumn fx:id="idColumn" prefWidth="35.20001298189163" text="Id" />
-                              <TableColumn fx:id="nameColumn" prefWidth="142.3999900817871" text="Name" />
+                              <TableColumn fx:id="idColumn" prefWidth="35.20001298189163" styleClass="column" text="Id" />
+                              <TableColumn fx:id="nameColumn" prefWidth="142.3999900817871" styleClass="column" text="Name" />
                            </columns>
                         </TableColumn>
-                      <TableColumn fx:id="requestColumn" editable="false" minWidth="0.0" prefWidth="152.80006408691406" sortable="false" text="Friendship request" />
+                      <TableColumn fx:id="requestColumn" editable="false" minWidth="0.0" prefWidth="152.80006408691406" sortable="false" styleClass="column" text="Friendship request" />
                     </columns>
                   </TableView>
                   <AnchorPane layoutX="334.0" prefHeight="338.0" prefWidth="265.0">

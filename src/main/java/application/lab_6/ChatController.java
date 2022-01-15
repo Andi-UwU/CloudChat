@@ -165,29 +165,27 @@ public class ChatController {
 
     // ===========  Messages  ================
 
-    final class CustomAlignmentListViewCell extends ListCell<Message> {
+    final class MessageListViewCell extends ListCell<Message> {
         @Override
         protected void updateItem(Message item, boolean empty) {
             super.updateItem(item, empty);
             if (empty) {
                 setGraphic(null);
             } else {
+                // Create  Label
+                Label label = new Label(item.toString());
                 // Create the HBox
                 HBox hBox = new HBox();
                 hBox.setAlignment(Pos.CENTER);
-                if (item.getFrom().getId().equals(user.getId()))
+                if (item.getFrom().getId().equals(user.getId())) { //sent by user
                     hBox.setAlignment(Pos.BASELINE_RIGHT);
-                else
+                    label.getStyleClass().add("message_user");
+                }
+                else { //sent by friend
                     hBox.setAlignment(Pos.BASELINE_LEFT);
 
-                // Create centered Label
-                Label label = new Label(item.toString());
-
-                if (item.getFrom().getId().equals(user.getId()))
-                    label.setAlignment(Pos.BASELINE_RIGHT);
-                else
-                    label.setAlignment(Pos.BASELINE_LEFT);
-
+                    label.getStyleClass().add("message_friend");
+                }
                 hBox.getChildren().add(label);
                 setGraphic(hBox);
             }
@@ -208,7 +206,7 @@ public class ChatController {
 
 
     private void initializeChatMessageListView(){
-        chatMessageListView.setCellFactory(messageListView -> new CustomAlignmentListViewCell());
+        chatMessageListView.setCellFactory(messageListView -> new MessageListViewCell());
 
         if (friendsList.size() > 0){
             currentFriendId = friendsList.get(0).getId();

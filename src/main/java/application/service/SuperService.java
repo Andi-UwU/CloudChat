@@ -799,6 +799,7 @@ public class SuperService {
     public List<Event> getSubscribedEventsForUser(User user) throws RepositoryException {
         return eventService.getAll()
                 .stream()
+                .filter(event -> event.getEventDate().isAfter(LocalDate.now()) || event.getEventDate().equals(LocalDate.now()))
                 .filter(event -> event.getSubscribers().contains(user))
                 .sorted((event1, event2) ->
                 {

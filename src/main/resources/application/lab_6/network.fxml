@@ -47,11 +47,11 @@
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <TextField fx:id="textFieldUser" maxWidth="-Infinity" pickOnBounds="false" prefHeight="25.0" prefWidth="235.0" style="-fx-background-color: #FF7900;" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <TextField fx:id="textFieldUser" maxWidth="-Infinity" pickOnBounds="false" prefHeight="25.0" prefWidth="235.0" styleClass="custom_text_field" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <font>
                   <Font size="13.0" />
                </font></TextField>
-            <PasswordField fx:id="passwordField" maxWidth="-Infinity" pickOnBounds="false" prefHeight="25.0" prefWidth="235.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+            <PasswordField fx:id="passwordField" maxWidth="-Infinity" pickOnBounds="false" prefHeight="25.0" prefWidth="235.0" styleClass="custom_text_field" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                <font>
                   <Font size="13.0" />
                </font>
@@ -75,7 +75,7 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label fx:id="signUpButton" onMouseClicked="#signUpView" text=" Create one now!" textFill="#ffa800">
+            <Label fx:id="signUpButton" onMouseClicked="#signUpView" styleClass="text_create_account" text=" Create one now!" textFill="#ffa800">
                <font>
                   <Font size="16.0" />
                </font>
