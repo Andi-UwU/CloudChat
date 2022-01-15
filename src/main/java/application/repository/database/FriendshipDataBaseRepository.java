@@ -1,11 +1,9 @@
 package application.repository.database;
 
-import application.domain.FriendRequest;
 import application.domain.Friendship;
 import application.domain.Tuple;
 import application.domain.User;
 import application.exceptions.RepositoryException;
-import application.utils.Pagination;
 
 import java.sql.*;
 import java.time.LocalDateTime;

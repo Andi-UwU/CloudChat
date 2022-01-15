@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -20,7 +21,7 @@ public class NetworkController {
     @FXML
     private TextField textFieldUser;
     @FXML
-    private TextField textFieldPassword;
+    private PasswordField passwordField;
     @FXML
     private Label welcomeLabel;
     @FXML
@@ -38,7 +39,7 @@ public class NetworkController {
         try {
 
             String username = textFieldUser.getText();
-            String password = textFieldPassword.getText();
+            String password = passwordField.getText();
 
 
             Integer id = superService.loginUser(username, password);
@@ -81,7 +82,6 @@ public class NetworkController {
             signUpScene=mainScene;
             mainStage.show();
         } catch (IOException e) {
-            e.printStackTrace();
             WarningBox.show(e.getMessage());
         }
     }

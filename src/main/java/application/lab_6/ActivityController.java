@@ -3,9 +3,7 @@ package application.lab_6;
 import application.domain.FriendDTO;
 import application.domain.Message;
 import application.domain.User;
-import application.domain.UserDTO;
 import application.exceptions.RepositoryException;
-import application.exceptions.ServiceException;
 import application.exceptions.ValidationException;
 import application.service.SuperService;
 import application.utils.InfoBox;
@@ -16,22 +14,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ActivityController {
     private SuperService superService;
@@ -114,7 +107,7 @@ public class ActivityController {
             friendsList.setAll(superService.getFriendDtoOfUser(user.getId()));
             chatFriendTableView.setItems(friendsList);
 
-        } catch (RepositoryException | SQLException | ValidationException e) {
+        } catch (RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
     }
@@ -124,8 +117,8 @@ public class ActivityController {
             newFriendList.setAll(superService.generateFriendActivity(user.getId(),startDate,endDate));
             newFriendsTableView.setItems(newFriendList);
 
-        } catch (ValidationException | SQLException | RepositoryException e) {
-            e.printStackTrace();
+        } catch (RepositoryException e) {
+            WarningBox.show(e.getMessage());
         }
     }
     
@@ -249,8 +242,7 @@ public class ActivityController {
                 InfoBox.show("PDF file successfully created!");
             }
 
-        } catch (IOException | ValidationException | RepositoryException | SQLException e) {
-            e.printStackTrace();
+        } catch (IOException | RepositoryException e) {
             WarningBox.show("Error exporting file.");
         }
     }

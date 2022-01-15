@@ -130,7 +130,7 @@ public class ChatController {
             friendsList.setAll(superService.getFriendDtoOfUser(user.getId()));
             chatFriendTableView.setItems(friendsList);
 
-        } catch (RepositoryException | SQLException | ValidationException e) {
+        } catch (RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
 
@@ -251,7 +251,7 @@ public class ChatController {
                 sentToList.setAll(superService.getUserDtoOfMessage(selectedMessage));
             }
             sentToTableView.setItems(sentToList);
-        } catch (ValidationException | SQLException | RepositoryException e) {
+        } catch (RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
 
@@ -289,7 +289,7 @@ public class ChatController {
                 Message message = superService.addMessage(user.getId(), List.of(currentFriendId), text);
                 messagesList.add(message);
                 chatMessageListView.setItems(messagesList);
-            } catch (ValidationException | SQLException | RepositoryException | IOException e) {
+            } catch (ValidationException | RepositoryException e) {
                 WarningBox.show(e.getMessage());
             }
         }
@@ -310,7 +310,7 @@ public class ChatController {
         }
         try {
             superService.addReply(user.getId(), message.getId(), text);
-        } catch (ValidationException | SQLException | RepositoryException | IOException e) {
+        } catch (ValidationException | RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
 
@@ -332,7 +332,7 @@ public class ChatController {
         }
         try {
             superService.addReplyToAll(user.getId(), message.getId(), text);
-        } catch (ValidationException | SQLException | RepositoryException | IOException e) {
+        } catch (ValidationException | RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
 
@@ -354,7 +354,7 @@ public class ChatController {
                         .map(friendDTO -> {return friendDTO.getId();})
                         .collect(Collectors.toList());
                 superService.addMessage(user.getId(), toIds, text);
-            } catch (ValidationException | SQLException | RepositoryException | IOException e) {
+            } catch (ValidationException | RepositoryException e) {
                 WarningBox.show(e.getMessage());
             }
         }
@@ -373,7 +373,7 @@ public class ChatController {
             superService.userDeleteMessage(user, selectedMessage.getId());
             messagesList.remove(selectedMessage);
             chatMessageListView.setItems(messagesList);
-        } catch (ValidationException | SQLException |  RepositoryException| ServiceException | IOException e) {
+        } catch (ServiceException | RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
     }

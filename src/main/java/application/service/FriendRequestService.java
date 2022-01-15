@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
  * Handles friend requests from the repository
  */
 public class FriendRequestService implements Observable {
-    //TODO missing comment
     private Repository<Tuple<Integer,Integer>, FriendRequest> requestRepository;
     private Validator<FriendRequest> validatorRequest;
     public FriendRequestService (Repository<Tuple<Integer, Integer>, FriendRequest> friendRequestDatabase,
@@ -46,7 +45,6 @@ public class FriendRequestService implements Observable {
      * @param request FriendRequest
      * @throws RepositoryException if a request already exists
      * @throws ValidationException if the request is invalid
-     * @throws IOException if the request has invalid data
      */
     public void addRequest (FriendRequest request) throws RepositoryException, ValidationException {
         validatorRequest.validate(request);
@@ -59,10 +57,7 @@ public class FriendRequestService implements Observable {
      * @param idFrom Integer
      * @param idTo Integer
      * @return FriendRequest
-     * @throws ValidationException if the old value is invalid
-     * @throws SQLException if the database cannot be reached
      * @throws RepositoryException if the friend request doesn't exist
-     * @throws IOException if the old value cannot be parsed
      */
     public FriendRequest deleteRequest (Integer idFrom, Integer idTo) throws RepositoryException {
         FriendRequest old = requestRepository.delete(new Tuple<>(idFrom,idTo));
@@ -76,10 +71,8 @@ public class FriendRequestService implements Observable {
      * @param idTo Integer
      * @param status FriendRequestStatus
      * @return FriendRequest
-     * @throws ValidationException if the old value is invalid
-     * @throws SQLException if the database cannot be reached
+     * @throws ValidationException if the new value is invalid
      * @throws RepositoryException if the friend request doesn't exist
-     * @throws IOException if the old value cannot be parsed
      */
     public FriendRequest updateRequest(Integer idFrom, Integer idTo, String status) throws ValidationException, RepositoryException {
         if (status.equals("PENDING"))
@@ -96,10 +89,9 @@ public class FriendRequestService implements Observable {
     /**
      * Returns all the friend requests
      * @return List(FriendRequest)
-     * @throws ValidationException if one or more of the entities are invalid
-     * @throws SQLException if the database cannot be reached
+     * @throws RepositoryException if there are no friend reqeusts
      */
-    public List<FriendRequest> getAll() throws SQLException, RepositoryException {
+    public List<FriendRequest> getAll() throws RepositoryException {
         return requestRepository.getAll();
     }
 
@@ -107,10 +99,8 @@ public class FriendRequestService implements Observable {
      * Returns all the requests that are sent to a specific user
      * @param id Integer
      * @return List(FriendRequest)
-     * @throws ValidationException if the entities are invalid
-     * @throws SQLException if the database cannot be reached
      */
-    public List<FriendRequest> getAllToUser(Integer id) throws SQLException, RepositoryException {
+    public List<FriendRequest> getAllToUser(Integer id) throws RepositoryException {
         return requestRepository.getAll()
                 .stream()
                 .filter(x-> { return x.getId().getRight().equals(id); })
@@ -121,10 +111,8 @@ public class FriendRequestService implements Observable {
      * Returns all the requests from a specific user
      * @param id Integer
      * @return List(FriendRequest)
-     * @throws ValidationException if the entities are invalid
-     * @throws SQLException if the database cannot be reached
      */
-    public List<FriendRequest> getAllFromUser(Integer id) throws SQLException, RepositoryException {
+    public List<FriendRequest> getAllFromUser(Integer id) throws RepositoryException {
         return requestRepository.getAll()
                 .stream()
                 .filter( x-> { return x.getId().getLeft().equals(id); })
@@ -133,13 +121,10 @@ public class FriendRequestService implements Observable {
 
     /**
      * Deletes all friend requests from a specific user
-     * @param id user's ID
-     * @throws IOException
-     * @throws SQLException
-     * @throws RepositoryException
-     * @throws ValidationException
+     * @param id Integer
+     * @throws RepositoryException if the user doesn't exist
      */
-    public void deleteRequestsOfUser(Integer id) throws SQLException, RepositoryException {
+    public void deleteRequestsOfUser(Integer id) throws RepositoryException {
 
         boolean done = false;
         while (!done) {

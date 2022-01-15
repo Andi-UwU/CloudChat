@@ -3,7 +3,6 @@ package application.repository.database;
 import application.domain.Message;
 import application.domain.User;
 import application.exceptions.RepositoryException;
-import application.utils.InfoBox;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -368,6 +367,13 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
         }
     }
 
+    /**
+     * Gets a conversation between two users
+     * @param user1 User
+     * @param user2 User
+     * @return List(Message)
+     * @throws RepositoryException if the users don't exist
+     */
     public List<Message> getConversation(User user1, User user2) throws RepositoryException {
 
         String sql =

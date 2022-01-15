@@ -5,10 +5,7 @@ import application.domain.User;
 import application.domain.validator.Validator;
 import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
-import application.repository.Repository;
 import application.repository.database.MessageDataBaseRepository;
-import application.utils.Pagination;
-import application.utils.WarningBox;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -34,9 +31,9 @@ public class MessageService {
     /**
      * Returns all messages
      * @return List(Message)
-     * @throws SQLException if the database cannot be reached
+     * @throws RepositoryException if there are no messages in the database
      */
-    public List<Message> getAll() throws RepositoryException, SQLException {
+    public List<Message> getAll() throws RepositoryException {
         return repository.getAll();
     }
 
@@ -72,7 +69,7 @@ public class MessageService {
      * @param text String
      * @param replyTo Message
      * @throws ValidationException if the params are invalid
-     * @throws RepositoryException if the message being replied to doesn't exist
+     * @throws RepositoryException if the message being replied to, doesn't exist
      */
     public void addReply(User from, String text, Message replyTo) throws ValidationException, RepositoryException {
         Message message = new Message(from, List.of(replyTo.getFrom()), text, LocalDateTime.now());
@@ -84,6 +81,14 @@ public class MessageService {
         repository.add(message);
     }
 
+    /**
+     * Adds a reply to all
+     * @param from User
+     * @param text String
+     * @param replyMessage Message
+     * @throws ValidationException if the message is invalid
+     * @throws RepositoryException if the message doesn't exist
+     */
     public void addReplyToAll(User from, String text, Message replyMessage) throws ValidationException, RepositoryException {
         List<User> to = replyMessage.getTo();
         to.remove(from);
@@ -101,10 +106,7 @@ public class MessageService {
      * Returns a message before deleting it
      * @param id Integer
      * @return Message
-     * @throws ValidationException if the message is invalid
-     * @throws SQLException if the database cannot be reached
      * @throws RepositoryException if the message with that id doesn't exist
-     * @throws IOException if the message cannot be parsed
      */
     public Message delete(Integer id) throws RepositoryException {
         return repository.delete(id);
@@ -118,8 +120,6 @@ public class MessageService {
      * @return Message
      * @throws RepositoryException if the message to update doesn't exist
      * @throws ValidationException if the new message is invalid
-     * @throws SQLException if the database cannot be reached
-     * @throws IOException if the old message is invalid
      */
     public Message update(Integer messageId, List<User> newTo,  String newText) throws RepositoryException, ValidationException {
         Message message = repository.find(messageId);
@@ -144,11 +144,9 @@ public class MessageService {
      * Deletes all the messages from a specific user
      * @param deleted User
      * @throws ValidationException if the messages are invalid
-     * @throws SQLException if the database cannot be reached
      * @throws RepositoryException if the user or his messages don't exist
-     * @throws IOException if the message contents cannot be parsed
      */
-    public void deleteMessagesOfUser(User deleted) throws ValidationException, SQLException, RepositoryException {
+    public void deleteMessagesOfUser(User deleted) throws ValidationException, RepositoryException {
         //delete all messages sent by user and user references in to list
 
         List<Message> messages = getAll();
@@ -180,18 +178,44 @@ public class MessageService {
         }
     }
 
+    /**
+     * Gets a conversation between 2 users
+     * @param user1 User
+     * @param user2 User
+     * @return List(Message)
+     * @throws RepositoryException if the users don't exist
+     */
     public List<Message> getConversation(User user1, User user2) throws RepositoryException {
         return repository.getConversation(user1, user2);
     }
 
+    /**
+     * Gets the page size of the repository
+     * @return Integer
+     */
     public Integer getPageSize(){
         return repository.getPageSize();
     }
 
+    /**
+     * Gets the number of pages the conversation has
+     * @param user1 User
+     * @param user2 User
+     * @return Integer
+     * @throws RepositoryException if the users don't exist
+     */
     public Integer getNumberOfConversationPages(User user1, User user2) throws RepositoryException {
         return repository.getNumberOfPages(user1, user2);
     }
 
+    /**
+     * Gets a specific page from a conversation
+     * @param user1 User
+     * @param user2 User
+     * @param page Integer
+     * @return List(Message)
+     * @throws RepositoryException if the users don't exist
+     */
     public List<Message> getConversationPage(User user1, User user2, Integer page) throws RepositoryException {
         int maxPage = getNumberOfConversationPages(user1,user2);
         if (page <= 0 || page > maxPage )

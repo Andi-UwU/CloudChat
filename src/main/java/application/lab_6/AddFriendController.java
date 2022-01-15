@@ -59,7 +59,7 @@ public class AddFriendController {
     private void updateTableView(){
         try {
             addFriendList.setAll(superService.getAddFriendDtoOfUser(user.getId()));
-        } catch (RepositoryException | SQLException | ValidationException e) {
+        } catch (RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
         tableView.setItems(addFriendList);
@@ -130,7 +130,7 @@ public class AddFriendController {
 
             //tableView.setItems(addFriendList);
 
-        } catch (ValidationException | SQLException | RepositoryException e) {
+        } catch (RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
     }

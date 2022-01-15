@@ -3,7 +3,6 @@ package application.repository.database;
 import application.domain.Event;
 import application.domain.User;
 import application.exceptions.RepositoryException;
-import application.utils.Pagination;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -11,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 
 public class EventDataBaseRepository extends DataBaseRepository<Integer, Event>{
     private int pageSize = 6;
@@ -178,6 +178,13 @@ public class EventDataBaseRepository extends DataBaseRepository<Integer, Event>{
     }
 
 
+    /**
+     * Adds a subscriber to the event
+     * @param event Event
+     * @param user User
+     * @return Event
+     * @throws RepositoryException if the user is already subscribed to the event
+     */
     public Event addSubscriber(Event event, User user) throws RepositoryException {
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement eventStatement = connection.prepareStatement(
@@ -198,6 +205,14 @@ public class EventDataBaseRepository extends DataBaseRepository<Integer, Event>{
             throw new RepositoryException("You already are subscribed to this event!\n");
         }
     }
+
+    /**
+     * Removes a subscriber from an event
+     * @param event Event
+     * @param user User
+     * @return Event
+     * @throws RepositoryException if the user isn't subscribed to the event
+     */
     public Event removeSubscriber(Event event, User user) throws RepositoryException {
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(

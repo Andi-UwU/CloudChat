@@ -22,6 +22,9 @@ import static application.utils.Constants.DATE_TIME_FORMATTER;
 import static org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER;
 import static org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER_BOLD;
 
+/**
+ * Exports data to a PDF file
+ */
 public class ExporterPDF {
     private static final float NEWLINE_LEADING_SIZE =14f;           // how much space should a newline leave in a document
     private static final int LEFT_MARGIN_SIZE = 20;                 // left margin size for text
