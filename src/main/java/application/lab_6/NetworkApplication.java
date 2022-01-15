@@ -57,7 +57,7 @@ public class NetworkApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(NetworkApplication.class.getResource("network.fxml"));
         fxmlLoader.setController(networkController);
         Scene loginScene = new Scene(fxmlLoader.load());
-        stage.setTitle("The Network");
+        stage.setTitle("Cloud Chat");
         stage.setScene(loginScene);
         stage.show();
         DatePicker datePicker = new DatePicker();

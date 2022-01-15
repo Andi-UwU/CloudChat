@@ -75,8 +75,8 @@ public class ActivityController {
     private TableView<FriendDTO> chatFriendTableView;
     @FXML
     private TableColumn<FriendDTO, String> chatNameColumn;
-    @FXML
-    private TableColumn<FriendDTO, CheckBox> chatSelectColumn;
+    //@FXML
+    //private TableColumn<FriendDTO, CheckBox> chatSelectColumn;
     @FXML
     private TableColumn<FriendDTO, Integer> chatIdColumn;
 
@@ -154,7 +154,7 @@ public class ActivityController {
     private void initializeChatFriendsTableView(LocalDate start, LocalDate end){
         chatIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         chatNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        chatSelectColumn.setCellValueFactory(new PropertyValueFactory<>("select"));
+        //chatSelectColumn.setCellValueFactory(new PropertyValueFactory<>("select"));
         updateChatFriendsTableView();
 
         chatFriendTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FriendDTO>() {

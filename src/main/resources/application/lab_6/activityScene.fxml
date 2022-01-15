@@ -13,61 +13,60 @@
     <children>
         <TableView fx:id="chatFriendTableView" accessibleRole="BUTTON" layoutX="274.0" layoutY="212.0" prefHeight="241.0" prefWidth="222.0" styleClass="custom_table_view">
             <columns>
-                <TableColumn fx:id="chatIdColumn" prefWidth="38.4000244140625" styleClass="column_header_background" text="ID" />
-                <TableColumn fx:id="chatNameColumn" minWidth="1.600006103515625" prefWidth="140.0" styleClass="column_header_background" text="Name" />
-                <TableColumn fx:id="chatSelectColumn" prefWidth="41.5999755859375" styleClass="column_header_background" text="Select" />
+                <TableColumn fx:id="chatIdColumn" prefWidth="38.4000244140625" styleClass="column" text="ID" />
+                <TableColumn fx:id="chatNameColumn" minWidth="1.600006103515625" prefWidth="181.5999755859375" styleClass="column" text="Name" />
             </columns>
         </TableView>
-        <ListView fx:id="chatMessageListView" layoutX="517.0" layoutY="212.0" prefHeight="241.0" prefWidth="369.0" styleClass="custom_background" />
-        <Label fx:id="friendNameLabel" layoutX="517.0" layoutY="181.0" prefHeight="26.0" prefWidth="278.0" text="Friend Name">
+        <ListView fx:id="chatMessageListView" layoutX="517.0" layoutY="212.0" prefHeight="241.0" prefWidth="369.0" />
+        <Label fx:id="friendNameLabel" layoutX="517.0" layoutY="181.0" prefHeight="26.0" prefWidth="278.0" styleClass="text_on_background" text="Friend Name:">
             <font>
                 <Font name="System Bold" size="16.0" />
             </font>
         </Label>
-        <Label layoutX="274.0" layoutY="181.0" prefHeight="25.0" prefWidth="190.0" text="Conversations with:">
+        <Label layoutX="274.0" layoutY="181.0" prefHeight="25.0" prefWidth="190.0" styleClass="text_on_background" text="Conversations with:">
             <font>
                 <Font name="System Bold" size="16.0" />
             </font>
         </Label>
-      <DatePicker fx:id="startDate" layoutX="140.0" layoutY="50.0" pickOnBounds="false" styleClass="date-picker" />
-      <DatePicker fx:id="endDate" layoutX="140.0" layoutY="86.0" pickOnBounds="false" styleClass="date-picker" />
-      <Label layoutX="30.0" layoutY="53.0" text="Activity start date:">
+      <DatePicker fx:id="startDate" layoutX="154.0" layoutY="55.0" pickOnBounds="false" styleClass="date-picker" />
+      <DatePicker fx:id="endDate" layoutX="155.0" layoutY="105.0" pickOnBounds="false" styleClass="date-picker" />
+      <Label layoutX="22.0" layoutY="58.0" styleClass="text_on_background_small" text="Activity start date:">
          <font>
             <Font size="13.0" />
          </font>
       </Label>
-      <Label layoutX="30.0" layoutY="89.0" text="Activity end date:">
+      <Label layoutX="29.0" layoutY="108.0" styleClass="text_on_background_small" text="Activity end date:">
          <font>
             <Font size="13.0" />
          </font>
       </Label>
-      <Button fx:id="generateActivityButton" layoutX="347.0" layoutY="49.0" mnemonicParsing="false" onAction="#generateActivityAction" styleClass="custom_button" text="Generate activity">
+      <Button fx:id="generateActivityButton" layoutX="347.0" layoutY="49.0" mnemonicParsing="false" onAction="#generateActivityAction" prefHeight="38.0" prefWidth="151.0" styleClass="custom_button" text="Generate activity">
          <font>
             <Font size="13.0" />
          </font>
       </Button>
-      <Button fx:id="exportButton" layoutX="475.0" layoutY="49.0" mnemonicParsing="false" onAction="#exportAction" prefHeight="27.0" prefWidth="115.0" styleClass="custom_button" text="Export to PDF">
+      <Button fx:id="exportButton" layoutX="519.0" layoutY="48.0" mnemonicParsing="false" onAction="#exportAction" prefHeight="38.0" prefWidth="151.0" styleClass="custom_button" text="Export to PDF">
          <font>
             <Font size="13.0" />
          </font>
       </Button>
-      <Button fx:id="backButton" layoutX="475.0" layoutY="85.0" mnemonicParsing="false" onAction="#backAction" prefHeight="27.0" prefWidth="115.0" styleClass="custom_button" text="Back">
+      <Button fx:id="backButton" layoutX="519.0" layoutY="99.0" mnemonicParsing="false" onAction="#backAction" prefHeight="38.0" prefWidth="151.0" styleClass="custom_button" text="Back">
          <font>
             <Font size="13.0" />
          </font>
       </Button>
       <TableView fx:id="newFriendsTableView" accessibleRole="BUTTON" layoutX="29.0" layoutY="212.0" prefHeight="241.0" prefWidth="222.0" styleClass="custom_table_view">
          <columns>
-            <TableColumn fx:id="newFriendsIdColumn" prefWidth="38.4000244140625" styleClass="column_header_background" text="ID" />
-            <TableColumn fx:id="newFriendsNameColumn" minWidth="1.600006103515625" prefWidth="182.0" styleClass="column_header_background" text="Name" />
+            <TableColumn fx:id="newFriendsIdColumn" prefWidth="38.4000244140625" styleClass="column" text="ID" />
+            <TableColumn fx:id="newFriendsNameColumn" minWidth="1.600006103515625" prefWidth="182.0" styleClass="column" text="Name" />
          </columns>
       </TableView>
-      <Label layoutX="29.0" layoutY="181.0" prefHeight="25.0" prefWidth="190.0" text="New friends:">
+      <Label layoutX="29.0" layoutY="181.0" prefHeight="25.0" prefWidth="190.0" styleClass="text_on_background" text="New friends:">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Button fx:id="resetButton" layoutX="347.0" layoutY="85.0" mnemonicParsing="false" onAction="#resetAction" prefHeight="27.0" prefWidth="115.0" styleClass="custom_button" text="Reset">
+      <Button fx:id="resetButton" layoutX="347.0" layoutY="99.0" mnemonicParsing="false" onAction="#resetAction" prefHeight="37.0" prefWidth="151.0" styleClass="custom_button" text="Reset">
          <font>
             <Font size="13.0" />
          </font>
