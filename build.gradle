@@ -1,0 +1,63 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
+}
+
+group 'application'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://plugins.gradle.org/m2/' }
+}
+
+ext {
+    junitVersion = '5.7.1'
+}
+
+sourceCompatibility = '17'
+targetCompatibility = '17'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+application {
+    mainModule = 'application.cloud_chat'
+    mainClass = 'application.cloud_chat.NetworkApplication'
+}
+
+javafx {
+    version = '17-ea+11'
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
+
+dependencies {
+    implementation('org.controlsfx:controlsfx:11.1.0')
+    implementation('com.dlsc.formsfx:formsfx-core:11.3.2') {
+        exclude(group: 'org.openjfx')
+    }
+
+    implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0')
+    //postgres db
+    implementation 'org.postgresql:postgresql:42.3.1'
+    //hash
+    implementation 'de.mkammerer:argon2-jvm:2.4'
+    implementation 'net.java.dev.jna:jna:4.5.0'
+    //pdf library
+    implementation 'org.apache.pdfbox:pdfbox:3.0.0-alpha2'
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+
+// https://mvnrepository.com/artifact/org.javamodularity.moduleplugin/org.javamodularity.moduleplugin.gradle.plugin
+    implementation group: 'org.javamodularity.moduleplugin', name: 'org.javamodularity.moduleplugin.gradle.plugin', version: '1.8.10', ext: 'pom'
+
+
+}
+
+test {
+    useJUnitPlatform()
+}

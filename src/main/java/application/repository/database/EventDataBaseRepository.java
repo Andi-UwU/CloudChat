@@ -29,12 +29,12 @@ public class EventDataBaseRepository extends DataBaseRepository<Integer, Event>{
     public Event find(Integer eventId) throws RepositoryException {
         String getEventSql =
                 "select event.id as event_id, author_id, title, description, creation_date, event_date,\n" +
-                "       users.id as user_id, first_name, last_name, username\n" +
+                "       \"user\".id as user_id, first_name, last_name, username\n" +
                 "from event\n" +
-                "inner join users on event.author_id = users.id\n" +
+                "inner join \"user\" on event.author_id = \"user\".id\n" +
                 "where event.id = ?";
-        String getSubscribersSql = "select * from users\n" +
-                "where users.id in \n" +
+        String getSubscribersSql = "select * from \"user\"\n" +
+                "where \"user\".id in \n" +
                 "(select user_id from subscribed where event_id = ?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement eventStatement = connection.prepareStatement(getEventSql);
@@ -91,11 +91,11 @@ public class EventDataBaseRepository extends DataBaseRepository<Integer, Event>{
 
         String getEventSql =
                 "select event.id as event_id, author_id, title, description, creation_date, event_date,\n" +
-                "       users.id as user_id, first_name, last_name, username\n" +
+                "       \"user\".id as user_id, first_name, last_name, username\n" +
                 "from event\n" +
-                "inner join users on event.author_id = users.id;";
-        String getSubscribersSql = "select * from users\n" +
-                "where users.id in \n" +
+                "inner join \"user\" on event.author_id = \"user\".id;";
+        String getSubscribersSql = "select * from \"user\"\n" +
+                "where \"user\".id in \n" +
                 "(select user_id from subscribed where event_id = ?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement eventStatement = connection.prepareStatement(getEventSql);

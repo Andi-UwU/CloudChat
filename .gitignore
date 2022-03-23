@@ -1,19 +1,7 @@
 data
 out
-Lab 4.iml
-Lab 5.iml
-src/application/utils/DatabaseConstants.java
-
 .idea
-
-#lab 6
 .gradle
-.idea
 build
-gradle
-build.gradle
-gradlew
-gradlew.bat
-settings.gradle
-src/main/java/application/utils/DatabaseConstants.java
-d
+
+

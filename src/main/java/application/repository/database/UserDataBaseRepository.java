@@ -30,7 +30,7 @@ public class UserDataBaseRepository extends DataBaseRepository<Integer, User> {
      * @throws RepositoryException if the params are invalid
      */
     public int login(String userName, String passWord) throws RepositoryException {
-        String sql = "SELECT id,hash from users where username = ?";
+        String sql = "SELECT id,hash from \"user\" where username = ?";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(sql)
         ) {
@@ -56,7 +56,7 @@ public class UserDataBaseRepository extends DataBaseRepository<Integer, User> {
     @Override
     public User find(Integer id) throws RepositoryException {
 
-        String sql = "SELECT id,first_name,last_name,username from users where id = ?";
+        String sql = "SELECT id,first_name,last_name,username from \"user\" where id = ?";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(sql)
              ){
@@ -84,7 +84,7 @@ public class UserDataBaseRepository extends DataBaseRepository<Integer, User> {
     public List<User> getAll() throws RepositoryException {
         List<User> users = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT id,first_name,last_name,username from users");
+             PreparedStatement statement = connection.prepareStatement("SELECT id,first_name,last_name,username from \"user\"");
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Integer id = resultSet.getInt("id");
@@ -103,7 +103,7 @@ public class UserDataBaseRepository extends DataBaseRepository<Integer, User> {
 
     @Override
     public User add(User entity) throws RepositoryException {
-        String sql = "insert into users (first_name, last_name, username, hash) values (?, ?, ?, ?)";
+        String sql = "insert into \"user\" (first_name, last_name, username, hash) values (?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
@@ -124,7 +124,7 @@ public class UserDataBaseRepository extends DataBaseRepository<Integer, User> {
     @Override
     public User delete(Integer id) throws RepositoryException {
 
-        String sql = "delete from users where id = ?";
+        String sql = "delete from \"user\" where id = ?";
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -141,7 +141,7 @@ public class UserDataBaseRepository extends DataBaseRepository<Integer, User> {
 
     @Override
     public User update(User entity) throws RepositoryException {
-        String sql = "update users set first_name = ?, last_name = ? where username = ?";
+        String sql = "update \"user\" set first_name = ?, last_name = ? where username = ?";
         User updated;
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -162,7 +162,7 @@ public class UserDataBaseRepository extends DataBaseRepository<Integer, User> {
     @Override
     public Integer size() throws RepositoryException {
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) as count from users");
+             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) as count from \"user\"");
              ResultSet resultSet = statement.executeQuery()) {
 
                 resultSet.next();

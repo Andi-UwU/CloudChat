@@ -18,7 +18,7 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
     @Override
     public FriendRequest find(Tuple<Integer, Integer> id) throws RepositoryException {
 
-        String sql = "SELECT u1.id, u1.first_name, u1.last_name, u1.username, u2.id, u2.first_name, u2.last_name,u2.username,status FROM friend_requests fr INNER JOIN users u1 on fr.id_from = u1.id  INNER JOIN users u2 on fr.id_to = u2.id  WHERE fr.id_from=? AND fr.id_to=?";
+        String sql = "SELECT u1.id, u1.first_name, u1.last_name, u1.username, u2.id, u2.first_name, u2.last_name,u2.username,status FROM friend_request fr INNER JOIN user u1 on fr.id_from = u1.id  INNER JOIN user u2 on fr.id_to = u2.id  WHERE fr.id_from=? AND fr.id_to=?";
 
         try(Connection connection = DriverManager.getConnection(url, username, password);
             PreparedStatement requestStatement = connection.prepareStatement(sql)) {
@@ -59,7 +59,7 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
         List<FriendRequest> requests = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(
-              "SELECT u1.id, u1.first_name, u1.last_name,u1.username, u2.id, u2.first_name, u2.last_name, u2.username, status FROM friend_requests fr INNER JOIN users u1 on fr.id_from = u1.id INNER JOIN users u2 on fr.id_to = u2.id ");
+              "SELECT u1.id, u1.first_name, u1.last_name,u1.username, u2.id, u2.first_name, u2.last_name, u2.username, status FROM friend_request fr INNER JOIN \"user\" u1 on fr.id_from = u1.id INNER JOIN \"user\" u2 on fr.id_to = u2.id ");
 
              ResultSet resultSet = statement.executeQuery()) {
 
@@ -94,7 +94,7 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
 
     @Override
     public FriendRequest add(FriendRequest entity) throws RepositoryException {
-        String sql = "insert into friend_requests (id_from, id_to, status ) values (?, ?, ?)";
+        String sql = "insert into friend_request (id_from, id_to, status ) values (?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
@@ -111,7 +111,7 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
 
     @Override
     public FriendRequest delete(Tuple<Integer, Integer> id) throws RepositoryException {
-        String sql = "delete from friend_requests where id_from = ? and id_to = ?";
+        String sql = "delete from friend_request where id_from = ? and id_to = ?";
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -130,7 +130,7 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
 
     @Override
     public FriendRequest update(FriendRequest entity) throws RepositoryException {
-        String sql = "update friend_requests set status = ? where id_from = ? and id_to = ?";
+        String sql = "update friend_request set status = ? where id_from = ? and id_to = ?";
         FriendRequest updated;
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -177,42 +177,5 @@ public class FriendRequestDataBaseRepository extends DataBaseRepository<Tuple<In
     public Integer getPageSize() {
         return pageSize;
     }
-
-
-
-    /*
-        List<Friendship> friendships = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT * from friendship WHERE id_left = ?");
-             statement.setInt(1, id);
-             ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
-                Integer leftId = resultSet.getInt("id_left");
-                Integer rightId = resultSet.getInt("id_right");
-                LocalDateTime date = LocalDateTime.parse(resultSet.getString("date"));
-                Friendship friendship = new Friendship(date);
-                friendship.setId(new Tuple<>(leftId, rightId));
-                friendships.add(friendship);
-            }
-            return friendships;
-        }
-    List<E> getAllToUser(Integer id);
-        List<Friendship> friendships = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT * from friendship WHERE id_right = ?");
-             statement.setInt(1, id);
-             ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
-                Integer leftId = resultSet.getInt("id_left");
-                Integer rightId = resultSet.getInt("id_right");
-                LocalDateTime date = LocalDateTime.parse(resultSet.getString("date"));
-                Friendship friendship = new Friendship(date);
-                friendship.setId(new Tuple<>(leftId, rightId));
-                friendships.add(friendship);
-            }
-            return friendships;
-        }
-     */
-
 }
 

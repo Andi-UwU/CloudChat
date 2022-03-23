@@ -1,4 +1,4 @@
-module application.lab_6 {
+module application.cloud_chat {
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -9,7 +9,9 @@ module application.lab_6 {
     requires de.mkammerer.argon2;
     requires org.apache.pdfbox;
 
-    opens application.lab_6 to javafx.fxml;
-    exports application.lab_6;
+    opens application.cloud_chat to javafx.fxml;
+    exports application.cloud_chat;
     exports application.domain;
+    exports application.contoller;
+    opens application.contoller to javafx.fxml;
 }

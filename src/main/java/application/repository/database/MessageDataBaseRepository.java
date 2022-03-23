@@ -24,7 +24,7 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
 
     private User findUser(Integer id) throws RepositoryException {
 
-        String sql = "SELECT first_name,last_name,username from users where id = ?";
+        String sql = "SELECT first_name,last_name,username from \"user\" where id = ?";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(sql)
         ) {
@@ -285,7 +285,7 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
         String sql =
                 "SELECT COUNT(*) AS COUNT FROM message m\n" +
                         "INNER JOIN send_to st ON m.id = st.message_id\n" +
-                        "INNER JOIN users u ON u.id = st.user_id\n" +
+                        "INNER JOIN \"user\" u ON u.id = st.user_id\n" +
                         "WHERE (u.id = ? AND m.from = ?) OR (m.from = ? AND u.id = ?);";
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
@@ -318,7 +318,7 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
                         "       m.id AS message_id, m.text, m.date, m.reply_of\n" +
                         "FROM message m\n" +
                         "INNER JOIN send_to st ON m.id = st.message_id\n" +
-                        "INNER JOIN users u ON u.id = st.user_id\n" +
+                        "INNER JOIN \"user\" u ON u.id = st.user_id\n" +
                         "WHERE (u.id = ? AND m.from = ?) OR (m.from = ? AND u.id = ?)\n" +
                         "ORDER BY m.date\n" +
                         "LIMIT ? OFFSET ?;";
@@ -381,7 +381,7 @@ public class MessageDataBaseRepository extends DataBaseRepository<Integer, Messa
                 "       m.id AS message_id, m.text, m.date, m.reply_of\n" +
                 "FROM message m\n" +
                 "INNER JOIN send_to st ON m.id = st.message_id\n" +
-                "INNER JOIN users u ON u.id = st.user_id\n" +
+                "INNER JOIN \"user\" u ON u.id = st.user_id\n" +
                 "WHERE (u.id = ? AND m.from = ?) OR (m.from = ? AND u.id = ?)\n" +
                 "ORDER BY m.date;";
         try (Connection connection = DriverManager.getConnection(url, username, password);
