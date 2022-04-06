@@ -7,7 +7,6 @@ module application.cloud_chat {
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
     requires de.mkammerer.argon2;
-    requires org.apache.pdfbox;
 
     opens application.cloud_chat to javafx.fxml;
     exports application.cloud_chat;

@@ -75,7 +75,8 @@ public class AddFriendController implements Controller{
     }
     @FXML
     public void initialize(){
-        initializeTableView();
+
+
     }
 
     @FXML
@@ -133,5 +134,6 @@ public class AddFriendController implements Controller{
     public void initializeController(SuperService superService, Optional<User> user) {
         this.superService = superService;
         this.user = user.get();
+        initializeTableView();
     }
 }

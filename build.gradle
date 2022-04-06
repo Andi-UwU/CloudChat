@@ -46,14 +46,11 @@ dependencies {
     //hash
     implementation 'de.mkammerer:argon2-jvm:2.4'
     implementation 'net.java.dev.jna:jna:4.5.0'
-    //pdf library
-    implementation 'org.apache.pdfbox:pdfbox:3.0.0-alpha2'
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 
-// https://mvnrepository.com/artifact/org.javamodularity.moduleplugin/org.javamodularity.moduleplugin.gradle.plugin
-    implementation group: 'org.javamodularity.moduleplugin', name: 'org.javamodularity.moduleplugin.gradle.plugin', version: '1.8.10', ext: 'pom'
+    implementation 'org.javamodularity:moduleplugin:1.8.10'
 
 
 }

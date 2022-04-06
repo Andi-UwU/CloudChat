@@ -4,7 +4,6 @@ import application.domain.*;
 import application.exceptions.RepositoryException;
 import application.exceptions.ServiceException;
 import application.exceptions.ValidationException;
-import application.utils.ExporterPDF;
 import application.utils.observer.Observer;
 
 import java.io.IOException;

@@ -180,10 +180,7 @@ public class MainPageController implements Controller {
         } catch (RepositoryException e) {
             WarningBox.show(e.getMessage());
         }
-
-
     }
-
 
     private void updateFriendsTableView(){
         try {
@@ -303,19 +300,9 @@ public class MainPageController implements Controller {
 
     @FXML
     public void createEventButtonAction(ActionEvent actionEvent){
+
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            CreateEventController createEventController = new CreateEventController();
-            createEventController.setService(superService);
-            createEventController.setUser(user);
-            fxmlLoader.setLocation(getClass().getResource("createEventScene.fxml"));
-            fxmlLoader.setController(createEventController);
-            Scene createEventScene = new Scene(fxmlLoader.load());
-            Stage createEventStage = new Stage();
-            createEventStage.setTitle("Create Event!");
-            createEventStage.setScene(createEventScene);
-            createEventStage.show();
-            ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+            SceneChanger.changeTo(actionEvent, "createEventScene.fxml", new CreateEventController(), superService, Optional.of(user));
 
         } catch (NumberFormatException | IOException e) {
             WarningBox.show(e.getMessage());

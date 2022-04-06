@@ -64,20 +64,6 @@ public class ChatController implements Controller {
 
     private ObservableList<FriendDTO> friendsList = FXCollections.observableArrayList();
 
-    // ===========  Sent To Table Fields  ================
-
-    @FXML
-    private TableView<UserDTO> sentToTableView;
-
-    @FXML
-    private TableColumn<UserDTO, Integer> sentToColumnId;
-
-    @FXML
-    private TableColumn<UserDTO, String> sentToColumnName;
-
-    private ObservableList<UserDTO> sentToList = FXCollections.observableArrayList();
-
-
     // ===========  Buttons Fields  ================
 
     @FXML
@@ -116,15 +102,7 @@ public class ChatController implements Controller {
 
     @FXML
     public void initialize() {
-        /*
-        currentFriendId = 0;
-        currentPage = 1;
-        initializeChatFriendsTableView();
-        initializeChatMessageListView();
-        initializeSentToTable();
-        pageNumberLabel.setText(currentPage.toString());
 
-         */
     }
 
     // ===========  Friends Table  ================
@@ -160,7 +138,6 @@ public class ChatController implements Controller {
                         if (oldValue.getId() == newValue.getId())
                             return;
                     }
-
                     updateMessageListView(newValue.getId(), currentPage);
                 }
             }
@@ -176,7 +153,6 @@ public class ChatController implements Controller {
         currentPage = 1;
         initializeChatFriendsTableView();
         initializeChatMessageListView();
-        initializeSentToTable();
         pageNumberLabel.setText(currentPage.toString());
     }
 
@@ -245,38 +221,11 @@ public class ChatController implements Controller {
                             if (oldValue.getId() == newValue.getId())
                                 return;
                         }
-                        updateSentToTable();
                     }
                 }
             });
         } catch (RepositoryException e) {
             e.printStackTrace();
-        }
-
-    }
-
-    // ===========  Sent To Table  ================
-
-    private void initializeSentToTable(){
-        sentToColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        sentToColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-    }
-    private void updateSentToTable(){
-
-        try {
-            Integer messageId = chatMessageListView.getSelectionModel().getSelectedItem().getId();
-
-            if (messageId == null){
-                sentToList.clear();
-            }
-            else{
-                Message selectedMessage = superService.findMessage(messageId);
-                sentToList.setAll(superService.getUserDtoOfMessage(selectedMessage));
-            }
-            sentToTableView.setItems(sentToList);
-        } catch (RepositoryException e) {
-            WarningBox.show(e.getMessage());
         }
 
     }
@@ -334,49 +283,8 @@ public class ChatController implements Controller {
         messageTextField.clear();
     }
 
-    @FXML
-    private void replyToAllButtonAction(ActionEvent actionEvent){
-        String text = messageTextField.getText();
-        if (text.equals("")){
-            WarningBox.show("You have to write a message!");
-            return;
-        }
-        Message message = chatMessageListView.getSelectionModel().getSelectedItem();
-        if (message == null){
-            WarningBox.show("You have to select a message to reply to!");
-            return;
-        }
-        try {
-            superService.addReplyToAll(user.getId(), message.getId(), text);
-        } catch (ValidationException | RepositoryException e) {
-            WarningBox.show(e.getMessage());
-        }
 
-        updateMessageListView(currentFriendId, currentPage);
-        messageTextField.clear();
-    }
 
-    @FXML
-    private void sendToSelectedButtonAction(ActionEvent actionEvent){
-        String text = messageTextField.getText();
-        if (text.equals("")){
-            WarningBox.show("You have to write a message!");
-        }
-        else{
-            try {
-                List<Integer> toIds = friendsList
-                        .stream()
-                        .filter(friendDTO -> {return friendDTO.getSelect().isSelected();})
-                        .map(friendDTO -> {return friendDTO.getId();})
-                        .collect(Collectors.toList());
-                superService.addMessage(user.getId(), toIds, text);
-            } catch (ValidationException | RepositoryException e) {
-                WarningBox.show(e.getMessage());
-            }
-        }
-        updateMessageListView(currentFriendId, currentPage);
-        messageTextField.clear();
-    }
 
     @FXML
     private void deleteMessageButtonAction(ActionEvent actionEvent){

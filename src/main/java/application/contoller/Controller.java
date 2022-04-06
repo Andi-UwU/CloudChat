@@ -9,4 +9,5 @@ public interface Controller {
 
 
     void initializeController(SuperService superService, Optional<User> user);
+
 }

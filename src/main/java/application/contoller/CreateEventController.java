@@ -5,6 +5,7 @@ import application.exceptions.RepositoryException;
 import application.exceptions.ValidationException;
 import application.service.SuperService;
 import application.utils.InfoBox;
+import application.utils.SceneChanger;
 import application.utils.WarningBox;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,8 +19,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Optional;
 
-public class CreateEventController {
+public class CreateEventController implements Controller {
     private SuperService superService;
     private User user;
 
@@ -63,19 +65,9 @@ public class CreateEventController {
 
     @FXML
     public void backButtonAction(ActionEvent actionEvent){
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            MainPageController mainPageController = new MainPageController();
-            fxmlLoader.setLocation(getClass().getResource("mainpage.fxml"));
-            fxmlLoader.setController(mainPageController);
-            Scene mainScene = new Scene(fxmlLoader.load());
-            Stage mainStage = new Stage();
-            mainStage.setTitle("Cloud Chat");
-            mainStage.setScene(mainScene);
-            mainStage.show();
-            ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
-
-        } catch (NumberFormatException | IOException e) {
+        try{
+            SceneChanger.changeTo(actionEvent, "mainpage.fxml", new MainPageController(), superService, Optional.of(user));
+        } catch (IOException e) {
             WarningBox.show(e.getMessage());
         }
     }
@@ -86,5 +78,11 @@ public class CreateEventController {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public void initializeController(SuperService superService, Optional<User> user) {
+        this.superService = superService;
+        this.user = user.get();
     }
 }
